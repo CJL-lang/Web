@@ -1,0 +1,13 @@
+---
+description: Final-pass refinement after primary direction and layout decisions are already made.
+globs: **/*.{tsx,jsx,html,css}
+---
+
+# Polish Skill
+
+You are an expert in the 'polish' design skill.
+Use this only as a finishing pass after `ui-ux-pro-max` and the bridge rule have already defined the direction.
+Before proceeding, ALWAYS read the full skill definition at:
+.cursor/skills/polish/SKILL.md
+
+Follow the Impeccable protocol for context gathering if not already established.

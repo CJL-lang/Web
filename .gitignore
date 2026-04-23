@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Logs & cache
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Env (do not commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Vite
+*.local
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Python (Cursor skills scripts)
+**/__pycache__/
+*.pyc

@@ -1,0 +1,38 @@
+@layer components {
+  .c-status-banner {
+    @apply flex items-start gap-3 rounded-[24px] border p-4;
+  }
+
+  .c-status-banner--success {
+    border-color: var(--border-success);
+    background: var(--surface-success-soft);
+  }
+
+  .c-status-banner__icon {
+    @apply mt-0.5 shrink-0 text-[var(--color-success)];
+  }
+
+  .c-status-banner__text {
+    @apply text-sm leading-6 text-[var(--color-text-primary)];
+  }
+
+  .c-section-card--message-content {
+    border-color: var(--border-brand-mid);
+    background: var(--gradient-message-content);
+  }
+
+  .c-section-card--message-recipients {
+    border-color: var(--border-brand-mid);
+    background: var(--gradient-message-recipient);
+  }
+
+  .c-validation-banner {
+    @apply rounded-2xl border px-4 py-3 text-sm text-[var(--color-danger)];
+    border-color: var(--border-danger);
+    background: var(--surface-danger-soft);
+  }
+
+  .c-recipient-grid {
+    @apply grid gap-4 sm:gap-5 md:grid-cols-2 md:gap-5 lg:gap-6;
+  }
+}

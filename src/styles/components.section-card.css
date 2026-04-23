@@ -1,0 +1,33 @@
+@layer components {
+  .c-section-card {
+    @apply rounded-[28px] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 shadow-[var(--shadow-soft)] md:p-5 lg:p-6;
+  }
+
+  .c-section-card__header {
+    @apply flex flex-col gap-4 border-b border-[var(--color-border-subtle)] pb-5 sm:flex-row sm:items-start sm:justify-between;
+  }
+
+  .c-section-card__intro {
+    @apply min-w-0 w-full space-y-2 sm:flex-1;
+  }
+
+  .c-section-card__title {
+    @apply text-lg font-semibold text-[var(--color-text-primary)] md:text-[1.125rem];
+  }
+
+  .c-section-card__desc {
+    @apply max-w-[68ch] text-sm leading-6 text-[var(--color-text-secondary)];
+  }
+
+  .c-section-card__desc-slot {
+    @apply min-w-0 w-full;
+  }
+
+  .c-section-card__action {
+    @apply shrink-0;
+  }
+
+  .c-section-card__body {
+    @apply pt-5 md:pt-6;
+  }
+}

@@ -1,0 +1,14 @@
+---
+description: Secondary design reference for extra judgment after ui-ux-pro-max sets direction.
+globs: **/*.{tsx,jsx,html,css,svg}
+---
+
+# Impeccable Skill
+
+You are an expert in the 'impeccable' design skill.
+Treat this as a secondary design reference, not the primary source of direction.
+First follow `.cursor/rules/ui-ux-pro-max.mdc` and `.cursor/rules/design-implementation-bridge.mdc`.
+Before proceeding, ALWAYS read the full skill definition at:
+.cursor/skills/impeccable/SKILL.md
+
+Follow the Teach/Craft/Extract protocols defined in the skill file.

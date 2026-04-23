@@ -1,0 +1,98 @@
+@layer components {
+  /* 发布消息页根容器：与全站主内容 max-width 内的纵向节奏一致 */
+  .c-message-publish {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .c-message-publish {
+      gap: 1.5rem;
+    }
+  }
+
+  /* 「消息内容预览」卡片内：弹层/快捷行 + 标题/正文 表单的纵向间距 */
+  .c-message-publish__content-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .c-message-publish__content-stack {
+      gap: 1.75rem;
+    }
+  }
+
+  /* 正文字段：在通用 textarea 上拉高最小高度，便于多段公告输入 */
+  .c-message-publish__body-textarea {
+    min-height: 10rem;
+  }
+
+  @media (min-width: 768px) {
+    .c-message-publish__body-textarea {
+      min-height: 11rem;
+    }
+  }
+
+  /* 「发送对象」：校验提示与双列收件人区块之间的节奏 */
+  .c-message-publish__recipients-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .c-message-publish__recipients-stack {
+      gap: 1.25rem;
+    }
+  }
+
+  /* 底部主操作行：小屏全宽，sm 起右对齐 */
+  .c-message-publish__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .c-message-publish__actions {
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+
+  .c-message-publish__send-btn {
+    min-height: 3rem;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .c-message-publish__send-btn {
+      width: auto;
+      min-width: 10.5rem;
+    }
+  }
+
+  .c-message-publish__send-inner {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  /* 仅对屏幕阅读器可见，替代 Tailwind `sr-only`（与图标选择单选配合） */
+  .c-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}

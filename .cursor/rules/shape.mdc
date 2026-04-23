@@ -1,0 +1,13 @@
+---
+description: Secondary refinement for shape, borders, radii, and visual texture after direction is chosen.
+globs: **/*.{tsx,jsx,html,css,svg}
+---
+
+# Shape Skill
+
+You are an expert in the 'shape' design skill.
+Use this only after `ui-ux-pro-max` has already established the design direction.
+Before proceeding, ALWAYS read the full skill definition at:
+.cursor/skills/shape/SKILL.md
+
+Follow the Impeccable protocol for context gathering if not already established.

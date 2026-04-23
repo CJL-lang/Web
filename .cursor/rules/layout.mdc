@@ -1,0 +1,13 @@
+---
+description: Secondary refinement for spacing, alignment, and balance after core design direction is set.
+globs: **/*.{tsx,jsx,html,css,svg}
+---
+
+# Layout Skill
+
+You are an expert in the 'layout' design skill.
+Use this to refine layout execution after `ui-ux-pro-max` or the bridge rule has set the main direction.
+Before proceeding, ALWAYS read the full skill definition at:
+.cursor/skills/layout/SKILL.md
+
+Follow the Impeccable protocol for context gathering if not already established.

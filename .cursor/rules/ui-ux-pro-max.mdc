@@ -1,0 +1,15 @@
+---
+description: Use ui-ux-pro-max as the primary design-system source for UI/UX tasks
+alwaysApply: true
+---
+
+# UI UX Pro Max
+
+Apply this rule only for UI/UX, visual design, page polish, interaction design, or design review tasks.
+
+- Before making any other design-rule decision, read `.cursor/skills/ui-ux-pro-max/SKILL.md` first.
+- Use `ui-ux-pro-max` to derive the design system, visual direction, palette logic, typography options, interaction guidance, and anti-patterns.
+- Treat `ui-ux-pro-max` as the first-choice design authority for this repository.
+- Prefer its React-oriented guidance over its default `html-tailwind` fallback because this project is implemented in React.
+- Use the repository's retained `.cursor/skills/` design stack only to refine, validate, or harden a direction that already came from `ui-ux-pro-max`.
+- Never copy canned examples directly if they conflict with existing tokens, component APIs, accessibility needs, or maintainability.

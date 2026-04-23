@@ -1,0 +1,75 @@
+@layer components {
+  .c-recipient-group {
+    @apply space-y-3 rounded-[18px] border p-3 md:p-4;
+    border-color: var(--border-brand-soft);
+    background: var(--surface-panel-deep);
+  }
+
+  .c-recipient-group__header {
+    @apply flex flex-wrap items-center justify-between gap-3;
+  }
+
+  .c-recipient-group__title {
+    @apply text-base font-semibold tracking-tight text-[var(--color-text-primary)];
+  }
+
+  .c-recipient-group__actions {
+    @apply flex flex-wrap items-center gap-2;
+  }
+
+  .c-recipient-group__action-button {
+    @apply min-h-11;
+  }
+
+  .c-recipient-group__search {
+    @apply relative;
+  }
+
+  .c-recipient-group__search-icon {
+    @apply pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)];
+  }
+
+  .c-recipient-group__search-input {
+    @apply min-h-11 w-full rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] py-2.5 pl-10 pr-3 text-sm text-[var(--color-text-primary)] outline-none transition placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-brand)];
+  }
+
+  .c-recipient-group__list {
+    @apply space-y-1.5 rounded-[20px] border p-2;
+    border-color: var(--color-border-subtle);
+    background: color-mix(in srgb, var(--color-surface) 45%, transparent);
+    box-shadow: var(--shadow-inset-soft);
+  }
+
+  .c-recipient-group__item {
+    @apply flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition;
+  }
+
+  .c-recipient-group__item:hover {
+    background: color-mix(in srgb, var(--color-surface-alt) 60%, transparent);
+  }
+
+  /* 选中态由原生 checkbox 驱动，避免在 TSX 中拼接状态类名 */
+  .c-recipient-group__item:has(:checked) {
+    @apply ring-1;
+    background: var(--surface-brand-soft);
+    --tw-ring-color: var(--color-border-strong);
+  }
+
+  .c-recipient-group__checkbox {
+    @apply h-4 w-4 shrink-0 rounded;
+    @apply border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] text-[var(--color-brand)] focus:ring-2;
+    --tw-ring-color: color-mix(in srgb, var(--color-brand) 50%, transparent);
+  }
+
+  .c-recipient-group__name {
+    @apply text-sm text-[var(--color-text-primary)];
+  }
+
+  .c-recipient-group__empty {
+    @apply list-none rounded-xl px-3 py-6 text-center text-sm text-[var(--color-text-muted)];
+  }
+
+  .c-recipient-group__error {
+    @apply text-xs text-[var(--color-danger)];
+  }
+}

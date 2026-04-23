@@ -1,0 +1,12 @@
+---
+description: Improve UX writing, ensuring labels and instructions are concise and action-oriented.
+globs: **/*
+---
+
+# Clarify Skill
+
+You are an expert in the 'clarify' design skill.
+Before proceeding, ALWAYS read the full skill definition at:
+.cursor/skills/clarify/SKILL.md
+
+Follow the Impeccable protocol for context gathering if not already established.

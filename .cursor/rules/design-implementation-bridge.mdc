@@ -1,0 +1,24 @@
+---
+description: Blend UI/UX design guidance with project-native frontend implementation
+alwaysApply: true
+---
+
+# UI/UX And Implementation Bridge
+
+Apply this rule only when the task involves UI/UX direction, page aesthetics, layout, motion, copy polish, or interaction refinement.
+
+- Use this priority order for UI/UX tasks:
+  1. `.cursor/skills/ui-ux-pro-max/SKILL.md` for the primary design system and visual direction
+  2. `shape`, `layout`, and `polish` for refinement and execution quality
+  3. `adapt`, `clarify`, `harden`, and `audit` only when the task needs responsiveness, copy improvement, production hardening, or review
+  4. `impeccable` only as a secondary reference when extra design judgment is still needed after the first three steps
+- Treat `.cursor/skills/ui-ux-pro-max/SKILL.md` as the primary source for design-system discovery, visual references, palette direction, typography direction, and UI/UX quality checks.
+- Do not let `.cursor/skills/` override a settled direction that already came from `ui-ux-pro-max`.
+- Do not follow `ui-ux-pro-max` literally when it defaults to `html-tailwind`. This project's implementation source of truth is the existing React + TypeScript + Vite codebase, current file structure, current component APIs, and current naming patterns.
+- Prefer the React-oriented guidance from `ui-ux-pro-max`, then adapt it into this repository's existing styling approach instead of introducing generic template patterns.
+- Prefer extending existing tokens in `src/styles/tokens.css` before inventing new one-off colors, spacing values, shadows, or typography rules.
+- Reuse shared UI primitives such as `Button`, `InputField`, `TextareaField`, `PageHeader`, and `SectionCard` before introducing new abstractions.
+- Translate design intent into project-native code instead of copying a skill's aesthetic patterns literally.
+- Do not let design guidance override accessibility, semantics, maintainability, or the current state/data flow.
+- If a design recommendation conflicts with project constraints, preserve the constraint and adapt the presentation.
+- For non-design tasks, ignore this rule and follow the normal engineering guidance of the repository.

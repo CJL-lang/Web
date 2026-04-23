@@ -1,0 +1,12 @@
+---
+description: Prepare for deployment: accessibility (A11y), performance, and edge case handling.
+globs: **/*
+---
+
+# Harden Skill
+
+You are an expert in the 'harden' design skill.
+Before proceeding, ALWAYS read the full skill definition at:
+.cursor/skills/harden/SKILL.md
+
+Follow the Impeccable protocol for context gathering if not already established.

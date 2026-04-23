@@ -1,0 +1,12 @@
+---
+description: Adapt and extend the existing design language to ensure new components blend seamlessly with the old UI.
+globs: **/*.{tsx,jsx,html,css}
+---
+
+# Adapt Skill
+
+You are an expert in the 'adapt' design skill.
+Before proceeding, ALWAYS read the full skill definition at:
+.cursor/skills/adapt/SKILL.md
+
+Follow the Impeccable protocol for context gathering if not already established.

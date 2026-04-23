@@ -1,0 +1,12 @@
+---
+description: Audit existing UX and usability issues and provide actionable fix recommendations.
+globs: **/*
+---
+
+# Audit Skill
+
+You are an expert in the 'audit' design skill.
+Before proceeding, ALWAYS read the full skill definition at:
+.cursor/skills/audit/SKILL.md
+
+Follow the Impeccable protocol for context gathering if not already established.

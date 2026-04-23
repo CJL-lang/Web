@@ -1,0 +1,48 @@
+:root {
+  --color-brand: #ecab13;
+  --color-brand-strong: #f2b936;
+  --color-canvas: #15110a;
+  --color-surface: #221c10;
+  --color-surface-alt: #2c2417;
+  --color-surface-alt-hover: #372d1d;
+  --color-surface-soft: rgba(34, 28, 16, 0.6);
+  --color-text-primary: #f6f2e8;
+  --color-text-secondary: #d2c7af;
+  --color-text-muted: #a9a9a9;
+  --color-ink-strong: #20190d;
+  --color-border-strong: rgba(236, 171, 19, 0.2);
+  --color-border-subtle: rgba(34, 28, 16, 0.2);
+  --color-success: #34a96c;
+  --color-danger: #dc5e5e;
+  --shadow-soft: 0 24px 48px rgba(5, 3, 1, 0.26);
+  --shadow-elevated-md: 0 20px 40px rgba(5, 3, 1, 0.12);
+  --shadow-inset-soft: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --gradient-message-content:
+    linear-gradient(165deg, rgba(236, 171, 19, 0.1) 0%, transparent 55%);
+  --gradient-message-recipient:
+    linear-gradient(195deg, rgba(236, 171, 19, 0.08) 0%, transparent 48%);
+  --surface-panel-raised: rgba(44, 36, 23, 0.8);
+  --surface-panel-deep: rgba(20, 16, 9, 0.4);
+  --surface-brand-soft: rgba(236, 171, 19, 0.1);
+  --surface-success-soft: rgba(52, 169, 108, 0.08);
+  --surface-danger-soft: rgba(220, 94, 94, 0.08);
+  --border-brand-soft: rgba(236, 171, 19, 0.12);
+  --border-brand-mid: rgba(236, 171, 19, 0.16);
+  --border-brand-strong: rgba(236, 171, 19, 0.22);
+  --border-success: rgba(52, 169, 108, 0.32);
+  --border-danger: rgba(220, 94, 94, 0.28);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --layout-max-width: 1600px;
+  --layout-content-max-width: 1120px;
+  --layout-rail-width: 96px;
+  --layout-sidebar-width: 320px;
+  --font-body:
+    "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial,
+    sans-serif;
+}
