@@ -61,15 +61,6 @@ export function Sidebar() {
           );
         })}
       </nav>
-
-      <div className="rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-4">
-        <p className="text-xs uppercase tracking-[0.18em] text-[var(--color-text-muted)]">
-          Layout Notes
-        </p>
-        <p className="mt-2 text-sm font-medium text-[var(--color-text-primary)]">
-          当前先统一桌面端与 iPad 横屏的骨架、导航和内容密度，再逐页接入真实模块。
-        </p>
-      </div>
     </aside>
   );
 }

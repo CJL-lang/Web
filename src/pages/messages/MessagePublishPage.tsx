@@ -77,11 +77,7 @@ export function MessagePublishPage() {
 
   return (
     <div className="c-message-publish">
-      <PageHeader
-        description="向学员与教练发送公告或提醒，支持分组选择与一次性送达。"
-        eyebrow="Messaging"
-        title="发布消息"
-      />
+      <PageHeader eyebrow="Messaging" title="发布消息" />
 
       {success ? (
         <div className="c-status-banner c-status-banner--success">

@@ -1,6 +1,7 @@
 import { ArrowDownRight, ArrowRight, ArrowUpRight } from "lucide-react";
 
 import type { DashboardMetric } from "../../types/dashboard";
+import { cn } from "../../utils/cn";
 
 const trendIconMap = {
   down: ArrowDownRight,
@@ -8,35 +9,50 @@ const trendIconMap = {
   up: ArrowUpRight,
 };
 
-const trendToneMap = {
-  down: "text-[var(--color-danger)]",
-  neutral: "text-[var(--color-text-secondary)]",
-  up: "text-[var(--color-success)]",
-};
-
 interface StatCardProps {
   metric: DashboardMetric;
+  showCaption?: boolean;
+  showTrend?: boolean;
 }
 
-export function StatCard({ metric }: StatCardProps) {
+export function StatCard({
+  metric,
+  showCaption = true,
+  showTrend = true,
+}: StatCardProps) {
   const TrendIcon = trendIconMap[metric.trend];
 
   return (
-    <article className="rounded-[26px] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 shadow-[var(--shadow-soft)] md:p-5 lg:p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-2">
-          <p className="text-sm text-[var(--color-text-muted)]">{metric.label}</p>
-          <p className="text-[1.9rem] font-semibold tracking-tight text-[var(--color-text-primary)] md:text-[2.15rem]">
-            {metric.value}
-          </p>
+    <article
+      className={cn(
+        "c-stat-card",
+        !showCaption && !showTrend && "c-stat-card--kpi"
+      )}
+    >
+      <div
+        className={cn(
+          "c-stat-card__header",
+          !showTrend && "c-stat-card__header--solo"
+        )}
+      >
+        <div>
+          <p className="c-stat-card__label">{metric.label}</p>
+          <p className="c-stat-card__value">{metric.value}</p>
         </div>
-        <div className={trendToneMap[metric.trend]}>
-          <TrendIcon size={20} />
-        </div>
+        {showTrend ? (
+          <div
+            className={cn(
+              "c-stat-card__trend",
+              `c-stat-card__trend--${metric.trend}`
+            )}
+          >
+            <TrendIcon size={20} />
+          </div>
+        ) : null}
       </div>
-      <p className="mt-6 text-sm leading-6 text-[var(--color-text-secondary)]">
-        {metric.caption}
-      </p>
+      {showCaption ? (
+        <p className="c-stat-card__caption">{metric.caption}</p>
+      ) : null}
     </article>
   );
 }

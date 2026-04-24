@@ -2,11 +2,26 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import { AdminLayout } from "../layouts/AdminLayout";
 import { ApprovalsPage } from "../pages/approvals/ApprovalsPage";
-import { CoachesPage } from "../pages/coaches/CoachesPage";
-import { DashboardPage } from "../pages/dashboard/DashboardPage";
+import {
+  CoachCreatePage,
+  CoachDetailPage,
+  CoachesLayout,
+  CoachesListPage,
+} from "../pages/coaches";
+import {
+  DashboardCoachesPage,
+  DashboardPage,
+  DashboardRevenuePage,
+  DashboardStudentsPage,
+} from "../pages/dashboard";
 import { MessagePublishPage } from "../pages/messages/MessagePublishPage";
 import { SettingsPage } from "../pages/settings/SettingsPage";
-import { StudentsPage } from "../pages/students/StudentsPage";
+import {
+  StudentCreatePage,
+  StudentManagePage,
+  StudentsLayout,
+  StudentsListPage,
+} from "../pages/students";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +35,24 @@ export const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <DashboardPage />,
+        children: [
+          {
+            index: true,
+            element: <Navigate replace to="students" />,
+          },
+          {
+            path: "students",
+            element: <DashboardStudentsPage />,
+          },
+          {
+            path: "coaches",
+            element: <DashboardCoachesPage />,
+          },
+          {
+            path: "revenue",
+            element: <DashboardRevenuePage />,
+          },
+        ],
       },
       {
         path: "messages",
@@ -27,11 +60,39 @@ export const router = createBrowserRouter([
       },
       {
         path: "students",
-        element: <StudentsPage />,
+        element: <StudentsLayout />,
+        children: [
+          {
+            index: true,
+            element: <StudentsListPage />,
+          },
+          {
+            path: "new",
+            element: <StudentCreatePage />,
+          },
+          {
+            path: ":studentId",
+            element: <StudentManagePage />,
+          },
+        ],
       },
       {
         path: "coaches",
-        element: <CoachesPage />,
+        element: <CoachesLayout />,
+        children: [
+          {
+            index: true,
+            element: <CoachesListPage />,
+          },
+          {
+            path: "new",
+            element: <CoachCreatePage />,
+          },
+          {
+            path: ":coachId",
+            element: <CoachDetailPage />,
+          },
+        ],
       },
       {
         path: "approvals",

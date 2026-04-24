@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 
+import { AdminDataProvider } from "../context/AdminDataContext";
 import { MobileNav } from "../components/navigation/MobileNav";
 import { Sidebar } from "../components/navigation/Sidebar";
 import { TabletNav } from "../components/navigation/TabletNav";
@@ -17,7 +18,9 @@ export function AdminLayout() {
         <main className="flex min-w-0 flex-col gap-4 md:gap-5 lg:gap-6">
           <MobileNav />
           <div className="w-full max-w-[var(--layout-content-max-width)]">
-            <Outlet />
+            <AdminDataProvider>
+              <Outlet />
+            </AdminDataProvider>
           </div>
         </main>
       </div>

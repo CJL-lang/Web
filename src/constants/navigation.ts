@@ -44,7 +44,7 @@ export const navigationItems: NavigationItem[] = [
     label: "批准申请",
     path: "/approvals",
     icon: CheckCheck,
-    description: "处理待审核业务申请",
+    description: "审批教练与学员的请假申请",
   },
   {
     label: "设置",

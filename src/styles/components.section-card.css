@@ -10,7 +10,7 @@
   .c-section-card__intro {
     @apply min-w-0 w-full space-y-2 sm:flex-1;
   }
-
+  
   .c-section-card__title {
     @apply text-lg font-semibold text-[var(--color-text-primary)] md:text-[1.125rem];
   }
