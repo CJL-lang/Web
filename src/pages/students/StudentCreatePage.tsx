@@ -7,7 +7,7 @@ import { PageHeader } from "../../components/ui/PageHeader";
 import { useAdminData } from "../../context/AdminDataContext";
 import { nextStudentId } from "../../utils/adminIds";
 
-const NEW_STUDENT_STATUS = "进行中";
+const NEW_STUDENT_STATUS = "正式学员";
 const NEW_STUDENT_COACH = "待分配";
 const NEW_STUDENT_PACKAGE = "待设置";
 
@@ -68,13 +68,12 @@ export function StudentCreatePage() {
   return (
     <>
       <PageHeader
-        description="请填写学员姓名、性别与年龄；学号将在保存时自动生成。其他信息可在后续流程中补充。"
         eyebrow="Students"
         title="新建学员"
       />
 
-      <div className="rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-5 md:p-6">
-        <div className="mx-auto flex max-w-xl flex-col gap-4">
+      <div className="c-form-shell">
+        <div className="c-form-shell__stack">
           <InputField
             autoComplete="name"
             error={errors.name}
@@ -115,18 +114,11 @@ export function StudentCreatePage() {
             value={ageInput}
           />
 
-          <p className="m-0 text-xs text-[var(--color-text-muted)]">
-            学号将在保存时自动生成（ST- 序号）。新建学员默认状态为「进行中」，教练与课程包为「待分配 / 待设置」，可在档案中继续完善。
-          </p>
-
-          <div className="flex flex-wrap gap-3 pt-2">
+          <div className="c-form-shell__actions">
             <Button type="button" onClick={handleSubmit}>
               保存并查看详情
             </Button>
-            <Link
-              className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-4 py-3 text-sm font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface-alt-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/60"
-              to="/students"
-            >
+            <Link className="c-button-link-secondary" to="/students">
               取消
             </Link>
           </div>

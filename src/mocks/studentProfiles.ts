@@ -85,11 +85,60 @@ export interface StudentProgressOverview {
   trends: StudentProgressTrend[];
 }
 
-export interface StudentPackageRow {
+/** 与家长端套餐状态 pill tone 对齐 */
+export type PackageStatusTone = "success" | "active" | "muted";
+
+/** 套餐列表与详情顶部展示的三种固定状态 */
+export type PackageDisplayStatus = "已结业" | "进行中" | "已体验";
+
+/** 列表徽章配色 → CSS：--success / --active / --muted */
+export function toneForPackageStatus(
+  status: PackageDisplayStatus,
+): PackageStatusTone {
+  if (status === "已结业") {
+    return "success";
+  }
+  if (status === "进行中") {
+    return "active";
+  }
+  return "muted";
+}
+
+export interface StudentPackagePeriod {
+  start: string;
+  end: string;
+}
+
+export interface StudentPackageOverview {
+  completedLessons: number;
+  totalLessons: number;
+}
+
+export interface StudentPackagePlanSummary {
+  title: string;
+  description: string;
+}
+
+export interface StudentPackageOutlineItem {
+  id: string;
+  title: string;
+  description: string;
+  statusLabel: string;
+}
+
+export interface StudentPackageDetail {
+  period: StudentPackagePeriod;
+  overview: StudentPackageOverview;
+  planSummary: StudentPackagePlanSummary;
+  courseOutline: StudentPackageOutlineItem[];
+}
+
+export interface StudentAdminPackage {
   id: string;
   name: string;
-  status: string;
+  status: PackageDisplayStatus;
   summary: string;
+  detail: StudentPackageDetail;
 }
 
 export interface StudentFullProfile extends StudentListItem {
@@ -102,7 +151,7 @@ export interface StudentFullProfile extends StudentListItem {
   coachProfile: StudentCoachProfile;
   ability: StudentAbilityAxis[];
   progressOverview: StudentProgressOverview;
-  packages: StudentPackageRow[];
+  packages: StudentAdminPackage[];
 }
 
 const coachDirectory: Record<
@@ -457,19 +506,107 @@ function defaultParents(
   ];
 }
 
-function defaultPackages(student: StudentListItem): StudentPackageRow[] {
+function placeholderOutline(
+  studentId: string,
+  packageKey: string,
+  variant: "in-progress" | "completed",
+): StudentPackageOutlineItem[] {
+  const p = `${studentId}-${packageKey}`;
+  const thirdStatus = variant === "completed" ? "已销课" : "待上课";
+  return [
+    {
+      id: `${p}-l1`,
+      title: "第 1 节：热身与安全走线",
+      description: "练习场规范、基础站姿与握杆复盘。",
+      statusLabel: "已销课",
+    },
+    {
+      id: `${p}-l2`,
+      title: "第 2 节：节奏与平面",
+      description: "半挥与全挥节奏，辅助录像对比。",
+      statusLabel: "已销课",
+    },
+    {
+      id: `${p}-l3`,
+      title: "第 3 节：专项巩固",
+      description: "根据上周数据布置打位与短杆练习。",
+      statusLabel: thirdStatus,
+    },
+  ];
+}
+
+function defaultPackages(student: StudentListItem): StudentAdminPackage[] {
+  const seed = seedFromStudentId(student.id);
+  const enrollment = student.status;
+  const primaryExpired = enrollment === "已过期";
+  const primaryPkgStatus: PackageDisplayStatus = primaryExpired
+    ? "已结业"
+    : "进行中";
+
+  const totalPrimary = 14 + (seed % 12);
+  const remainingPrimary = primaryExpired
+    ? 0
+    : Math.max(1, 4 + (seed % 8));
+  const completedPrimary = primaryExpired
+    ? totalPrimary
+    : totalPrimary - remainingPrimary;
+
+  const periodPrimary = primaryExpired
+    ? { start: "2024.02.01", end: "2024.12.28" }
+    : { start: "2025.09.01", end: "2026.06.30" };
+
+  const totalHist = 8;
+  const monthStart = 6 + (seed % 3);
+  const periodHist = {
+    start: `2025.${String(monthStart).padStart(2, "0")}.15`,
+    end: `2025.${String(Math.min(12, monthStart + 2)).padStart(2, "0")}.20`,
+  };
+
   return [
     {
       id: `${student.id}-p1`,
       name: student.packageName,
-      status: student.status,
-      summary: "当前在训 · 含场地与教练课时",
+      status: primaryPkgStatus,
+      summary:
+        enrollment === "已过期"
+          ? "已结业归档 · 权益如需延续可联系前台"
+          : "当前进行中 · 含场地与教练课时",
+      detail: {
+        period: periodPrimary,
+        overview: {
+          completedLessons: completedPrimary,
+          totalLessons: totalPrimary,
+        },
+        planSummary: {
+          title: primaryExpired ? "结业归档" : "阶段训练计划",
+          description: primaryExpired
+            ? `共 ${totalPrimary} 节系统课已结业；权益已到期，可联系前台续办。`
+            : `共 ${totalPrimary} 节系统课，当前进度 ${completedPrimary}/${totalPrimary}。`,
+        },
+        courseOutline: placeholderOutline(
+          student.id,
+          "p1",
+          primaryExpired ? "completed" : "in-progress",
+        ),
+      },
     },
     {
       id: `${student.id}-p2`,
       name: "假期集训（历史）",
-      status: "已结课",
+      status: "已结业",
       summary: "2025 暑期 · 已完成 8/8 次",
+      detail: {
+        period: periodHist,
+        overview: {
+          completedLessons: totalHist,
+          totalLessons: totalHist,
+        },
+        planSummary: {
+          title: "假期集训营",
+          description: `密集周训共 ${totalHist} 次，已全部完成。`,
+        },
+        courseOutline: placeholderOutline(student.id, "p2", "completed"),
+      },
     },
   ];
 }
@@ -735,21 +872,113 @@ const profilePatches: Partial<Record<string, Partial<StudentFullProfile>>> = {
     packages: [
       {
         id: "ST-1024-p1",
-        name: "青少年进阶课（在训）",
+        name: "青少年进阶课（进行中）",
         status: "进行中",
         summary: "剩余 14 课时 · 至 2026-06",
+        detail: {
+          period: { start: "2026.01.06", end: "2026.06.30" },
+          overview: { completedLessons: 6, totalLessons: 20 },
+          planSummary: {
+            title: "梯队进阶主线",
+            description:
+              "青少年挥杆平面与短杆稳定性为主，共 20 节；当前 6/20，优先完成阶段测评与场地应用周。",
+          },
+          courseOutline: [
+            {
+              id: "ST-1024-p1-l1",
+              title: "第 1 节：平面与站位复盘",
+              description: "视频对比 + 打位基础节奏。",
+              statusLabel: "已销课",
+            },
+            {
+              id: "ST-1024-p1-l2",
+              title: "第 2 节：铁杆距离控制",
+              description: "半挥与全挥落区训练。",
+              statusLabel: "已销课",
+            },
+            {
+              id: "ST-1024-p1-l3",
+              title: "第 3 节：阶段测评",
+              description: "六项维度雷达图与教练点评。",
+              statusLabel: "已销课",
+            },
+            {
+              id: "ST-1024-p1-l4",
+              title: "第 4 节：场下策略辅导",
+              description: "与同组学员组队洞杯策略沙盘。",
+              statusLabel: "待上课",
+            },
+          ],
+        },
       },
       {
         id: "ST-1024-p2",
         name: "寒假短杆集训",
-        status: "已结课",
+        status: "已结业",
         summary: "2026-01 · 8/8 次完成",
+        detail: {
+          period: { start: "2026.01.12", end: "2026.01.25" },
+          overview: { completedLessons: 8, totalLessons: 8 },
+          planSummary: {
+            title: "短杆密集型集训",
+            description: "两周内完成果岭周边救球与切滚组合，出勤与销课已全部闭环。",
+          },
+          courseOutline: [
+            {
+              id: "ST-1024-p2-l1",
+              title: "第 1 节：切滚与高抛切换",
+              description: "不同草纹下的杆面选择与落点意象。",
+              statusLabel: "已销课",
+            },
+            {
+              id: "ST-1024-p2-l2",
+              title: "第 2 节：洞杯周边对抗",
+              description: "与同组轮换救球记分。",
+              statusLabel: "已销课",
+            },
+            {
+              id: "ST-1024-p2-l3",
+              title: "第 3 节：集训结业赛",
+              description: "计时赛统计救球成功率。",
+              statusLabel: "已销课",
+            },
+          ],
+        },
       },
       {
         id: "ST-1024-p3",
         name: "体能辅训包",
-        status: "暂停",
-        summary: "与主课并行 · 可恢复",
+        status: "已体验",
+        summary: "与主课并行 · 可转正课",
+        detail: {
+          period: { start: "2025.11.01", end: "2026.08.31" },
+          overview: { completedLessons: 4, totalLessons: 10 },
+          planSummary: {
+            title: "体能辅训（体验进度）",
+            description:
+              "与主课并行共 10 次体验额度，当前 4/10；未完部分可续为正课包或暂停后顺延。",
+          },
+          courseOutline: [
+            {
+              id: "ST-1024-p3-l1",
+              title: "第 1 节：核心与下肢稳定",
+              description: "平板与单侧支撑结合挥杆代偿评估。",
+              statusLabel: "已销课",
+            },
+            {
+              id: "ST-1024-p3-l2",
+              title: "第 2 节：爆发与柔韧性",
+              description: "药球与弹力带轮转。",
+              statusLabel: "已销课",
+            },
+            {
+              id: "ST-1024-p3-l3",
+              title: "第 3 节：体验待续",
+              description: "可选下一节转正课计费；当前不计入结业包。",
+              statusLabel: "待上课",
+            },
+          ],
+        },
       },
     ],
   },

@@ -1,0 +1,28 @@
+---
+description: Web（Vite + React + TS）工程结构、模块边界与协作约定
+globs: web/src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Web 前端工程约定
+
+## 目录职责
+
+- **`src/pages/`**：路由页面；可含本地小组件，复杂 UI 抽到 `src/components/`。
+- **`src/components/`**：可复用 UI；按领域分子文件夹（如 `dashboard/`、`navigation/`、`ui/`）。
+- **`src/layouts/`**：壳布局（如 `AdminLayout`）。
+- **`src/styles/`**：全局与组件样式（见 `styles-css-first` 规则）；不在组件旁散落 `.module.css`（除非团队后续另有约定）。
+- **`src/types/`**、**`src/mocks/`**：类型与假数据；页面逻辑优先消费类型而非内联魔法字符串。
+
+## 代码习惯
+
+- **导入**：以相对路径为主，与同目录其它文件风格保持一致；若日后引入 `@/` 别名再统一迁移。
+- **组件**：默认函数组件；服务端无关逻辑不放组件文件深处时可抽 `hooks/` 或 `utils/`。
+- **路由**：集中在 `src/router`； outlet context 类型在页面导出（如 `DashboardOutletContext`）。
+- **状态**：页面级 `useState`；跨树共享用 Context（已有 `AdminDataContext` 模式可参考）。
+- **可访问性**：交互控件保留 `aria-*`、按钮 `type`、表单 `label` 与错误提示（与现有 Field/SectionCard 模式对齐）。
+
+## Agent 修改约束
+
+- **小步提交**：无关文件不格式化、不重命名；需求外的「顺手重构」不做。
+- **改样式**：同步更新 `src/styles` 与 TSX 类名；跑 `npm run build`（在 `web/` 目录）确认通过。

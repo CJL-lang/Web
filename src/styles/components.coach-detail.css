@@ -1,0 +1,81 @@
+@layer components {
+  .c-coach-detail__toolbar {
+    @apply flex flex-wrap items-center gap-3;
+  }
+
+  .c-coach-detail__back-link {
+    @apply inline-flex min-h-11 items-center gap-2 rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-4 py-3 text-sm font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface-alt-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/60;
+  }
+
+  .c-coach-detail__hero {
+    @apply flex flex-col gap-4 rounded-[28px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-5 shadow-[var(--shadow-soft)] sm:flex-row sm:items-center sm:gap-6 sm:p-6;
+  }
+
+  .c-coach-detail__avatar-frame {
+    @apply relative h-24 w-24 shrink-0 overflow-hidden rounded-[22px] bg-gradient-to-br from-[color:rgba(236,171,19,0.35)] to-[color:rgba(90,70,30,0.55)] shadow-[inset_0_1px_0_rgba(255,255,255,0.2)];
+  }
+
+  .c-coach-detail__avatar-fallback {
+    @apply flex h-full w-full items-center justify-center text-xl font-bold tracking-tight text-[var(--color-ink-strong)];
+  }
+
+  .c-coach-detail__avatar-img {
+    @apply h-full w-full object-cover;
+  }
+
+  .c-coach-detail__intro {
+    @apply min-w-0 flex-1 space-y-2;
+  }
+
+  .c-coach-detail__name {
+    @apply text-2xl font-semibold tracking-tight text-[var(--color-text-primary)] md:text-[1.75rem];
+  }
+
+  .c-coach-detail__job-title {
+    @apply m-0 text-sm font-medium text-[var(--color-text-secondary)];
+  }
+
+  .c-coach-detail__tagline {
+    @apply m-0 text-sm text-[var(--color-text-muted)];
+  }
+
+  .c-coach-detail__dl {
+    @apply m-0 grid gap-4 sm:grid-cols-2;
+  }
+
+  .c-coach-detail__dl-row-wide {
+    @apply sm:col-span-2;
+  }
+
+  .c-coach-detail__dt {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
+  .c-coach-detail__dd {
+    @apply mt-1 m-0 text-sm font-medium text-[var(--color-text-primary)];
+  }
+
+  .c-coach-detail__tel {
+    @apply text-[var(--color-brand)] underline-offset-2 hover:underline;
+  }
+
+  .c-coach-detail__bio {
+    @apply m-0 text-sm leading-relaxed text-[var(--color-text-secondary)];
+  }
+
+  .c-coach-detail__specialty-list {
+    @apply m-0 list-none space-y-3 p-0;
+  }
+
+  .c-coach-detail__specialty-row {
+    @apply flex gap-3 rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] px-4 py-3;
+  }
+
+  .c-coach-detail__specialty-index {
+    @apply flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[rgba(236,171,19,0.14)] text-xs font-bold text-[var(--color-brand)];
+  }
+
+  .c-coach-detail__specialty-text {
+    @apply text-sm text-[var(--color-text-primary)];
+  }
+}

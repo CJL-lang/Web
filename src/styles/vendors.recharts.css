@@ -1,0 +1,9 @@
+/* Recharts sets tabindex on SVG for a11y; click focuses it and shows the UA focus ring. */
+.recharts-surface:focus {
+  outline: none;
+}
+
+.recharts-surface:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-brand) 55%, transparent);
+  outline-offset: 3px;
+}

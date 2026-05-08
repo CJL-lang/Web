@@ -30,10 +30,6 @@
       flex: 1;
       min-width: 0;
     }
-
-    .c-dashboard-header__range {
-      flex-shrink: 0;
-    }
   }
 
   .c-dashboard-range {
@@ -77,6 +73,18 @@
     background: color-mix(in srgb, var(--color-brand) 14%, var(--color-surface-alt));
     color: var(--color-text-primary);
     box-shadow: var(--shadow-inset-soft);
+  }
+
+  .c-dashboard-range--embedded {
+    gap: 0.35rem;
+    padding: 0.28rem;
+  }
+
+  .c-dashboard-range--embedded .c-dashboard-range__button {
+    min-height: 2rem;
+    padding: 0.375rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
   }
 
   .c-dashboard-tabs {

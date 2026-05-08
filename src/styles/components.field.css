@@ -97,6 +97,10 @@
     @apply flex items-center justify-between gap-3;
   }
 
+  .c-field-shell__label-row--inline {
+    @apply flex-wrap items-baseline justify-start gap-x-2 gap-y-0.5;
+  }
+
   .c-field-shell__label {
     @apply text-sm font-medium text-[var(--color-text-primary)];
   }

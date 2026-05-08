@@ -6,12 +6,12 @@ import { AcademyBrand } from "./AcademyBrand";
 
 export function TabletNav() {
   return (
-    <aside className="sticky top-5 flex h-[calc(100vh-2.5rem)] flex-col items-center rounded-[28px] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-3 py-4 shadow-[var(--shadow-soft)]">
-      <div className="pb-4">
+    <aside className="c-tablet-nav">
+      <div className="c-tablet-nav__brand">
         <AcademyBrand compact />
       </div>
 
-      <nav className="flex min-h-0 flex-1 flex-col items-center gap-2 overflow-y-auto pt-3">
+      <nav className="c-tablet-nav__nav">
         {navigationItems.map((item) => {
           const Icon = item.icon;
 
@@ -21,10 +21,10 @@ export function TabletNav() {
               aria-label={item.label}
               className={({ isActive }) =>
                 cn(
-                  "flex min-h-12 w-12 items-center justify-center rounded-2xl border border-transparent transition duration-200",
+                  "c-tablet-nav__link",
                   isActive
-                    ? "border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] text-[var(--color-brand)]"
-                    : "bg-[var(--color-surface-soft)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
+                    ? "c-tablet-nav__link--active"
+                    : "c-tablet-nav__link--inactive"
                 )
               }
               title={item.label}

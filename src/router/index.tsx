@@ -14,6 +14,10 @@ import {
   DashboardRevenuePage,
   DashboardStudentsPage,
 } from "../pages/dashboard";
+import { OrderManagementPage } from "../pages/commerce/OrderManagementPage";
+import { PackageCreatePage } from "../pages/commerce/PackageCreatePage";
+import { PackageEditPage } from "../pages/commerce/PackageEditPage";
+import { PackageManagementPage } from "../pages/commerce/PackageManagementPage";
 import { MessagePublishPage } from "../pages/messages/MessagePublishPage";
 import { SettingsPage } from "../pages/settings/SettingsPage";
 import {
@@ -93,6 +97,22 @@ export const router = createBrowserRouter([
             element: <CoachDetailPage />,
           },
         ],
+      },
+      {
+        path: "packages",
+        element: <PackageManagementPage />,
+      },
+      {
+        path: "packages/new",
+        element: <PackageCreatePage />,
+      },
+      {
+        path: "packages/:packageId/edit",
+        element: <PackageEditPage />,
+      },
+      {
+        path: "orders",
+        element: <OrderManagementPage />,
       },
       {
         path: "approvals",

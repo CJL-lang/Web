@@ -25,15 +25,15 @@ export function FeaturePlaceholder({
   return (
     <SectionCard
       action={
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="c-feature-placeholder__actions">
           <Button variant="secondary">
-            <span className="inline-flex items-center gap-2">
+            <span className="c-feature-placeholder__btn-inner">
               <Search size={16} />
               筛选位预留
             </span>
           </Button>
           <Button variant="ghost">
-            <span className="inline-flex items-center gap-2">
+            <span className="c-feature-placeholder__btn-inner">
               <Plus size={16} />
               新增能力预留
             </span>
@@ -43,19 +43,12 @@ export function FeaturePlaceholder({
       description={description}
       title={title}
     >
-      <div className="space-y-5">
-        <div className="grid gap-4 md:grid-cols-3">
+      <div className="c-feature-placeholder__stack">
+        <div className="c-feature-placeholder__metric-grid">
           {["列表筛选", "状态统计", "批量操作"].map((item) => (
-            <div
-              key={item}
-              className="rounded-[22px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-5 py-4"
-            >
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--color-text-muted)]">
-                预留模块
-              </p>
-              <p className="mt-3 text-base font-semibold text-[var(--color-text-primary)]">
-                {item}
-              </p>
+            <div key={item} className="c-feature-placeholder__metric-cell">
+              <p className="c-feature-placeholder__metric-kicker">预留模块</p>
+              <p className="c-feature-placeholder__metric-title">{item}</p>
             </div>
           ))}
         </div>

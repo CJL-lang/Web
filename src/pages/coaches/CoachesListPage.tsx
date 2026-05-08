@@ -47,13 +47,7 @@ export function CoachesListPage() {
     <>
       <PageHeader
         actions={
-          <Link
-            className={cn(
-              "inline-flex min-h-11 items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/60",
-              "bg-[var(--color-brand)] text-[var(--color-ink-strong)] shadow-[0_14px_30px_rgba(236,171,19,0.22)] hover:bg-[var(--color-brand-strong)]"
-            )}
-            to="/coaches/new"
-          >
+          <Link className="c-button-link-primary" to="/coaches/new">
             新建教练
           </Link>
         }
@@ -62,18 +56,15 @@ export function CoachesListPage() {
       />
 
       <div
-        className="flex flex-col gap-3 rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-4 md:flex-row md:flex-wrap md:items-end md:gap-4"
+        className="c-resource-list__toolbar"
         role="search"
         aria-label="搜索与筛选教练"
       >
-        <div className="relative min-w-0 flex-1 md:min-w-[240px]">
-          <Search
-            aria-hidden
-            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]"
-          />
+        <div className="c-resource-list__search-wrap">
+          <Search aria-hidden className="c-resource-list__search-icon" />
           <input
             autoComplete="off"
-            className="c-field-input w-full pl-10"
+            className="c-field-input c-resource-list__search-field"
             onChange={(e) => setQuery(e.target.value)}
             placeholder="搜索姓名、编号、状态或主攻方向"
             type="search"
@@ -81,13 +72,11 @@ export function CoachesListPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:gap-3">
-          <label className="flex min-w-0 flex-col gap-1 sm:min-w-[9.5rem]">
-            <span className="text-xs font-medium text-[var(--color-text-muted)]">
-              状态
-            </span>
+        <div className="c-resource-list__filters">
+          <label className="c-resource-list__filter-field">
+            <span className="c-resource-list__filter-label">状态</span>
             <select
-              className="c-field-input cursor-pointer"
+              className="c-field-input c-resource-list__filter-select"
               onChange={(e) => setStatusFilter(e.target.value)}
               value={statusFilter}
             >
@@ -104,11 +93,11 @@ export function CoachesListPage() {
 
       <section aria-label="教练列表">
         {filtered.length === 0 ? (
-          <p className="m-0 rounded-[24px] border border-dashed border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-4 py-10 text-center text-sm text-[var(--color-text-secondary)]">
+          <p className="c-resource-list__empty">
             没有符合条件的教练，请调整搜索或筛选条件。
           </p>
         ) : (
-          <ul className="m-0 list-none space-y-3 p-0">
+          <ul className="c-resource-list__list">
             {filtered.map((coach) => {
               const studentCount = studentCountByCoachName.get(coach.name) ?? 0;
               return (
@@ -116,41 +105,33 @@ export function CoachesListPage() {
                   <NavLink
                     className={({ isPending }) =>
                       cn(
-                        "group flex min-h-[4.5rem] items-center gap-4 rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-4 py-4 transition duration-200",
-                        "hover:border-[color-mix(in_srgb,var(--color-border-strong)_80%,transparent)] hover:bg-[var(--color-surface-alt)]",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55",
-                        isPending && "opacity-60"
+                        "group c-resource-list__row",
+                        isPending && "c-resource-list__row--pending"
                       )
                     }
                     to={coach.id}
                   >
-                    <div className="min-w-0 flex-1 space-y-1">
-                      <p className="text-base font-semibold text-[var(--color-text-primary)]">
-                        {coach.name}
-                      </p>
-                      <p className="text-sm text-[var(--color-text-secondary)]">
+                    <div className="c-resource-list__title-block">
+                      <p className="c-resource-list__title">{coach.name}</p>
+                      <p className="c-resource-list__subtitle">
                         {coach.id} · {coach.title}
                       </p>
                     </div>
-                    <div className="hidden shrink-0 text-right sm:block sm:max-w-[7.5rem]">
-                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                        状态
-                      </p>
-                      <p className="mt-1 text-sm font-medium text-[var(--color-text-primary)]">
+                    <div className="c-resource-list__stat c-resource-list__stat--coach-col">
+                      <p className="c-resource-list__stat-label--strong">状态</p>
+                      <p className="c-resource-list__stat-value">
                         {coach.sessionStatus}
                       </p>
                     </div>
-                    <div className="hidden text-right md:block md:min-w-[5.5rem]">
-                      <p className="text-xs uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                        带教学员
-                      </p>
-                      <p className="mt-1 text-sm text-[var(--color-text-primary)]">
+                    <div className="c-resource-list__stat c-resource-list__stat--fixed">
+                      <p className="c-resource-list__stat-label">带教学员</p>
+                      <p className="c-resource-list__stat-value--plain">
                         {studentCount} 人
                       </p>
                     </div>
                     <ChevronRight
                       aria-hidden
-                      className="h-5 w-5 shrink-0 text-[var(--color-text-muted)] transition group-hover:text-[var(--color-brand)]"
+                      className="c-resource-list__chevron"
                     />
                   </NavLink>
                 </li>

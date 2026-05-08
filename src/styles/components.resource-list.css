@@ -1,0 +1,95 @@
+@layer components {
+  .c-resource-list__toolbar {
+    @apply flex flex-col gap-3 rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-4 md:flex-row md:flex-wrap md:items-end md:gap-4;
+  }
+
+  .c-resource-list__search-wrap {
+    @apply relative min-w-0 flex-1 md:min-w-[240px];
+  }
+
+  .c-resource-list__search-icon {
+    @apply pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)];
+  }
+
+  .c-resource-list__search-field {
+    @apply w-full pl-10;
+  }
+
+  .c-resource-list__filter-select {
+    @apply cursor-pointer;
+  }
+
+  .c-resource-list__filters {
+    @apply flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:gap-3;
+  }
+
+  .c-resource-list__filter-field {
+    @apply flex min-w-0 flex-col gap-1 sm:min-w-[9.5rem];
+  }
+
+  .c-resource-list__filter-label {
+    @apply text-xs font-medium text-[var(--color-text-muted)];
+  }
+
+  .c-resource-list__empty {
+    @apply m-0 rounded-[24px] border border-dashed border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-4 py-10 text-center text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-resource-list__list {
+    @apply m-0 list-none space-y-3 p-0;
+  }
+
+  .c-resource-list__row {
+    @apply flex min-h-[4.5rem] items-center gap-4 rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-4 py-4 transition duration-200;
+    @apply hover:border-[color-mix(in_srgb,var(--color-border-strong)_80%,transparent)] hover:bg-[var(--color-surface-alt)];
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
+  }
+
+  .c-resource-list__row--pending {
+    @apply opacity-60;
+  }
+
+  .c-resource-list__title-block {
+    @apply min-w-0 flex-1 space-y-1;
+  }
+
+  .c-resource-list__title {
+    @apply text-base font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-resource-list__subtitle {
+    @apply text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-resource-list__stat {
+    @apply hidden shrink-0 text-right sm:block;
+  }
+
+  .c-resource-list__stat--coach-col {
+    @apply sm:max-w-[7.5rem];
+  }
+
+  .c-resource-list__stat-label {
+    @apply text-xs uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
+  .c-resource-list__stat-label--strong {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
+  .c-resource-list__stat-value {
+    @apply mt-1 text-sm font-medium text-[var(--color-text-primary)];
+  }
+
+  .c-resource-list__stat-value--plain {
+    @apply mt-1 text-sm text-[var(--color-text-primary)];
+  }
+
+  .c-resource-list__chevron {
+    @apply h-5 w-5 shrink-0 text-[var(--color-text-muted)] transition group-hover:text-[var(--color-brand)];
+  }
+
+  .c-resource-list__stat--fixed {
+    @apply md:min-w-[5.5rem];
+  }
+}

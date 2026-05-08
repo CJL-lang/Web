@@ -1,4 +1,13 @@
 @import "tailwindcss";
+
+@theme {
+  /* 与 tokens.css 中 --font-body 一致（思源黑体 / Noto Sans SC） */
+  --font-sans: var(--font-body);
+}
+
+/* tokens.css is loaded in main.tsx before this file */
+/* Import order: Tailwind → document/base → domain components → vendor overrides */
+@import "./base.document.css";
 @import "./components.message-ui.css";
 @import "./components.message-publish.css";
 @import "./components.page-header.css";
@@ -9,60 +18,18 @@
 @import "./components.dashboard-shell.css";
 @import "./components.dashboard-stats.css";
 @import "./components.system-message-icon.css";
-
-html {
-  color-scheme: dark;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at top, rgba(236, 171, 19, 0.09), transparent 30%),
-    linear-gradient(180deg, #171109 0%, #110d08 100%);
-  color: var(--color-text-primary);
-  font-family: var(--font-body);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-button,
-input,
-textarea {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-#root {
-  min-height: 100vh;
-}
-
-::selection {
-  background: rgba(236, 171, 19, 0.24);
-  color: var(--color-text-primary);
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 999px;
-  background: rgba(236, 171, 19, 0.22);
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-}
+@import "./components.admin-layout.css";
+@import "./components.route-layout.css";
+@import "./components.inline-icons.css";
+@import "./components.navigation.css";
+@import "./components.resource-list.css";
+@import "./components.button.css";
+@import "./components.form-shell.css";
+@import "./components.student-detail.css";
+@import "./components.coach-detail.css";
+@import "./components.commerce.css";
+@import "./components.approvals.css";
+@import "./components.badge-wall.css";
+@import "./components.empty-state.css";
+@import "./components.feature-placeholder.css";
+@import "./vendors.recharts.css";

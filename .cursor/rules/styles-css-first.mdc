@@ -1,0 +1,36 @@
+---
+description: Web 前端样式写在 CSS 文件中（语义类 + Tailwind @apply），TSX 避免堆砌原子类
+globs: web/src/**/*.{tsx,css}
+alwaysApply: false
+---
+
+# 样式：CSS 优先（golf-academy-admin）
+
+## 原则
+
+- **呈现样式放在 `web/src/styles/`**：用 `@layer components { ... }` + `@apply` + 设计变量 `var(--color-*)`，不要在 TSX 里写长串 Tailwind 原子类。
+- **TSX 只挂语义类名**：`c-<块名>` / `c-<块名>__元素` / `c-<块名>--修饰符`，与现有 `c-section-card`、`c-resource-list__*` 一致。
+- **令牌**：颜色与间距以 [tokens.css](web/src/styles/tokens.css) 为准；不在 TSX 里写魔法色值。
+- **聚合入口**：新建领域样式文件后，在 [globals.css](web/src/styles/globals.css) 按注释顺序 `@import`（Tailwind → base.document → components → vendors）。
+
+## 允许出现在 TSX 里的样式相关写法
+
+- **`cn()` 拼接状态修饰符**：如 NavLink 的 `isActive`、`group`（Tailwind v4 下 `@apply` 不可用 `group`，需在 TSX 写 `group`）。
+- **第三方组件 API**：Recharts `tick={{ fill: ... }}` 等无法用 CSS 类替代的 props。
+- **极简 utility**：仅在语义类尚未抽取时临时使用；顺手时应抽到对应 `components.*.css`。
+
+## 新增样式的步骤
+
+1. 优先扩展现有 `components.<domain>.css`；新领域新建 `components.<feature>.css`。
+2. 在 `globals.css` 增加一行 `@import`（放在同类组件附近；`vendors.*.css` 放最后）。
+3. 第三方全局覆盖（如 Recharts 焦点）放在 `vendors.*.css`。
+
+## 反例 / 正例
+
+```tsx
+// ❌ 避免：长串原子类
+<div className="flex flex-col gap-4 rounded-[24px] border border-[var(--color-border-subtle)] ...">
+
+// ✅ 优先：语义类（样式在 CSS 文件中定义）
+<div className="c-my-feature__panel">
+```

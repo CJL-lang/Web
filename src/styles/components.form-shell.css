@@ -1,0 +1,17 @@
+@layer components {
+  .c-form-shell {
+    @apply rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-5 md:p-6;
+  }
+
+  .c-form-shell__stack {
+    @apply mx-auto flex max-w-xl flex-col gap-4;
+  }
+
+  .c-form-shell__hint {
+    @apply m-0 text-xs text-[var(--color-text-muted)];
+  }
+
+  .c-form-shell__actions {
+    @apply flex flex-wrap gap-3 pt-2;
+  }
+}

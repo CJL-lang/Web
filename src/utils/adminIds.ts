@@ -1,4 +1,5 @@
 import type { CoachListItem } from "../mocks/coaches";
+import type { PackageListItem } from "../mocks/packages";
 import type { StudentListItem } from "../mocks/students";
 
 export function nextStudentId(students: StudentListItem[]): string {
@@ -21,6 +22,17 @@ export function nextCoachId(coaches: CoachListItem[]): string {
     }
   }
   return `CH-${max + 1}`;
+}
+
+export function nextPackageId(packages: PackageListItem[]): string {
+  let max = 0;
+  for (const p of packages) {
+    const m = /^PKG-(\d+)$/.exec(p.id);
+    if (m) {
+      max = Math.max(max, parseInt(m[1], 10));
+    }
+  }
+  return `PKG-${max + 1}`;
 }
 
 export function coachInitialsFromName(name: string): string {

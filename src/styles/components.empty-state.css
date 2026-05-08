@@ -1,0 +1,25 @@
+@layer components {
+  .c-empty-state {
+    @apply flex min-h-72 flex-col items-start justify-center gap-4 rounded-[28px] border border-dashed border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-8;
+  }
+
+  .c-empty-state__badge {
+    @apply rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-3 py-1 text-xs font-medium tracking-[0.18em] text-[var(--color-brand)] uppercase;
+  }
+
+  .c-empty-state__icon-wrap {
+    @apply flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-surface-alt)] text-[var(--color-brand)];
+  }
+
+  .c-empty-state__body {
+    @apply space-y-2;
+  }
+
+  .c-empty-state__title {
+    @apply text-xl font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-empty-state__description {
+    @apply max-w-[56ch] text-sm leading-7 text-[var(--color-text-secondary)];
+  }
+}

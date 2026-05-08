@@ -1,0 +1,27 @@
+@layer components {
+  .c-admin-layout {
+    @apply min-h-screen bg-[var(--color-canvas)] text-[var(--color-text-primary)];
+  }
+
+  /* 全宽后台：仅用 edge padding 呼吸边，避免 mx-auto + max-width 在宽屏两侧留白 */
+  .c-admin-layout__grid {
+    @apply grid min-h-screen w-full max-w-none grid-cols-1 gap-4 p-3 md:grid-cols-[var(--layout-rail-width)_minmax(0,1fr)] md:items-start md:gap-5 md:p-5 lg:grid-cols-[var(--layout-sidebar-width)_minmax(0,1fr)] lg:gap-6 lg:p-6;
+  }
+
+  .c-admin-layout__rail-md {
+    @apply hidden md:sticky md:top-5 md:block lg:hidden;
+  }
+
+  .c-admin-layout__sidebar-lg {
+    @apply hidden lg:sticky lg:top-6 lg:block;
+  }
+
+  .c-admin-layout__main {
+    @apply flex min-w-0 flex-col gap-4 md:gap-5 lg:gap-6;
+  }
+
+  /* 主区随栅格列伸缩；不再套一层 1120px 顶宽，避免宽屏右侧空洞 */
+  .c-admin-layout__content {
+    @apply w-full min-w-0 max-w-none;
+  }
+}

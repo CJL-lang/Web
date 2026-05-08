@@ -12,7 +12,30 @@
     }
   }
 
-  /* 「消息内容预览」卡片内：弹层/快捷行 + 标题/正文 表单的纵向间距 */
+  /* 与头部「列表预览」区分：内凹工作台，承载表单与图标快捷入口 */
+  .c-message-publish__composer {
+    border-radius: 1.375rem;
+    border: 1px solid var(--color-border-subtle);
+    background: color-mix(in srgb, var(--color-surface-alt) 88%, transparent);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    padding: 1rem 1.125rem 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .c-message-publish__composer {
+      padding: 1.125rem 1.25rem 1.375rem;
+    }
+  }
+
+  .c-message-publish__composer-kicker {
+    margin: 0 0 0.625rem;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--color-text-muted);
+  }
+
+  /* 「消息内容」卡片内：弹层/快捷行 + 标题/正文 表单的纵向间距 */
   .c-message-publish__content-stack {
     display: flex;
     flex-direction: column;

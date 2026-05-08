@@ -21,6 +21,50 @@
     background: var(--gradient-message-content);
   }
 
+  /* 预览（头部）与编辑（正文）分区：头部偏「展示」，正文偏「操作工作台」 */
+  .c-section-card--message-content .c-section-card__header {
+    position: relative;
+    /* 与 SectionCard 的 p-4 / md:p-5 / lg:p-6 对齐 */
+    margin-inline: -1rem;
+    margin-top: -1rem;
+    width: calc(100% + 2rem);
+    padding-inline: 1rem;
+    padding-top: 1rem;
+    border-bottom-color: var(--border-brand-soft);
+    border-radius: 1.75rem 1.75rem 0 0;
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-brand) 10%, var(--color-surface)) 0%,
+      var(--surface-panel-raised) 48%,
+      var(--color-surface) 100%
+    );
+    box-shadow: var(--shadow-inset-soft);
+  }
+
+  @media (min-width: 768px) {
+    .c-section-card--message-content .c-section-card__header {
+      margin-inline: -1.25rem;
+      margin-top: -1.25rem;
+      width: calc(100% + 2.5rem);
+      padding-inline: 1.25rem;
+      padding-top: 1.25rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .c-section-card--message-content .c-section-card__header {
+      margin-inline: -1.5rem;
+      margin-top: -1.5rem;
+      width: calc(100% + 3rem);
+      padding-inline: 1.5rem;
+      padding-top: 1.5rem;
+    }
+  }
+
+  .c-section-card--message-content .c-section-card__body {
+    @apply pt-4 md:pt-5;
+  }
+
   .c-section-card--message-recipients {
     border-color: var(--border-brand-mid);
     background: var(--gradient-message-recipient);

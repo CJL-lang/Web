@@ -1,0 +1,156 @@
+@layer components {
+  .c-sidebar {
+    @apply flex h-[calc(100vh-3rem)] flex-col rounded-[32px] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 shadow-[var(--shadow-soft)];
+  }
+
+  .c-sidebar__brand-row {
+    @apply border-b border-[var(--color-border-subtle)] px-3 pb-5 pt-2;
+  }
+
+  .c-sidebar__nav {
+    @apply mt-5 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-1;
+  }
+
+  .c-sidebar-navlink {
+    @apply rounded-[24px] border px-4 py-4 transition duration-200;
+  }
+
+  .c-sidebar-navlink--active {
+    @apply border-[var(--color-border-strong)] bg-[var(--color-surface-alt)];
+  }
+
+  .c-sidebar-navlink--inactive {
+    @apply border-transparent hover:bg-[var(--color-surface-soft)];
+  }
+
+  .c-sidebar-navlink__row {
+    @apply flex items-start gap-3;
+  }
+
+  .c-sidebar-navlink__icon {
+    @apply mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl transition;
+  }
+
+  .c-sidebar-navlink__icon--active {
+    @apply bg-[color:rgba(236,171,19,0.12)] text-[var(--color-brand)];
+  }
+
+  .c-sidebar-navlink__icon--inactive {
+    @apply bg-[var(--color-surface-soft)] text-[var(--color-text-secondary)];
+  }
+
+  .c-sidebar-navlink__title {
+    @apply text-sm font-semibold transition;
+  }
+
+  .c-sidebar-navlink__title--active {
+    @apply text-[var(--color-text-primary)];
+  }
+
+  .c-sidebar-navlink__title--inactive {
+    @apply text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)];
+  }
+
+  .c-sidebar-navlink__text-stack {
+    @apply space-y-1;
+  }
+
+  .c-sidebar-navlink__desc {
+    @apply text-xs leading-5 text-[var(--color-text-muted)];
+  }
+
+  /* Mobile horizontal strip */
+  .c-mobile-nav {
+    @apply md:hidden;
+  }
+
+  .c-mobile-nav__strip {
+    @apply flex gap-3 overflow-x-auto rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-3 shadow-[var(--shadow-soft)];
+  }
+
+  .c-mobile-nav__link {
+    @apply inline-flex min-h-11 min-w-fit items-center rounded-2xl px-4 py-3 text-sm font-medium transition;
+  }
+
+  .c-mobile-nav__link--active {
+    @apply bg-[color:rgba(236,171,19,0.14)] text-[var(--color-brand)];
+  }
+
+  .c-mobile-nav__link--inactive {
+    @apply bg-[var(--color-surface-soft)] text-[var(--color-text-secondary)];
+  }
+
+  /* Tablet icon rail */
+  .c-tablet-nav {
+    @apply sticky top-5 flex h-[calc(100vh-2.5rem)] flex-col items-center rounded-[28px] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] px-3 py-4 shadow-[var(--shadow-soft)];
+  }
+
+  .c-tablet-nav__brand {
+    @apply pb-4;
+  }
+
+  .c-tablet-nav__nav {
+    @apply flex min-h-0 flex-1 flex-col items-center gap-2 overflow-y-auto pt-3;
+  }
+
+  .c-tablet-nav__link {
+    @apply flex min-h-12 w-12 items-center justify-center rounded-2xl border border-transparent transition duration-200;
+  }
+
+  .c-tablet-nav__link--active {
+    @apply border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] text-[var(--color-brand)];
+  }
+
+  .c-tablet-nav__link--inactive {
+    @apply bg-[var(--color-surface-soft)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)];
+  }
+
+  /* Academy logo / wordmark */
+  .c-academy-brand {
+    @apply flex items-center gap-3;
+  }
+
+  .c-academy-brand--compact {
+    @apply gap-0;
+  }
+
+  .c-academy-brand__figure {
+    @apply flex items-center justify-center overflow-hidden rounded-2xl;
+  }
+
+  .c-academy-brand__figure--lg {
+    @apply h-16 w-16;
+  }
+
+  .c-academy-brand__figure--sm {
+    @apply h-12 w-12;
+  }
+
+  .c-academy-brand__img {
+    @apply h-full w-full object-contain p-0;
+  }
+
+  .c-academy-brand__fallback {
+    @apply font-semibold tracking-[0.2em] text-[var(--color-brand)];
+  }
+
+  .c-academy-brand__fallback--lg {
+    @apply text-base;
+  }
+
+  .c-academy-brand__fallback--sm {
+    @apply text-sm;
+  }
+
+  .c-academy-brand__titles {
+    @apply space-y-1;
+  }
+
+  .c-academy-brand__eyebrow {
+    @apply text-sm font-medium uppercase tracking-[0.24em] text-[var(--color-brand)];
+  }
+
+  .c-academy-brand__heading {
+    @apply text-base font-semibold text-[var(--color-text-primary)];
+  }
+}

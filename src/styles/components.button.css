@@ -1,0 +1,40 @@
+@layer components {
+  .c-button {
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/60 disabled:cursor-not-allowed disabled:opacity-55;
+  }
+
+  .c-button--primary {
+    @apply bg-[var(--color-brand)] text-[var(--color-ink-strong)] shadow-[0_14px_30px_rgba(236,171,19,0.22)] hover:bg-[var(--color-brand-strong)];
+  }
+
+  .c-button--secondary {
+    @apply border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface-alt-hover)];
+  }
+
+  .c-button--ghost {
+    @apply text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-soft)] hover:text-[var(--color-text-primary)];
+  }
+
+  .c-button--danger {
+    @apply border border-[var(--border-danger)] bg-[var(--surface-danger-soft)] text-[var(--color-danger)] hover:bg-[rgba(220,94,94,0.14)] hover:text-[var(--color-danger)] focus-visible:ring-[var(--color-danger)]/45;
+  }
+
+  .c-button--full {
+    @apply w-full;
+  }
+
+  /* Anchor styled as primary CTA (e.g. PageHeader actions) */
+  .c-button-link-primary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/60;
+    @apply bg-[var(--color-brand)] text-[var(--color-ink-strong)] shadow-[0_14px_30px_rgba(236,171,19,0.22)] hover:bg-[var(--color-brand-strong)];
+  }
+
+  .c-button-link-secondary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-4 py-3 text-sm font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface-alt-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/60;
+  }
+
+  /** 表单标题行旁的轻量操作（如「添加一项」），非底部「取消」大按钮 */
+  .c-button-link-quiet {
+    @apply inline-flex min-h-0 items-center gap-1 self-baseline rounded-md border-0 bg-transparent px-1 py-0.5 text-xs font-semibold tracking-tight text-[var(--color-brand)] transition hover:bg-[rgba(236,171,19,0.09)] hover:text-[var(--color-brand-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/45;
+  }
+}

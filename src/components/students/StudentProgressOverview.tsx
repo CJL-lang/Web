@@ -19,6 +19,7 @@ import type {
   StudentProgressOverview,
   StudentProgressTrend,
 } from "../../mocks/studentProfiles";
+import { cn } from "../../utils/cn";
 
 type ViewMode = "dimensions" | "trends";
 
@@ -58,47 +59,34 @@ export function StudentProgressOverview({
     null;
 
   return (
-    <div className="space-y-5">
-      <div className="rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4 md:p-5">
-        <p className="m-0 text-sm leading-6 text-[var(--color-text-secondary)]">
-          {overview.summary.lead}
-        </p>
-        <p className="mt-2 mb-0 text-sm leading-6 text-[var(--color-text-muted)]">
-          {overview.summary.support}
-        </p>
+    <div className="c-student-progress">
+      <div className="c-student-progress__summary-panel">
+        <p className="c-student-progress__lead">{overview.summary.lead}</p>
+        <p className="c-student-progress__support">{overview.summary.support}</p>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <div className="c-student-progress__metrics">
         {overview.metrics.map((metric) => (
-          <article
-            key={metric.id}
-            className="rounded-[22px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4"
-          >
-            <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-              {metric.label}
-            </p>
-            <p className="mt-2 mb-0 text-2xl font-semibold tracking-tight text-[var(--color-text-primary)]">
-              {metric.value}
-            </p>
+          <article key={metric.id} className="c-student-progress__metric-card">
+            <p className="c-student-progress__metric-label">{metric.label}</p>
+            <p className="c-student-progress__metric-value">{metric.value}</p>
             {metric.progress != null ? (
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-[var(--color-surface-soft)]">
+              <div className="c-student-progress__metric-bar-track">
                 <div
-                  className="h-full rounded-full bg-[var(--color-brand)]"
+                  className="c-student-progress__metric-bar-fill"
                   style={{ width: `${metric.progress}%` }}
                 />
               </div>
             ) : null}
             {metric.helper ? (
-              <p className="mt-3 mb-0 text-sm text-[var(--color-text-secondary)]">
-                {metric.helper}
-              </p>
+              <p className="c-student-progress__metric-helper">{metric.helper}</p>
             ) : null}
           </article>
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="inline-flex rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-1">
+      <div className="c-student-progress__mode-row">
+        <div className="c-student-progress__segmented">
           {[
             { id: "dimensions", label: "能力画像" },
             { id: "trends", label: "最近变化" },
@@ -108,11 +96,12 @@ export function StudentProgressOverview({
               <button
                 key={option.id}
                 type="button"
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                className={cn(
+                  "c-student-progress__segment-btn",
                   isActive
-                    ? "bg-[var(--color-brand)] text-[var(--color-ink-strong)]"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]"
-                }`}
+                    ? "c-student-progress__segment-btn--active"
+                    : "c-student-progress__segment-btn--inactive"
+                )}
                 onClick={() => setViewMode(option.id as ViewMode)}
               >
                 {option.label}
@@ -120,15 +109,15 @@ export function StudentProgressOverview({
             );
           })}
         </div>
-        <span className="text-sm text-[var(--color-text-muted)]">
+        <span className="c-student-progress__mode-caption">
           {overview.summary.subtitle}
         </span>
       </div>
 
       {viewMode === "dimensions" ? (
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-          <div className="rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4 md:p-5">
-            <div className="h-[320px] w-full min-w-0">
+        <div className="c-student-progress__split">
+          <div className="c-student-progress__chart-panel">
+            <div className="c-student-progress__chart-fixed-h">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart
                   cx="50%"
@@ -170,27 +159,25 @@ export function StudentProgressOverview({
           />
         </div>
       ) : (
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-          <div className="rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4 md:p-5">
+        <div className="c-student-progress__split">
+          <div className="c-student-progress__chart-panel">
             {activeTrend ? (
               <>
-                <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="c-student-progress__trend-head">
                   <div>
-                    <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                      最近变化
-                    </p>
-                    <h3 className="mt-2 mb-0 text-xl font-semibold text-[var(--color-text-primary)]">
+                    <p className="c-student-progress__trend-kicker">最近变化</p>
+                    <h3 className="c-student-progress__trend-title">
                       {activeTrend.label}
                     </h3>
                   </div>
-                  <span className="rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] px-3 py-1 text-sm font-medium text-[var(--color-brand)]">
+                  <span className="c-student-progress__trend-badge">
                     {activeTrend.changeText}
                   </span>
                 </div>
-                <p className="mt-3 mb-0 text-sm leading-6 text-[var(--color-text-secondary)]">
+                <p className="c-student-progress__trend-summary">
                   {activeTrend.summary}
                 </p>
-                <div className="mt-5 h-[280px] w-full min-w-0">
+                <div className="c-student-progress__chart-fixed-h--sm">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={activeTrend.points}>
                       <defs>
@@ -274,31 +261,28 @@ function DimensionDetailsPanel({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="space-y-4">
-      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+    <div className="c-student-progress__dim-stack">
+      <div className="c-student-progress__dim-grid">
         {dimensions.map((dimension) => {
           const isActive = dimension.id === activeDimension?.id;
           return (
             <button
               key={dimension.id}
               type="button"
-              className={`rounded-[20px] border p-4 text-left transition ${
+              className={cn(
+                "c-student-progress__pill-btn",
                 isActive
-                  ? "border-[var(--color-brand)] bg-[color:rgba(236,171,19,0.12)]"
-                  : "border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] hover:border-[var(--color-border-strong)]"
-              }`}
+                  ? "c-student-progress__pill-btn--active"
+                  : "c-student-progress__pill-btn--inactive"
+              )}
               onClick={() => onSelect(dimension.id)}
             >
-              <div className="flex items-start justify-between gap-3">
+              <div className="c-student-progress__pill-row">
                 <div>
-                  <p className="m-0 text-sm font-semibold text-[var(--color-text-primary)]">
-                    {dimension.title}
-                  </p>
-                  <p className="mt-1 mb-0 text-xs text-[var(--color-text-muted)]">
-                    {dimension.summary}
-                  </p>
+                  <p className="c-student-progress__pill-label">{dimension.title}</p>
+                  <p className="c-student-progress__pill-meta">{dimension.summary}</p>
                 </div>
-                <span className="text-base font-semibold text-[var(--color-brand)]">
+                <span className="c-student-progress__pill-score">
                   {dimension.score.toFixed(1)}
                 </span>
               </div>
@@ -308,38 +292,34 @@ function DimensionDetailsPanel({
       </div>
 
       {activeDimension ? (
-        <div className="rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4 md:p-5">
-          <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="c-student-progress__detail-panel">
+          <div className="c-student-progress__detail-head">
             <div>
-              <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                细项拆解
-              </p>
-              <h3 className="mt-2 mb-0 text-xl font-semibold text-[var(--color-text-primary)]">
+              <p className="c-student-progress__detail-kicker">细项拆解</p>
+              <h3 className="c-student-progress__detail-title">
                 {activeDimension.title}
               </h3>
             </div>
-            <span className="rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] px-3 py-1 text-sm font-medium text-[var(--color-brand)]">
+            <span className="c-student-progress__detail-badge">
               {activeDimension.score.toFixed(1)} 分
             </span>
           </div>
-          <p className="mt-3 mb-0 text-sm leading-6 text-[var(--color-text-secondary)]">
-            {activeDimension.summary}
-          </p>
+          <p className="c-student-progress__detail-copy">{activeDimension.summary}</p>
 
-          <div className="mt-5 space-y-3">
+          <div className="c-student-progress__detail-rows">
             {activeDimension.details.map((detail) => (
-              <div key={detail.id} className="space-y-2">
-                <div className="flex items-center justify-between gap-3 text-sm">
-                  <span className="text-[var(--color-text-primary)]">
+              <div key={detail.id} className="c-student-progress__detail-row">
+                <div className="c-student-progress__detail-row-head">
+                  <span className="c-student-progress__detail-row-label">
                     {detail.label}
                   </span>
-                  <span className="font-medium text-[var(--color-text-secondary)]">
+                  <span className="c-student-progress__detail-row-score">
                     {detail.score} 分
                   </span>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-[var(--color-surface-soft)]">
+                <div className="c-student-progress__detail-bar-track">
                   <div
-                    className="h-full rounded-full bg-[var(--color-brand)]"
+                    className="c-student-progress__detail-bar-fill"
                     style={{ width: scoreBarWidth(detail.score) }}
                   />
                 </div>
@@ -362,32 +342,27 @@ function TrendListPanel({
   trends: StudentProgressTrend[];
 }) {
   return (
-    <div className="space-y-3">
+    <div className="c-student-progress__trend-list">
       {trends.map((trend) => {
         const isActive = trend.id === activeTrend?.id;
         return (
           <button
             key={trend.id}
             type="button"
-            className={`w-full rounded-[22px] border p-4 text-left transition ${
+            className={cn(
+              "c-student-progress__pill-btn c-student-progress__pill-btn--wide",
               isActive
-                ? "border-[var(--color-brand)] bg-[color:rgba(236,171,19,0.12)]"
-                : "border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] hover:border-[var(--color-border-strong)]"
-            }`}
+                ? "c-student-progress__pill-btn--active"
+                : "c-student-progress__pill-btn--inactive"
+            )}
             onClick={() => onSelect(trend.id)}
           >
-            <div className="flex items-start justify-between gap-3">
+            <div className="c-student-progress__pill-row">
               <div>
-                <p className="m-0 text-sm font-semibold text-[var(--color-text-primary)]">
-                  {trend.label}
-                </p>
-                <p className="mt-2 mb-0 text-xs leading-5 text-[var(--color-text-muted)]">
-                  {trend.summary}
-                </p>
+                <p className="c-student-progress__pill-label">{trend.label}</p>
+                <p className="c-student-progress__pill-meta--loose">{trend.summary}</p>
               </div>
-              <span className="text-sm font-semibold text-[var(--color-brand)]">
-                {trend.changeText}
-              </span>
+              <span className="c-student-progress__pill-delta">{trend.changeText}</span>
             </div>
           </button>
         );

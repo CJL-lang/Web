@@ -11,6 +11,8 @@ export interface CourseLeaveRequest {
   reason: string;
   submittedAtLabel: string;
   status: LeaveRequestStatus;
+  /** 驳回时由审批人填写；已通过 / 待处理通常为空 */
+  rejectionReason?: string;
 }
 
 export const leaveRequestSeed: CourseLeaveRequest[] = [
@@ -63,5 +65,6 @@ export const leaveRequestSeed: CourseLeaveRequest[] = [
     reason: "考务冲突，需请假一次。",
     submittedAtLabel: "2026-04-19 08:55",
     status: "rejected",
+    rejectionReason: "该时段已有替课安排，请与教务协调改期后再提交。",
   },
 ];

@@ -1,8 +1,9 @@
+import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "../../components/ui/Button";
-import { InputField } from "../../components/ui/Field";
+import { InputField, TextareaField } from "../../components/ui/Field";
 import { PageHeader } from "../../components/ui/PageHeader";
 import type { CoachListItem } from "../../mocks/coaches";
 import { useAdminData } from "../../context/AdminDataContext";
@@ -13,6 +14,8 @@ interface FieldErrors {
   phone?: string;
   title?: string;
   focus?: string;
+  bio?: string;
+  specialties?: string;
 }
 
 export function CoachCreatePage() {
@@ -23,7 +26,29 @@ export function CoachCreatePage() {
   const [phone, setPhone] = useState("");
   const [title, setTitle] = useState("");
   const [focus, setFocus] = useState("");
+  const [bio, setBio] = useState("");
+  const [specialties, setSpecialties] = useState<string[]>([""]);
   const [errors, setErrors] = useState<FieldErrors>({});
+
+  const updateSpecialty = (index: number, value: string) => {
+    setSpecialties((current) =>
+      current.map((item, i) => (i === index ? value : item))
+    );
+    setErrors((current) => ({ ...current, specialties: undefined }));
+  };
+
+  const addSpecialty = () => {
+    setSpecialties((current) => [...current, ""]);
+  };
+
+  const removeSpecialty = (index: number) => {
+    setSpecialties((current) => {
+      if (current.length === 1) {
+        return [""];
+      }
+      return current.filter((_, i) => i !== index);
+    });
+  };
 
   const validate = (): boolean => {
     const next: FieldErrors = {};
@@ -38,6 +63,13 @@ export function CoachCreatePage() {
     }
     if (!focus.trim()) {
       next.focus = "请输入列表摘要（主攻方向一行）";
+    }
+    if (!bio.trim()) {
+      next.bio = "请输入简介";
+    }
+    const trimmedSpecialties = specialties.map((item) => item.trim()).filter(Boolean);
+    if (trimmedSpecialties.length === 0) {
+      next.specialties = "请至少填写一条擅长方向";
     }
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -56,13 +88,13 @@ export function CoachCreatePage() {
       focus: focus.trim(),
       initials: coachInitialsFromName(trimmedName),
       title: title.trim(),
-      tagline: "学院认证教练",
+      tagline: "",
       avatarUrl: "",
       phone: phone.trim(),
       sessionStatus: "空闲",
       bestScoreShort: "—",
-      bio: "（待完善）",
-      specialties: ["待补充"],
+      bio: bio.trim(),
+      specialties: specialties.map((item) => item.trim()).filter(Boolean),
     };
     addCoach(item);
     navigate(`/coaches/${id}`);
@@ -71,19 +103,17 @@ export function CoachCreatePage() {
   return (
     <>
       <PageHeader
-        description="填写基础信息即可加入教练列表；其余档案字段将使用占位默认值，后续可接接口维护。"
         eyebrow="Coaches"
         title="新建教练"
       />
 
-      <div className="rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-5 md:p-6">
-        <div className="mx-auto flex max-w-xl flex-col gap-4">
+      <div className="c-form-shell">
+        <div className="c-form-shell__stack">
           <InputField
             autoComplete="off"
             error={errors.name}
             label="姓名"
             onChange={(e) => setName(e.target.value)}
-            placeholder="例如：张教练"
             value={name}
           />
 
@@ -100,7 +130,6 @@ export function CoachCreatePage() {
             error={errors.title}
             label="职称"
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="例如：学院认证教练"
             value={title}
           />
 
@@ -112,18 +141,61 @@ export function CoachCreatePage() {
             value={focus}
           />
 
-          <p className="m-0 text-xs text-[var(--color-text-muted)]">
-            教练编号将在保存时自动生成（CH- 序号）。
-          </p>
+          <TextareaField
+            error={errors.bio}
+            label="简介"
+            onChange={(e) => setBio(e.target.value)}
+            rows={5}
+            value={bio}
+          />
 
-          <div className="flex flex-wrap gap-3 pt-2">
+          <div className="c-field-shell">
+            <span className="c-field-shell__label-row c-field-shell__label-row--inline">
+              <span className="c-field-shell__label">擅长方向</span>
+              <button
+                className="c-button-link-quiet"
+                onClick={addSpecialty}
+                type="button"
+              >
+                <Plus size={12} aria-hidden />
+                添加一项
+              </button>
+            </span>
+
+            <div className="c-package-plan-list">
+              {specialties.map((specialty, index) => (
+                <div className="c-package-plan-item" key={index}>
+                  <div className="c-package-plan-item__field">
+                    <InputField
+                      autoComplete="off"
+                      label={`方向 ${index + 1}`}
+                      onChange={(e) => updateSpecialty(index, e.target.value)}
+                      value={specialty}
+                    />
+                  </div>
+                  <Button
+                    className="c-package-plan-item__remove"
+                    onClick={() => removeSpecialty(index)}
+                    type="button"
+                    variant="ghost"
+                  >
+                    <Trash2 aria-hidden size={15} />
+                    删除
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            {errors.specialties ? (
+              <span className="c-field-shell__error">{errors.specialties}</span>
+            ) : null}
+          </div>
+
+          <div className="c-form-shell__actions">
             <Button type="button" onClick={handleSubmit}>
               保存并查看详情
             </Button>
-            <Link
-              className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-4 py-3 text-sm font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface-alt-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/60"
-              to="/coaches"
-            >
+            <Link className="c-button-link-secondary" to="/coaches">
               取消
             </Link>
           </div>

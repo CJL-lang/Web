@@ -5,17 +5,17 @@ import { cn } from "../../utils/cn";
 
 export function MobileNav() {
   return (
-    <nav className="md:hidden">
-      <div className="flex gap-3 overflow-x-auto rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-3 shadow-[var(--shadow-soft)]">
+    <nav className="c-mobile-nav">
+      <div className="c-mobile-nav__strip">
         {navigationItems.map((item) => (
           <NavLink
             key={item.path}
             className={({ isActive }) =>
               cn(
-                "inline-flex min-h-11 min-w-fit items-center rounded-2xl px-4 py-3 text-sm font-medium transition",
+                "c-mobile-nav__link",
                 isActive
-                  ? "bg-[color:rgba(236,171,19,0.14)] text-[var(--color-brand)]"
-                  : "bg-[var(--color-surface-soft)] text-[var(--color-text-secondary)]"
+                  ? "c-mobile-nav__link--active"
+                  : "c-mobile-nav__link--inactive"
               )
             }
             to={item.path}

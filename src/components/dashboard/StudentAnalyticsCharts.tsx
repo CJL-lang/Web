@@ -13,14 +13,18 @@ import {
   YAxis,
 } from "recharts";
 
-import { SectionCard } from "../ui/SectionCard";
+import { dashboardTimeRanges } from "../../mocks/dashboard";
 import type {
+  DashboardTimeRange,
   StudentAgeBucket,
   StudentAttendanceTrendPoint,
   StudentGenderRatioItem,
   StudentLevelKey,
   StudentLevelTrendPoint,
 } from "../../types/dashboard";
+import { cn } from "../../utils/cn";
+
+import { SectionCard } from "../ui/SectionCard";
 
 interface DashboardTooltipContentProps {
   active?: boolean;
@@ -39,8 +43,43 @@ interface StudentGenderRatioChartProps {
   data: StudentGenderRatioItem[];
 }
 
+interface ChartTimeRangeToolbarProps {
+  "aria-label": string;
+  onChange: (range: DashboardTimeRange) => void;
+  value: DashboardTimeRange;
+}
+
+function ChartTimeRangeToolbar({
+  "aria-label": ariaLabel,
+  onChange,
+  value,
+}: ChartTimeRangeToolbarProps) {
+  return (
+    <div
+      className="c-dashboard-range c-dashboard-range--embedded"
+      aria-label={ariaLabel}
+    >
+      {dashboardTimeRanges.map((item) => (
+        <button
+          key={item.id}
+          className={cn(
+            "c-dashboard-range__button",
+            item.id === value && "is-active"
+          )}
+          onClick={() => onChange(item.id)}
+          type="button"
+        >
+          {item.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 interface StudentLevelTrendChartProps {
   data: StudentLevelTrendPoint[];
+  onTimeRangeChange: (range: DashboardTimeRange) => void;
+  timeRange: DashboardTimeRange;
 }
 
 interface StudentAverageLevelPoint {
@@ -50,6 +89,8 @@ interface StudentAverageLevelPoint {
 
 interface StudentAttendanceChartProps {
   data: StudentAttendanceTrendPoint[];
+  onTimeRangeChange: (range: DashboardTimeRange) => void;
+  timeRange: DashboardTimeRange;
 }
 
 const levelKeys: StudentLevelKey[] = [
@@ -63,6 +104,12 @@ const levelKeys: StudentLevelKey[] = [
   "L8",
   "L9",
 ];
+
+const dashboardBarTooltipCursor = {
+  fill: "rgba(236, 171, 19, 0.06)",
+  stroke: "rgba(236, 171, 19, 0.22)",
+  strokeWidth: 1,
+};
 
 function levelTrendToAverageSeries(
   rows: StudentLevelTrendPoint[],
@@ -135,7 +182,10 @@ export function StudentAgeDistributionChart({
                 tick={{ fill: "var(--color-text-muted)", fontSize: 12 }}
                 tickLine={false}
               />
-              <Tooltip content={<DashboardTooltipContent />} />
+              <Tooltip
+                content={<DashboardTooltipContent />}
+                cursor={dashboardBarTooltipCursor}
+              />
               <Bar
                 dataKey="male"
                 fill="var(--dashboard-series-age-male)"
@@ -209,11 +259,22 @@ export function StudentGenderRatioChart({
 
 export function StudentLevelTrendChart({
   data,
+  onTimeRangeChange,
+  timeRange,
 }: StudentLevelTrendChartProps) {
   const chartData = levelTrendToAverageSeries(data);
 
   return (
-    <SectionCard title="学员平均等级走势">
+    <SectionCard
+      title="学员平均等级走势"
+      action={
+        <ChartTimeRangeToolbar
+          aria-label="学员平均等级走势统计周期"
+          onChange={onTimeRangeChange}
+          value={timeRange}
+        />
+      }
+    >
       <div className="c-dashboard-chart">
         <div className="c-dashboard-chart__frame c-dashboard-chart__frame--lg">
           <ResponsiveContainer width="100%" height="100%">
@@ -255,9 +316,20 @@ export function StudentLevelTrendChart({
 
 export function StudentAttendanceChart({
   data,
+  onTimeRangeChange,
+  timeRange,
 }: StudentAttendanceChartProps) {
   return (
-    <SectionCard title="每天上课人数变化">
+    <SectionCard
+      title="每天上课人数变化"
+      action={
+        <ChartTimeRangeToolbar
+          aria-label="每天上课人数变化统计周期"
+          onChange={onTimeRangeChange}
+          value={timeRange}
+        />
+      }
+    >
       <div className="c-dashboard-chart">
         <div className="c-dashboard-chart__frame c-dashboard-chart__frame--md">
           <ResponsiveContainer width="100%" height="100%">

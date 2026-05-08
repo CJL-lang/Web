@@ -42,7 +42,8 @@
   --layout-content-max-width: 1120px;
   --layout-rail-width: 96px;
   --layout-sidebar-width: 320px;
+  /* 思源黑体：Web 上优先用 Google Fonts 的 Noto Sans SC；本地若安装 Adobe 源文件则为 Source Han Sans SC */
   --font-body:
-    "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial,
-    sans-serif;
+    "Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
 }

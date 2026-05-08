@@ -1,13 +1,14 @@
 import type { StudentBadges } from "../../mocks/studentProfiles";
+import { cn } from "../../utils/cn";
 
 interface StudentBadgeWallProps {
   badges: StudentBadges;
 }
 
-const featuredCardStyles = [
-  "from-[color:rgba(236,171,19,0.22)] to-[color:rgba(124,92,28,0.1)]",
-  "from-[color:rgba(120,148,255,0.18)] to-[color:rgba(87,102,153,0.08)]",
-];
+const FEATURED_TONES = [
+  "c-badge-wall__featured-card--tone-a",
+  "c-badge-wall__featured-card--tone-b",
+] as const;
 
 export function StudentBadgeWall({ badges }: StudentBadgeWallProps) {
   const { badgeWall, featuredMedals } = badges;
@@ -15,41 +16,35 @@ export function StudentBadgeWall({ badges }: StudentBadgeWallProps) {
 
   if (!hasContent) {
     return (
-      <p className="m-0 text-sm text-[var(--color-text-muted)]">
+      <p className="c-badge-wall__empty">
         暂无勋章记录。
       </p>
     );
   }
 
   return (
-    <div className="space-y-5">
+    <div className="c-badge-wall">
       {featuredMedals.length > 0 ? (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="c-badge-wall__featured-grid">
           {featuredMedals.map((medal, index) => (
             <article
               key={medal.id}
-              className={`relative overflow-hidden rounded-[24px] border border-[var(--color-border-subtle)] bg-gradient-to-br p-4 ${
-                featuredCardStyles[index % featuredCardStyles.length]
-              }`}
+              className={cn(
+                "c-badge-wall__featured-card",
+                FEATURED_TONES[index % FEATURED_TONES.length]
+              )}
             >
-              <div className="absolute inset-x-4 top-0 h-px bg-[rgba(255,255,255,0.35)]" />
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] border border-[rgba(255,255,255,0.18)] bg-[rgba(22,18,10,0.24)] p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-                  <img
-                    alt=""
-                    aria-hidden
-                    className="h-full w-full object-contain"
-                    loading="lazy"
-                    src="/logo-256.webp"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                    已获得勋章
-                  </p>
-                  <p className="mt-1 mb-0 text-base font-semibold text-[var(--color-text-primary)]">
-                    {medal.label}
-                  </p>
+              <div className="c-badge-wall__featured-row">
+                <img
+                  alt=""
+                  aria-hidden
+                  className="c-badge-wall__icon-img"
+                  loading="lazy"
+                  src="/logo-256.webp"
+                />
+                <div className="c-badge-wall__featured-copy">
+                  <p className="c-badge-wall__featured-kicker">已获得勋章</p>
+                  <p className="c-badge-wall__featured-title">{medal.label}</p>
                 </div>
               </div>
             </article>
@@ -58,32 +53,57 @@ export function StudentBadgeWall({ badges }: StudentBadgeWallProps) {
       ) : null}
 
       {badgeWall.length > 0 ? (
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {badgeWall.map((badge) => (
-            <article
-              key={badge.id}
-              className="rounded-[22px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4 shadow-[var(--shadow-soft)]"
+        <section
+          className="c-badge-wall__skills-panel"
+          aria-labelledby="student-badge-wall-skills-heading"
+        >
+          <div className="c-badge-wall__skills-panel-head">
+            <h3
+              id="student-badge-wall-skills-heading"
+              className="c-badge-wall__skills-panel-title"
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="space-y-1">
-                  <p className="m-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)]">
-                    等级
-                  </p>
-                  <p className="m-0 text-2xl font-semibold tracking-tight text-[var(--color-brand)]">
-                    {badge.rank}
-                  </p>
-                </div>
-                <span className="rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] px-2.5 py-1 text-xs font-medium text-[var(--color-text-secondary)]">
-                  {badge.levelScale}
-                </span>
-              </div>
+              技能等级明细
+            </h3>
+            <span className="c-badge-wall__skills-panel-count">
+              {badgeWall.length} 项
+            </span>
+          </div>
 
-              <p className="mt-4 mb-0 text-sm font-medium text-[var(--color-text-primary)]">
-                {badge.label}
-              </p>
-            </article>
-          ))}
-        </div>
+          <div className="c-badge-wall__table-scroll">
+            <table className="c-badge-wall__table">
+              <thead>
+                <tr>
+                  <th scope="col" className="c-badge-wall__th">
+                    技能项目
+                  </th>
+                  <th scope="col" className="c-badge-wall__th c-badge-wall__th--narrow">
+                    当前等级
+                  </th>
+                  <th scope="col" className="c-badge-wall__th c-badge-wall__th--narrow">
+                    等级区间
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {badgeWall.map((badge) => (
+                  <tr key={badge.id} className="c-badge-wall__tr">
+                    <td className="c-badge-wall__td c-badge-wall__td--skill">
+                      {badge.label}
+                    </td>
+                    <td className="c-badge-wall__td c-badge-wall__td--rank">
+                      <span className="c-badge-wall__rank-chip">{badge.rank}</span>
+                    </td>
+                    <td className="c-badge-wall__td c-badge-wall__td--scale">
+                      <span className="c-badge-wall__scale-chip">
+                        {badge.levelScale}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
       ) : null}
     </div>
   );

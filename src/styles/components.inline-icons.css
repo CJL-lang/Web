@@ -1,0 +1,17 @@
+@layer components {
+  .c-icon-back {
+    @apply h-4 w-4;
+  }
+
+  .c-icon-phone-inline {
+    @apply h-3.5 w-3.5 shrink-0;
+  }
+
+  .c-icon-phone {
+    @apply h-3.5 w-3.5;
+  }
+
+  .c-icon-profile {
+    @apply h-7 w-7;
+  }
+}

@@ -1,0 +1,601 @@
+@layer components {
+  /* StudentManagePage */
+  .c-student-detail__toolbar {
+    @apply flex flex-wrap items-center gap-3;
+  }
+
+  .c-student-detail__back-link {
+    @apply inline-flex min-h-11 items-center gap-2 rounded-2xl border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-4 py-3 text-sm font-semibold text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface-alt-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/60;
+  }
+
+  .c-student-detail__hero {
+    @apply flex flex-col gap-4 rounded-[28px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-5 shadow-[var(--shadow-soft)] sm:flex-row sm:items-center sm:gap-6 sm:p-6;
+  }
+
+  .c-student-detail__avatar {
+    @apply flex h-24 w-24 shrink-0 items-center justify-center rounded-[22px] bg-gradient-to-br from-[color:rgba(236,171,19,0.35)] to-[color:rgba(90,70,30,0.55)] text-3xl font-bold tracking-tight text-[var(--color-ink-strong)] shadow-[inset_0_1px_0_rgba(255,255,255,0.2)];
+  }
+
+  .c-student-detail__hero-main {
+    @apply min-w-0 flex-1 space-y-2;
+  }
+
+  .c-student-detail__display-name {
+    @apply text-2xl font-semibold tracking-tight text-[var(--color-text-primary)] md:text-[1.75rem];
+  }
+
+  .c-student-detail__meta-line {
+    @apply flex flex-wrap gap-x-4 gap-y-1 text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-student-detail__status-chip {
+    @apply rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-2.5 py-0.5 text-xs font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-student-detail__school-no-emphasis {
+    @apply font-medium text-[var(--color-text-primary)];
+  }
+
+  .c-student-detail__cards-grid {
+    @apply grid gap-4 lg:grid-cols-2;
+  }
+
+  .c-student-detail__contacts-stack {
+    @apply flex flex-col gap-6;
+  }
+
+  .c-student-detail__parent-list {
+    @apply m-0 grid list-none gap-3 p-0;
+  }
+
+  .c-student-detail__section-heading {
+    @apply m-0 mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
+  .c-student-detail__parent-card {
+    @apply rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] px-4 py-3;
+  }
+
+  .c-student-detail__parent-card-header {
+    @apply flex flex-wrap items-baseline justify-between gap-2;
+  }
+
+  .c-student-detail__parent-name {
+    @apply m-0 font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-student-detail__parent-relation {
+    @apply text-xs font-medium uppercase tracking-[0.12em] text-[var(--color-text-muted)];
+  }
+
+  .c-student-detail__parent-phone-row {
+    @apply mt-2 mb-0 flex items-center gap-2 text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-student-detail__coach-divider {
+    @apply border-t border-[var(--color-border-subtle)] pt-6;
+  }
+
+  .c-student-detail__coach-card {
+    @apply flex gap-4 rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4;
+  }
+
+  .c-student-detail__coach-icon-wrap {
+    @apply flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-surface-soft)] text-[var(--color-brand)];
+  }
+
+  .c-student-detail__coach-body {
+    @apply min-w-0 space-y-2;
+  }
+
+  .c-student-detail__coach-name {
+    @apply m-0 text-lg font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-student-detail__coach-title {
+    @apply m-0 text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-student-detail__coach-specialty {
+    @apply m-0 text-sm text-[var(--color-text-muted)];
+  }
+
+  .c-student-detail__coach-phone {
+    @apply m-0 flex items-center gap-2 text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-student-detail__records-btn {
+    @apply inline-flex min-h-10 items-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-4 py-2 text-sm font-medium text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface-alt-hover)];
+  }
+
+  .c-student-detail__package-list {
+    @apply m-0 list-none divide-y divide-[var(--color-border-subtle)] rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-0;
+  }
+
+  .c-student-detail__package-row {
+    @apply m-0 p-0 first:rounded-t-[18px] last:rounded-b-[18px];
+  }
+
+  .c-student-detail__package-row-btn {
+    @apply flex w-full cursor-pointer flex-col gap-1 rounded-none border-0 bg-transparent px-4 py-3 text-left transition hover:bg-[var(--color-surface-soft)] focus-visible:z-[1] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55 sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:gap-y-2;
+  }
+
+  .c-student-detail__package-main {
+    @apply min-w-0 flex-1 sm:mr-4;
+  }
+
+  .c-student-detail__package-tail {
+    @apply flex shrink-0 items-center justify-end gap-3 sm:gap-2;
+  }
+
+  .c-student-detail__package-chevron {
+    @apply shrink-0 text-[var(--color-text-muted)] sm:self-center;
+  }
+
+  .c-student-detail__package-name {
+    @apply m-0 font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-student-detail__package-summary {
+    @apply mt-1 mb-0 text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-student-detail__package-status {
+    @apply rounded-full px-2.5 py-1 text-xs font-semibold;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--color-border-strong);
+    background-color: var(--color-surface-soft);
+    color: var(--color-text-primary);
+  }
+
+  .c-student-detail__package-status--active {
+    border-color: color-mix(in srgb, var(--color-brand) 38%, transparent);
+    background: color-mix(in srgb, var(--color-brand) 14%, transparent);
+    color: var(--color-text-primary);
+  }
+
+  .c-student-detail__package-status--success {
+    border-color: color-mix(in srgb, rgb(34 197 94) 45%, transparent);
+    background: color-mix(in srgb, rgb(34 197 94) 12%, transparent);
+    color: var(--color-text-primary);
+  }
+
+  .c-student-detail__package-status--muted {
+    border-color: var(--color-border-subtle);
+    background: var(--color-surface-soft);
+    color: var(--color-text-muted);
+  }
+
+  .c-student-detail__package-status--dialog-chip {
+    @apply m-0 inline-flex max-w-full flex-wrap whitespace-normal;
+  }
+
+  .c-student-package-dialog {
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+
+  .c-student-package-dialog::backdrop {
+    background: rgba(5, 3, 1, 0.66);
+    backdrop-filter: blur(3px);
+  }
+
+  .c-student-package-dialog__surface {
+    display: flex;
+    min-height: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  .c-student-package-dialog__panel {
+    display: flex;
+    box-sizing: border-box;
+    width: min(640px, 100%);
+    max-height: min(88vh, 880px);
+    flex-direction: column;
+    gap: 0.85rem;
+    overflow: hidden auto;
+    border-radius: 24px;
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-soft);
+    padding: 1.05rem 1.15rem 1.2rem;
+  }
+
+  .c-student-package-dialog__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.85rem;
+  }
+
+  .c-student-package-dialog__head-text {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .c-student-package-dialog__eyebrow {
+    margin: 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .c-student-package-dialog__title {
+    margin: 0.35rem 0 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    word-break: break-word;
+  }
+
+  .c-student-package-dialog__close {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    margin: -0.2rem -0.2rem 0 0;
+    padding: 0;
+    border: none;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .c-student-package-dialog__close:hover {
+    background: var(--color-surface-soft);
+    color: var(--color-text-primary);
+  }
+
+  .c-student-package-dialog__close:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-brand) 60%, transparent);
+    outline-offset: 2px;
+  }
+
+  .c-student-package-dialog__hero {
+    display: grid;
+    gap: 0.6rem;
+    padding: 0.85rem 0.95rem;
+    border-radius: 18px;
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-alt);
+  }
+
+  .c-student-package-dialog__meta {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  @media (width >= 40rem) {
+    .c-student-package-dialog__meta {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.65rem;
+    }
+
+    .c-student-package-dialog__meta-value {
+      text-align: right;
+      max-width: 65%;
+    }
+  }
+
+  .c-student-package-dialog__meta-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .c-student-package-dialog__meta-value {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+    word-break: break-word;
+  }
+
+  .c-student-package-dialog__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .c-student-package-dialog__section-title {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .c-student-package-dialog__section-desc {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .c-student-package-dialog__outline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .c-student-package-dialog__outline-item {
+    padding: 0.8rem 0.95rem;
+    border-radius: 16px;
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-alt);
+  }
+
+  .c-student-package-dialog__outline-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.65rem;
+  }
+
+  .c-student-package-dialog__outline-title {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    font-size: 0.93rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-text-primary);
+  }
+
+  .c-student-package-dialog__outline-status {
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1px solid var(--color-border-strong);
+    padding: 0.15rem 0.65rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: var(--color-surface-soft);
+  }
+
+  .c-student-package-dialog__outline-desc {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.52;
+    color: var(--color-text-secondary);
+  }
+  .c-student-progress {
+    @apply space-y-5;
+  }
+
+  .c-student-progress__summary-panel {
+    @apply rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4 md:p-5;
+  }
+
+  .c-student-progress__lead {
+    @apply m-0 text-sm leading-6 text-[var(--color-text-secondary)];
+  }
+
+  .c-student-progress__support {
+    @apply mt-2 mb-0 text-sm leading-6 text-[var(--color-text-muted)];
+  }
+
+  .c-student-progress__metrics {
+    @apply grid gap-3 md:grid-cols-2 xl:grid-cols-4;
+  }
+
+  .c-student-progress__metric-card {
+    @apply rounded-[22px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4;
+  }
+
+  .c-student-progress__metric-label {
+    @apply m-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
+  .c-student-progress__metric-value {
+    @apply mt-2 mb-0 text-2xl font-semibold tracking-tight text-[var(--color-text-primary)];
+  }
+
+  .c-student-progress__metric-bar-track {
+    @apply mt-3 h-2 overflow-hidden rounded-full bg-[var(--color-surface-soft)];
+  }
+
+  .c-student-progress__metric-bar-fill {
+    @apply h-full rounded-full bg-[var(--color-brand)];
+  }
+
+  .c-student-progress__metric-helper {
+    @apply mt-3 mb-0 text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-student-progress__mode-row {
+    @apply flex flex-wrap items-center justify-between gap-3;
+  }
+
+  .c-student-progress__segmented {
+    @apply inline-flex rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-1;
+  }
+
+  .c-student-progress__segment-btn {
+    @apply rounded-full px-4 py-2 text-sm font-medium transition;
+  }
+
+  .c-student-progress__segment-btn--active {
+    @apply bg-[var(--color-brand)] text-[var(--color-ink-strong)];
+  }
+
+  .c-student-progress__segment-btn--inactive {
+    @apply text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)];
+  }
+
+  .c-student-progress__mode-caption {
+    @apply text-sm text-[var(--color-text-muted)];
+  }
+
+  .c-student-progress__split {
+    @apply grid gap-4 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)];
+  }
+
+  .c-student-progress__chart-panel {
+    @apply rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4 md:p-5;
+  }
+
+  .c-student-progress__chart-fixed-h {
+    @apply h-[320px] w-full min-w-0;
+  }
+
+  .c-student-progress__chart-fixed-h--sm {
+    @apply mt-5 h-[280px] w-full min-w-0;
+  }
+
+  .c-student-progress__trend-head {
+    @apply flex flex-wrap items-start justify-between gap-3;
+  }
+
+  .c-student-progress__trend-kicker {
+    @apply m-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
+  .c-student-progress__trend-title {
+    @apply mt-2 mb-0 text-xl font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-student-progress__trend-badge {
+    @apply rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] px-3 py-1 text-sm font-medium text-[var(--color-brand)];
+  }
+
+  .c-student-progress__trend-summary {
+    @apply mt-3 mb-0 text-sm leading-6 text-[var(--color-text-secondary)];
+  }
+
+  .c-student-progress__dim-stack {
+    @apply space-y-4;
+  }
+
+  .c-student-progress__dim-grid {
+    @apply grid gap-2 sm:grid-cols-2 xl:grid-cols-1;
+  }
+
+  .c-student-progress__pill-btn {
+    @apply rounded-[20px] border p-4 text-left transition;
+  }
+
+  .c-student-progress__pill-btn--active {
+    @apply border-[var(--color-brand)] bg-[color:rgba(236,171,19,0.12)];
+  }
+
+  .c-student-progress__pill-btn--inactive {
+    @apply border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] hover:border-[var(--color-border-strong)];
+  }
+
+  .c-student-progress__pill-btn--wide {
+    @apply w-full rounded-[22px] border p-4 text-left transition;
+  }
+
+  .c-student-progress__pill-row {
+    @apply flex items-start justify-between gap-3;
+  }
+
+  .c-student-progress__pill-label {
+    @apply m-0 text-sm font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-student-progress__pill-meta {
+    @apply mt-1 mb-0 text-xs text-[var(--color-text-muted)];
+  }
+
+  .c-student-progress__pill-meta--loose {
+    @apply mt-2 mb-0 text-xs leading-5 text-[var(--color-text-muted)];
+  }
+
+  .c-student-progress__pill-score {
+    @apply text-base font-semibold text-[var(--color-brand)];
+  }
+
+  .c-student-progress__pill-delta {
+    @apply text-sm font-semibold text-[var(--color-brand)];
+  }
+
+  .c-student-progress__detail-panel {
+    @apply rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4 md:p-5;
+  }
+
+  .c-student-progress__detail-head {
+    @apply flex flex-wrap items-start justify-between gap-3;
+  }
+
+  .c-student-progress__detail-kicker {
+    @apply m-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
+  .c-student-progress__detail-title {
+    @apply mt-2 mb-0 text-xl font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-student-progress__detail-badge {
+    @apply rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] px-3 py-1 text-sm font-medium text-[var(--color-brand)];
+  }
+
+  .c-student-progress__detail-copy {
+    @apply mt-3 mb-0 text-sm leading-6 text-[var(--color-text-secondary)];
+  }
+
+  .c-student-progress__detail-rows {
+    @apply mt-5 space-y-3;
+  }
+
+  .c-student-progress__detail-row {
+    @apply space-y-2;
+  }
+
+  .c-student-progress__detail-row-head {
+    @apply flex items-center justify-between gap-3 text-sm;
+  }
+
+  .c-student-progress__detail-row-label {
+    @apply text-[var(--color-text-primary)];
+  }
+
+  .c-student-progress__detail-row-score {
+    @apply font-medium text-[var(--color-text-secondary)];
+  }
+
+  .c-student-progress__detail-bar-track {
+    @apply h-2 overflow-hidden rounded-full bg-[var(--color-surface-soft)];
+  }
+
+  .c-student-progress__detail-bar-fill {
+    @apply h-full rounded-full bg-[var(--color-brand)];
+  }
+
+  .c-student-progress__trend-list {
+    @apply space-y-3;
+  }
+}

@@ -1,0 +1,29 @@
+@layer components {
+  .c-feature-placeholder__actions {
+    @apply flex flex-wrap items-center gap-3;
+  }
+
+  .c-feature-placeholder__btn-inner {
+    @apply inline-flex items-center gap-2;
+  }
+
+  .c-feature-placeholder__stack {
+    @apply space-y-5;
+  }
+
+  .c-feature-placeholder__metric-grid {
+    @apply grid gap-4 md:grid-cols-3;
+  }
+
+  .c-feature-placeholder__metric-cell {
+    @apply rounded-[22px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-5 py-4;
+  }
+
+  .c-feature-placeholder__metric-kicker {
+    @apply text-xs uppercase tracking-[0.18em] text-[var(--color-text-muted)];
+  }
+
+  .c-feature-placeholder__metric-title {
+    @apply mt-3 text-base font-semibold text-[var(--color-text-primary)];
+  }
+}

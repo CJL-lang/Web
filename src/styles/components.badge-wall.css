@@ -1,0 +1,124 @@
+@layer components {
+  .c-badge-wall {
+    @apply space-y-5;
+  }
+
+  .c-badge-wall__featured-grid {
+    @apply grid gap-3 sm:grid-cols-2;
+  }
+
+  .c-badge-wall__featured-card {
+    @apply relative overflow-hidden rounded-[26px] border border-[rgba(255,255,255,0.16)] bg-gradient-to-br p-4 shadow-[0_18px_40px_rgba(4,8,20,0.18)] transition duration-200;
+  }
+
+  .c-badge-wall__featured-card::before {
+    content: "";
+    @apply pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[rgba(255,255,255,0.16)] blur-2xl;
+  }
+
+  .c-badge-wall__featured-card::after {
+    content: "";
+    @apply pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-[rgba(255,255,255,0.08)];
+  }
+
+  .c-badge-wall__featured-card--tone-a {
+    @apply from-[color:rgba(244,181,40,0.34)] via-[color:rgba(160,111,30,0.14)] to-[color:rgba(70,50,22,0.12)];
+  }
+
+  .c-badge-wall__featured-card--tone-b {
+    @apply from-[color:rgba(126,151,255,0.34)] via-[color:rgba(95,113,207,0.16)] to-[color:rgba(35,43,86,0.14)];
+  }
+
+  .c-badge-wall__featured-row {
+    @apply relative z-10 flex items-center gap-3;
+  }
+
+  .c-badge-wall__icon-img {
+    @apply h-10 w-10 shrink-0 rounded-full object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.22)];
+  }
+
+  .c-badge-wall__featured-copy {
+    @apply min-w-0;
+  }
+
+  .c-badge-wall__featured-kicker {
+    @apply m-0 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
+  .c-badge-wall__featured-title {
+    @apply mt-1 mb-0 text-base font-semibold text-[var(--color-text-primary)];
+  }
+
+  /* Data-dense skills table (admin / dashboard pattern) */
+  .c-badge-wall__skills-panel {
+    @apply space-y-3;
+  }
+
+  .c-badge-wall__skills-panel-head {
+    @apply flex items-baseline justify-between gap-3;
+  }
+
+  .c-badge-wall__skills-panel-title {
+    @apply m-0 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-text-muted)];
+  }
+
+  .c-badge-wall__skills-panel-count {
+    @apply shrink-0 rounded-full border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-2 py-0.5 text-[11px] font-medium tabular-nums text-[var(--color-text-secondary)];
+  }
+
+  .c-badge-wall__table-scroll {
+    @apply -mx-0 overflow-x-auto rounded-[18px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] shadow-[var(--shadow-soft)];
+  }
+
+  .c-badge-wall__table {
+    @apply w-full min-w-[320px] border-collapse text-left text-sm;
+  }
+
+  .c-badge-wall__th {
+    @apply border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-3 py-2.5 text-[11px] font-semibold tracking-wide text-[var(--color-text-secondary)] first:pl-4 last:pr-4;
+  }
+
+  .c-badge-wall__th--narrow {
+    @apply w-[1%] whitespace-nowrap;
+  }
+
+  .c-badge-wall__tr {
+    @apply border-b border-[var(--color-border-subtle)] transition-colors duration-200 last:border-b-0;
+  }
+
+  .c-badge-wall__tr:hover {
+    @apply bg-[color:rgba(120,148,255,0.06)];
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .c-badge-wall__tr {
+      @apply transition-none;
+    }
+  }
+
+  .c-badge-wall__td {
+    @apply px-3 py-2 align-middle text-[var(--color-text-primary)] first:pl-4 last:pr-4;
+  }
+
+  .c-badge-wall__td--skill {
+    @apply min-w-[6.5rem] max-w-[14rem] font-medium;
+  }
+
+  .c-badge-wall__td--rank,
+  .c-badge-wall__td--scale {
+    @apply whitespace-nowrap;
+  }
+
+  .c-badge-wall__rank-chip {
+    @apply inline-flex min-w-[2.25rem] justify-center rounded-lg px-2 py-0.5 text-xs font-semibold tabular-nums tracking-tight text-[var(--color-brand)];
+    background: color-mix(in srgb, var(--color-brand) 14%, var(--color-surface-alt));
+  }
+
+  .c-badge-wall__scale-chip {
+    @apply inline-flex rounded-md border border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] px-2 py-0.5 text-xs font-medium tabular-nums text-[var(--color-text-secondary)];
+  }
+
+  .c-badge-wall__empty {
+    @apply m-0 text-sm text-[var(--color-text-muted)];
+  }
+}

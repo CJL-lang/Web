@@ -95,32 +95,38 @@ export function MessagePublishPage() {
         <SectionCard
           className="c-section-card--message-content"
           description={<MessageIconPreviewTrigger />}
-          title="消息内容预览"
+          eyebrow="列表预览"
+          title="消息内容"
         >
-          <div className="c-message-publish__content-stack">
-            <MessageIconPickerDialog />
-            <MessageIconAddShortcut />
-            <InputField
-              error={errors.title}
-              label="标题"
-              onChange={(e) => {
-                setTitle(e.target.value);
-                setErrors((c) => ({ ...c, title: undefined }));
-              }}
-              placeholder="例如：本周末活动提醒"
-              value={title}
-            />
-            <TextareaField
-              className="c-message-publish__body-textarea"
-              error={errors.body}
-              label="正文"
-              onChange={(e) => {
-                setBody(e.target.value);
-                setErrors((c) => ({ ...c, body: undefined }));
-              }}
-              placeholder="在此填写消息内容"
-              value={body}
-            />
+          <div
+            aria-label="编辑标题与正文"
+            className="c-message-publish__composer"
+            role="group"
+          >
+            <p className="c-message-publish__composer-kicker">编辑区</p>
+            <div className="c-message-publish__content-stack">
+              <MessageIconPickerDialog />
+              <MessageIconAddShortcut />
+              <InputField
+                error={errors.title}
+                label="标题"
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  setErrors((c) => ({ ...c, title: undefined }));
+                }}
+                value={title}
+              />
+              <TextareaField
+                className="c-message-publish__body-textarea"
+                error={errors.body}
+                label="正文"
+                onChange={(e) => {
+                  setBody(e.target.value);
+                  setErrors((c) => ({ ...c, body: undefined }));
+                }}
+                value={body}
+              />
+            </div>
           </div>
         </SectionCard>
       </MessageIconPickerProvider>

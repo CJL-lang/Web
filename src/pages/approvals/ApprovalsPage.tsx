@@ -1,7 +1,8 @@
 import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { Button } from "../../components/ui/Button";
+import { TextareaField } from "../../components/ui/Field";
 import { PageHeader } from "../../components/ui/PageHeader";
 import {
   leaveRequestSeed,
@@ -26,6 +27,15 @@ const STATUS_OPTIONS: { value: typeof STATUS_ALL | LeaveRequestStatus; label: st
   { value: "approved", label: "已通过" },
   { value: "rejected", label: "已驳回" },
 ];
+
+const APPROVAL_STATUS_CLASS: Record<
+  LeaveRequestStatus,
+  "c-approval-card__status--pending" | "c-approval-card__status--approved" | "c-approval-card__status--rejected"
+> = {
+  pending: "c-approval-card__status--pending",
+  approved: "c-approval-card__status--approved",
+  rejected: "c-approval-card__status--rejected",
+};
 
 function roleLabel(role: LeaveApplicantRole) {
   return role === "coach" ? "教练" : "学员";
@@ -55,6 +65,16 @@ export function ApprovalsPage() {
   const [statusFilter, setStatusFilter] = useState<typeof STATUS_ALL | LeaveRequestStatus>(
     "pending"
   );
+  const rejectDialogRef = useRef<HTMLDialogElement>(null);
+  const [rejectTargetId, setRejectTargetId] = useState<string | null>(null);
+  const [rejectReasonInput, setRejectReasonInput] = useState("");
+  const [rejectReasonError, setRejectReasonError] = useState("");
+
+  const rejectTargetRow = useMemo(
+    () =>
+      rejectTargetId ? rows.find((r) => r.id === rejectTargetId) : undefined,
+    [rejectTargetId, rows]
+  );
 
   const filtered = useMemo(() => {
     const q = normalize(query);
@@ -69,35 +89,64 @@ export function ApprovalsPage() {
         return true;
       }
       const haystack = normalize(
-        `${row.applicantName} ${row.courseLabel} ${row.reason} ${row.id} ${row.sessionDateLabel}`
+        `${row.applicantName} ${row.courseLabel} ${row.reason} ${row.id} ${row.sessionDateLabel} ${row.rejectionReason ?? ""}`
       );
       return haystack.includes(q);
     });
   }, [query, roleFilter, rows, statusFilter]);
 
-  const setStatus = (id: string, status: Exclude<LeaveRequestStatus, "pending">) => {
+  const approveRequest = (id: string) => {
     setRows((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, status } : r))
+      prev.map((r) => (r.id === id ? { ...r, status: "approved" as const } : r))
     );
   };
 
+  const openRejectDialog = (id: string) => {
+    setRejectTargetId(id);
+    setRejectReasonInput("");
+    setRejectReasonError("");
+    rejectDialogRef.current?.showModal();
+  };
+
+  const handleRejectDialogClose = () => {
+    setRejectTargetId(null);
+    setRejectReasonInput("");
+    setRejectReasonError("");
+  };
+
+  const confirmReject = () => {
+    const trimmed = rejectReasonInput.trim();
+    if (!trimmed) {
+      setRejectReasonError("请填写驳回理由");
+      return;
+    }
+    if (!rejectTargetId) {
+      return;
+    }
+    setRows((prev) =>
+      prev.map((r) =>
+        r.id === rejectTargetId
+          ? { ...r, status: "rejected" as const, rejectionReason: trimmed }
+          : r
+      )
+    );
+    rejectDialogRef.current?.close();
+  };
+
   return (
-    <div className="space-y-5 md:space-y-6">
+    <div className="c-approvals-page">
       <PageHeader eyebrow="Approvals" title="批准申请" />
 
       <div
-        className="flex flex-col gap-3 rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-4 md:flex-row md:flex-wrap md:items-end md:gap-4"
+        className="c-resource-list__toolbar"
         role="search"
         aria-label="搜索与筛选请假申请"
       >
-        <div className="relative min-w-0 flex-1 md:min-w-[240px]">
-          <Search
-            aria-hidden
-            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]"
-          />
+        <div className="c-resource-list__search-wrap">
+          <Search aria-hidden className="c-resource-list__search-icon" />
           <input
             autoComplete="off"
-            className="c-field-input w-full pl-10"
+            className="c-field-input c-resource-list__search-field"
             onChange={(e) => setQuery(e.target.value)}
             placeholder="搜索姓名、课程、原因或编号"
             type="search"
@@ -105,13 +154,11 @@ export function ApprovalsPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:gap-3">
-          <label className="flex min-w-0 flex-col gap-1 sm:min-w-[9.5rem]">
-            <span className="text-xs font-medium text-[var(--color-text-muted)]">
-              申请对象
-            </span>
+        <div className="c-resource-list__filters">
+          <label className="c-resource-list__filter-field">
+            <span className="c-resource-list__filter-label">申请对象</span>
             <select
-              className="c-field-input cursor-pointer"
+              className="c-field-input c-resource-list__filter-select"
               onChange={(e) =>
                 setRoleFilter(e.target.value as typeof ROLE_ALL | LeaveApplicantRole)
               }
@@ -125,12 +172,10 @@ export function ApprovalsPage() {
             </select>
           </label>
 
-          <label className="flex min-w-0 flex-col gap-1 sm:min-w-[9.5rem]">
-            <span className="text-xs font-medium text-[var(--color-text-muted)]">
-              状态
-            </span>
+          <label className="c-resource-list__filter-field">
+            <span className="c-resource-list__filter-label">状态</span>
             <select
-              className="c-field-input cursor-pointer"
+              className="c-field-input c-resource-list__filter-select"
               onChange={(e) =>
                 setStatusFilter(e.target.value as typeof STATUS_ALL | LeaveRequestStatus)
               }
@@ -148,69 +193,64 @@ export function ApprovalsPage() {
 
       <section aria-label="请假申请列表">
         {filtered.length === 0 ? (
-          <p className="m-0 rounded-[24px] border border-dashed border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-4 py-10 text-center text-sm text-[var(--color-text-secondary)]">
+          <p className="c-resource-list__empty">
             没有符合条件的申请，请调整搜索或筛选条件。
           </p>
         ) : (
-          <ul className="m-0 list-none space-y-3 p-0">
+          <ul className="c-resource-list__list">
             {filtered.map((row) => (
               <li key={row.id}>
-                <article
-                  className={cn(
-                    "flex flex-col gap-4 rounded-[24px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-4 md:flex-row md:items-stretch md:gap-5 md:p-5"
-                  )}
-                >
-                  <div className="min-w-0 flex-1 space-y-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-full bg-[var(--color-surface-alt)] px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-text-muted)]">
+                <article className="c-approval-card">
+                  <div className="c-approval-card__main">
+                    <div className="c-approval-card__badge-row">
+                      <span className="c-approval-card__role-chip">
                         {roleLabel(row.role)}
                       </span>
                       <span
                         className={cn(
-                          "rounded-full px-2.5 py-0.5 text-xs font-semibold",
-                          row.status === "pending" &&
-                            "bg-[rgba(236,171,19,0.12)] text-[var(--color-brand)]",
-                          row.status === "approved" &&
-                            "bg-[rgba(52,169,108,0.14)] text-[var(--color-success)]",
-                          row.status === "rejected" &&
-                            "bg-[rgba(220,94,94,0.12)] text-[var(--color-danger)]"
+                          "c-approval-card__status",
+                          APPROVAL_STATUS_CLASS[row.status]
                         )}
                       >
                         {statusLabel(row.status)}
                       </span>
-                      <span className="text-xs text-[var(--color-text-muted)]">{row.id}</span>
+                      <span className="c-approval-card__id">{row.id}</span>
                     </div>
-                    <p className="text-base font-semibold text-[var(--color-text-primary)]">
-                      {row.applicantName}
-                    </p>
-                    <p className="text-sm text-[var(--color-text-secondary)]">
-                      {row.courseLabel}
-                    </p>
-                    <p className="text-sm text-[var(--color-text-secondary)]">
+                    <p className="c-approval-card__name">{row.applicantName}</p>
+                    <p className="c-approval-card__line">{row.courseLabel}</p>
+                    <p className="c-approval-card__line">
                       涉及上课：{row.sessionDateLabel}
                     </p>
-                    <p className="m-0 text-sm text-[var(--color-text-primary)]">
-                      <span className="text-[var(--color-text-muted)]">原因：</span>
+                    <p className="c-approval-card__reason-block">
+                      <span className="c-approval-card__reason-label">原因：</span>
                       {row.reason}
                     </p>
-                    <p className="text-xs text-[var(--color-text-muted)]">
+                    {row.status === "rejected" && row.rejectionReason ? (
+                      <p className="c-approval-card__rejection-block">
+                        <span className="c-approval-card__rejection-label">
+                          驳回理由：
+                        </span>
+                        {row.rejectionReason}
+                      </p>
+                    ) : null}
+                    <p className="c-approval-card__meta">
                       提交于 {row.submittedAtLabel}
                     </p>
                   </div>
 
                   {row.status === "pending" ? (
-                    <div className="flex shrink-0 flex-col justify-center gap-2 border-t border-[var(--color-border-subtle)] pt-4 md:w-[11rem] md:border-l md:border-t-0 md:pl-5 md:pt-0">
+                    <div className="c-approval-card__actions">
                       <Button
                         type="button"
                         variant="primary"
-                        onClick={() => setStatus(row.id, "approved")}
+                        onClick={() => approveRequest(row.id)}
                       >
                         批准
                       </Button>
                       <Button
                         type="button"
                         variant="danger"
-                        onClick={() => setStatus(row.id, "rejected")}
+                        onClick={() => openRejectDialog(row.id)}
                       >
                         驳回
                       </Button>
@@ -222,6 +262,64 @@ export function ApprovalsPage() {
           </ul>
         )}
       </section>
+
+      <dialog
+        ref={rejectDialogRef}
+        aria-labelledby="approval-reject-dialog-title"
+        aria-modal="true"
+        className="c-approval-reject-dialog"
+        onClose={handleRejectDialogClose}
+      >
+        <div
+          className="c-approval-reject-dialog__surface"
+          onPointerDown={(e) => {
+            if (e.target === e.currentTarget) {
+              rejectDialogRef.current?.close();
+            }
+          }}
+        >
+          <div
+            className="c-approval-reject-dialog__panel"
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            <h2
+              className="c-approval-reject-dialog__title"
+              id="approval-reject-dialog-title"
+            >
+              驳回请假申请
+            </h2>
+            {rejectTargetRow ? (
+              <p className="c-approval-reject-dialog__meta">
+                {rejectTargetRow.applicantName} · {rejectTargetRow.id}
+              </p>
+            ) : null}
+            <TextareaField
+              error={rejectReasonError}
+              label="驳回理由"
+              onChange={(e) => {
+                setRejectReasonInput(e.target.value);
+                if (rejectReasonError) {
+                  setRejectReasonError("");
+                }
+              }}
+              rows={4}
+              value={rejectReasonInput}
+            />
+            <div className="c-approval-reject-dialog__actions">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => rejectDialogRef.current?.close()}
+              >
+                取消
+              </Button>
+              <Button type="button" variant="danger" onClick={confirmReject}>
+                确认驳回
+              </Button>
+            </div>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

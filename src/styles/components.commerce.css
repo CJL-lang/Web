@@ -1,0 +1,25 @@
+@layer components {
+  .c-package-list__row {
+    @apply cursor-pointer;
+  }
+
+  .c-package-list__stat {
+    @apply md:min-w-[6rem];
+  }
+
+  .c-package-plan-list {
+    @apply flex flex-col gap-3;
+  }
+
+  .c-package-plan-item {
+    @apply flex flex-col gap-3 rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-3 sm:flex-row sm:items-start;
+  }
+
+  .c-package-plan-item__field {
+    @apply min-w-0 flex-1;
+  }
+
+  .c-package-plan-item__remove {
+    @apply sm:mt-[1.875rem];
+  }
+}

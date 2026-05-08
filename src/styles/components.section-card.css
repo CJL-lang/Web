@@ -10,7 +10,11 @@
   .c-section-card__intro {
     @apply min-w-0 w-full space-y-2 sm:flex-1;
   }
-  
+
+  .c-section-card__eyebrow {
+    @apply m-0 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
   .c-section-card__title {
     @apply text-lg font-semibold text-[var(--color-text-primary)] md:text-[1.125rem];
   }
@@ -29,5 +33,9 @@
 
   .c-section-card__body {
     @apply pt-5 md:pt-6;
+  }
+
+  .c-section-card--grid-span-2 {
+    @apply lg:col-span-2;
   }
 }

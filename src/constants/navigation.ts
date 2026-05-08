@@ -3,6 +3,8 @@ import {
   BarChart3,
   BellRing,
   CheckCheck,
+  ClipboardList,
+  Package,
   Settings,
   UserRoundCog,
   Users,
@@ -39,6 +41,18 @@ export const navigationItems: NavigationItem[] = [
     path: "/coaches",
     icon: UserRoundCog,
     description: "管理教练档案与安排",
+  },
+  {
+    label: "套餐管理",
+    path: "/packages",
+    icon: Package,
+    description: "配置在售课程套餐与权益",
+  },
+  {
+    label: "订单管理",
+    path: "/orders",
+    icon: ClipboardList,
+    description: "查看与处理学员购课订单",
   },
   {
     label: "批准申请",

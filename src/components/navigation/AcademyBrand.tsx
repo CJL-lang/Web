@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { cn } from "../../utils/cn";
+
 interface AcademyBrandProps {
   compact?: boolean;
 }
@@ -8,11 +10,12 @@ export function AcademyBrand({ compact = false }: AcademyBrandProps) {
   const [logoFailed, setLogoFailed] = useState(false);
 
   return (
-    <div className={`flex items-center ${compact ? "gap-0" : "gap-3"}`}>
+    <div className={cn("c-academy-brand", compact && "c-academy-brand--compact")}>
       <div
-        className={`flex items-center justify-center overflow-hidden rounded-2xl ${
-          compact ? "h-12 w-12" : "h-16 w-16"
-        }`}
+        className={cn(
+          "c-academy-brand__figure",
+          compact ? "c-academy-brand__figure--sm" : "c-academy-brand__figure--lg"
+        )}
       >
         {!logoFailed ? (
           <picture>
@@ -22,7 +25,7 @@ export function AcademyBrand({ compact = false }: AcademyBrandProps) {
             />
             <img
               alt="高尔夫学院 LOGO"
-              className="h-full w-full object-contain p-0"
+              className="c-academy-brand__img"
               decoding="async"
               onError={() => setLogoFailed(true)}
               src="/academy-logo.svg"
@@ -30,22 +33,19 @@ export function AcademyBrand({ compact = false }: AcademyBrandProps) {
           </picture>
         ) : (
           <span
-            className={`font-semibold tracking-[0.2em] text-[var(--color-brand)] ${
-              compact ? "text-sm" : "text-base"
-            }`}
+            className={cn(
+              "c-academy-brand__fallback",
+              compact ? "c-academy-brand__fallback--sm" : "c-academy-brand__fallback--lg"
+            )}
           >
             GA
           </span>
         )}
       </div>
       {!compact ? (
-        <div className="space-y-1">
-          <p className="text-sm font-medium uppercase tracking-[0.24em] text-[var(--color-brand)]">
-            Golf Academy
-          </p>
-          <h1 className="text-base font-semibold text-[var(--color-text-primary)]">
-            高尔夫学院后台
-          </h1>
+        <div className="c-academy-brand__titles">
+          <p className="c-academy-brand__eyebrow">Golf Academy</p>
+          <h1 className="c-academy-brand__heading">高尔夫学院后台</h1>
         </div>
       ) : null}
     </div>

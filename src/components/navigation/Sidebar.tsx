@@ -6,12 +6,12 @@ import { AcademyBrand } from "./AcademyBrand";
 
 export function Sidebar() {
   return (
-    <aside className="flex h-[calc(100vh-3rem)] flex-col rounded-[32px] border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 shadow-[var(--shadow-soft)]">
-      <div className="border-b border-[var(--color-border-subtle)] px-3 pb-5 pt-2">
+    <aside className="c-sidebar">
+      <div className="c-sidebar__brand-row">
         <AcademyBrand />
       </div>
 
-      <nav className="mt-5 flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto pr-1">
+      <nav className="c-sidebar__nav">
         {navigationItems.map((item) => {
           const Icon = item.icon;
 
@@ -20,40 +20,38 @@ export function Sidebar() {
               key={item.path}
               className={({ isActive }) =>
                 cn(
-                  "group rounded-[24px] border border-transparent px-4 py-4 transition duration-200",
+                  "group c-sidebar-navlink",
                   isActive
-                    ? "border-[var(--color-border-strong)] bg-[var(--color-surface-alt)]"
-                    : "hover:bg-[var(--color-surface-soft)]"
+                    ? "c-sidebar-navlink--active"
+                    : "c-sidebar-navlink--inactive"
                 )
               }
               to={item.path}
             >
               {({ isActive }) => (
-                <div className="flex items-start gap-3">
+                <div className="c-sidebar-navlink__row">
                   <div
                     className={cn(
-                      "mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl transition",
+                      "c-sidebar-navlink__icon",
                       isActive
-                        ? "bg-[color:rgba(236,171,19,0.12)] text-[var(--color-brand)]"
-                        : "bg-[var(--color-surface-soft)] text-[var(--color-text-secondary)]"
+                        ? "c-sidebar-navlink__icon--active"
+                        : "c-sidebar-navlink__icon--inactive"
                     )}
                   >
                     <Icon size={18} />
                   </div>
-                  <div className="space-y-1">
+                  <div className="c-sidebar-navlink__text-stack">
                     <div
                       className={cn(
-                        "text-sm font-semibold transition",
+                        "c-sidebar-navlink__title",
                         isActive
-                          ? "text-[var(--color-text-primary)]"
-                          : "text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)]"
+                          ? "c-sidebar-navlink__title--active"
+                          : "c-sidebar-navlink__title--inactive"
                       )}
                     >
                       {item.label}
                     </div>
-                    <p className="text-xs leading-5 text-[var(--color-text-muted)]">
-                      {item.description}
-                    </p>
+                    <p className="c-sidebar-navlink__desc">{item.description}</p>
                   </div>
                 </div>
               )}
