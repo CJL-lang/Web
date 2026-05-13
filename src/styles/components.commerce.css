@@ -60,6 +60,39 @@
     @apply border-[var(--border-danger)] bg-[var(--surface-danger-soft)] text-[var(--color-danger)];
   }
 
+  .c-order-voucher-input {
+    @apply cursor-pointer py-3;
+  }
+
+  .c-order-payment-methods {
+    @apply grid grid-cols-2 gap-2 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-2 sm:grid-cols-3;
+  }
+
+  .c-order-payment-methods__option {
+    @apply min-h-11 rounded-xl border border-transparent bg-transparent px-3 py-2 text-sm font-semibold text-[var(--color-text-secondary)] transition hover:bg-[var(--color-surface-alt)] hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
+  }
+
+  .c-order-payment-methods__option--active {
+    @apply border-[var(--color-border-strong)] bg-[var(--surface-brand-soft)] text-[var(--color-brand)];
+    box-shadow: var(--shadow-inset-soft);
+  }
+
+  .c-order-voucher-preview {
+    @apply flex flex-col gap-3 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-3 sm:flex-row sm:items-center;
+  }
+
+  .c-order-voucher-preview__image {
+    @apply h-36 w-full rounded-xl border border-[var(--color-border-subtle)] object-cover sm:w-56;
+  }
+
+  .c-order-voucher-preview__meta {
+    @apply flex min-w-0 flex-1 flex-wrap items-center justify-between gap-2;
+  }
+
+  .c-order-voucher-preview__name {
+    @apply min-w-0 break-all text-sm font-medium text-[var(--color-text-primary)];
+  }
+
   .c-order-detail__toolbar {
     @apply flex flex-wrap items-center gap-3;
   }
@@ -113,6 +146,18 @@
 
   .c-order-detail-table__note {
     @apply block whitespace-pre-line font-normal leading-6 text-[var(--color-text-secondary)];
+  }
+
+  .c-order-detail-voucher {
+    @apply flex flex-col gap-2;
+  }
+
+  .c-order-detail-voucher__image {
+    @apply max-h-64 w-full max-w-md rounded-2xl border border-[var(--color-border-subtle)] object-contain;
+  }
+
+  .c-order-detail-voucher__name {
+    @apply break-all text-xs font-medium text-[var(--color-text-secondary)];
   }
 
   @media (max-width: 639px) {

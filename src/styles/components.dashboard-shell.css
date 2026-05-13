@@ -99,7 +99,24 @@
     }
   }
 
+  .c-dashboard-tabs--cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  @media (min-width: 768px) {
+    .c-dashboard-tabs--cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
   .c-dashboard-tab {
+    cursor: pointer;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+    appearance: none;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -114,6 +131,11 @@
       border-color 200ms ease,
       background-color 200ms ease,
       transform 200ms ease;
+  }
+
+  .c-dashboard-tab:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-brand) 60%, transparent);
+    outline-offset: 2px;
   }
 
   .c-dashboard-tab:hover {

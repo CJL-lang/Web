@@ -7,6 +7,10 @@ import {
 } from "react";
 
 import {
+  INITIAL_COURSE_OPENING_GROUPS,
+  type CourseOpeningGroup,
+} from "../mocks/courseOpenings";
+import {
   INITIAL_COACH_LIST,
   type CoachListItem,
 } from "../mocks/coaches";
@@ -29,6 +33,7 @@ export interface AdminDataContextValue {
   coaches: CoachListItem[];
   packages: PackageListItem[];
   orders: OrderListItem[];
+  courseOpeningGroups: CourseOpeningGroup[];
   addStudent: (item: StudentListItem) => void;
   addCoach: (item: CoachListItem) => void;
   addPackage: (item: PackageListItem) => void;
@@ -38,7 +43,12 @@ export interface AdminDataContextValue {
     id: string,
     next: Omit<OrderListItem, "id" | "createdAt">,
   ) => void;
-  cancelOrder: (id: string) => void;
+  closeOrder: (id: string) => void;
+  addCourseOpeningGroup: (item: CourseOpeningGroup) => void;
+  appendOrdersToCourseOpeningGroup: (id: string, orderIds: string[]) => void;
+  confirmCourseOpeningGroup: (id: string) => void;
+  reassignCourseOpeningGroupCoach: (id: string, coachId: string) => void;
+  deleteCourseOpeningGroup: (id: string) => void;
 }
 
 const AdminDataContext = createContext<AdminDataContextValue | null>(null);
@@ -56,6 +66,9 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<OrderListItem[]>(() =>
     structuredClone(INITIAL_ORDER_LIST)
   );
+  const [courseOpeningGroups, setCourseOpeningGroups] = useState<
+    CourseOpeningGroup[]
+  >(() => structuredClone(INITIAL_COURSE_OPENING_GROUPS));
 
   const addStudent = useCallback((item: StudentListItem) => {
     setStudents((prev) => [...prev, normalizeStudentListItem(item)]);
@@ -95,14 +108,70 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const cancelOrder = useCallback((id: string) => {
+  const closeOrder = useCallback((id: string) => {
     setOrders((prev) =>
-      prev.map((order) =>
-        order.id === id
-          ? { ...order, status: "已取消", updatedAt: new Date().toISOString() }
-          : order,
+      prev.map((order) => {
+        if (order.id !== id) {
+          return order;
+        }
+
+        const now = new Date().toISOString();
+        return { ...order, closedAt: now, updatedAt: now };
+      }),
+    );
+  }, []);
+
+  const addCourseOpeningGroup = useCallback((item: CourseOpeningGroup) => {
+    setCourseOpeningGroups((prev) => [...prev, item]);
+  }, []);
+
+  const appendOrdersToCourseOpeningGroup = useCallback(
+    (id: string, orderIds: string[]) => {
+      setCourseOpeningGroups((prev) =>
+        prev.map((group) => {
+          if (group.id !== id) {
+            return group;
+          }
+
+          const nextOrderIds = Array.from(
+            new Set([...group.orderIds, ...orderIds]),
+          );
+          return {
+            ...group,
+            orderIds: nextOrderIds,
+            updatedAt: new Date().toISOString(),
+          };
+        }),
+      );
+    },
+    [],
+  );
+
+  const confirmCourseOpeningGroup = useCallback((id: string) => {
+    setCourseOpeningGroups((prev) =>
+      prev.map((group) =>
+        group.id === id
+          ? { ...group, status: "已开课", updatedAt: new Date().toISOString() }
+          : group,
       ),
     );
+  }, []);
+
+  const reassignCourseOpeningGroupCoach = useCallback(
+    (id: string, coachId: string) => {
+      setCourseOpeningGroups((prev) =>
+        prev.map((group) =>
+          group.id === id
+            ? { ...group, coachId, updatedAt: new Date().toISOString() }
+            : group,
+        ),
+      );
+    },
+    [],
+  );
+
+  const deleteCourseOpeningGroup = useCallback((id: string) => {
+    setCourseOpeningGroups((prev) => prev.filter((group) => group.id !== id));
   }, []);
 
   return (
@@ -112,13 +181,19 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
         coaches,
         packages,
         orders,
+        courseOpeningGroups,
         addStudent,
         addCoach,
         addPackage,
         updatePackage,
         addOrder,
         updateOrder,
-        cancelOrder,
+        closeOrder,
+        addCourseOpeningGroup,
+        appendOrdersToCourseOpeningGroup,
+        confirmCourseOpeningGroup,
+        reassignCourseOpeningGroupCoach,
+        deleteCourseOpeningGroup,
       }}
     >
       {children}

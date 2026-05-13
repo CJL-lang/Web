@@ -44,7 +44,7 @@ export function AcademyBrand({ compact = false }: AcademyBrandProps) {
       </div>
       {!compact ? (
         <div className="c-academy-brand__titles">
-          <p className="c-academy-brand__eyebrow">Golf Academy</p>
+          <p className="c-academy-brand__eyebrow">Define Golf</p>
           <h1 className="c-academy-brand__heading">高尔夫学院后台</h1>
         </div>
       ) : null}

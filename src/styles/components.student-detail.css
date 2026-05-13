@@ -124,6 +124,26 @@
     @apply inline-flex min-h-10 items-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-4 py-2 text-sm font-medium text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface-alt-hover)];
   }
 
+  .c-student-detail__opening-list {
+    @apply m-0 flex list-none flex-col gap-3 p-0;
+  }
+
+  .c-student-detail__opening-row {
+    @apply flex flex-col gap-3 rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .c-student-detail__opening-main {
+    @apply min-w-0 flex-1;
+  }
+
+  .c-student-detail__opening-title {
+    @apply break-words text-sm font-semibold text-[var(--color-text-primary)] transition hover:text-[var(--color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
+  }
+
+  .c-student-detail__opening-meta {
+    @apply mt-1 mb-0 break-words text-sm text-[var(--color-text-secondary)];
+  }
+
   .c-student-detail__package-list {
     @apply m-0 list-none divide-y divide-[var(--color-border-subtle)] rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-0;
   }

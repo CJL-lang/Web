@@ -168,7 +168,7 @@ export function StudentAgeDistributionChart({
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} barGap={10}>
               <CartesianGrid
-                stroke="rgba(210, 199, 175, 0.08)"
+                stroke="var(--dashboard-grid-color)"
                 vertical={false}
               />
               <XAxis
@@ -280,7 +280,7 @@ export function StudentLevelTrendChart({
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
               <CartesianGrid
-                stroke="rgba(210, 199, 175, 0.08)"
+                stroke="var(--dashboard-grid-color)"
                 vertical={false}
               />
               <XAxis
@@ -335,7 +335,7 @@ export function StudentAttendanceChart({
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
               <CartesianGrid
-                stroke="rgba(210, 199, 175, 0.08)"
+                stroke="var(--dashboard-grid-color)"
                 vertical={false}
               />
               <XAxis

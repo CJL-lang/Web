@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   BarChart3,
   BellRing,
+  CalendarCheck2,
   CheckCheck,
   ClipboardList,
   Package,
@@ -46,6 +47,11 @@ export const navigationItems: NavigationItem[] = [
     label: "订单管理",
     path: "/orders",
     icon: ClipboardList,
+  },
+  {
+    label: "开课管理",
+    path: "/course-openings",
+    icon: CalendarCheck2,
   },
   {
     label: "批准申请",

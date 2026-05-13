@@ -1,3 +1,7 @@
+import type {
+  CourseOpeningGroupDisplayStatus,
+  OrderOpeningStatus,
+} from "../mocks/courseOpenings";
 import type { StudentEnrollmentStatus } from "../mocks/students";
 
 const coachSessionStatusPill: Record<"上课中" | "空闲", string> = {
@@ -21,4 +25,31 @@ export function studentEnrollmentStatusPillClass(
   status: StudentEnrollmentStatus,
 ): string {
   return studentStatusPill[status];
+}
+
+const orderOpeningStatusPill: Record<OrderOpeningStatus, string> = {
+  未开启: "c-order-status--pending",
+  待开课: "c-order-status--pending",
+  已开启: "c-order-status--active",
+};
+
+export function orderOpeningStatusPillClass(
+  status: OrderOpeningStatus,
+): string {
+  return orderOpeningStatusPill[status];
+}
+
+const courseOpeningGroupStatusPill: Record<
+  CourseOpeningGroupDisplayStatus,
+  string
+> = {
+  未满人: "c-order-status--pending",
+  待开课: "c-order-status--pending",
+  已开课: "c-order-status--active",
+};
+
+export function courseOpeningGroupStatusPillClass(
+  status: CourseOpeningGroupDisplayStatus,
+): string {
+  return courseOpeningGroupStatusPill[status];
 }

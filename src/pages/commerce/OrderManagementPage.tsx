@@ -15,10 +15,8 @@ const FILTER_ALL = "__all__";
 type CreatedSort = "asc" | "desc";
 
 const orderStatusClass: Record<OrderStatus, string> = {
-  待支付: "c-order-status--pending",
-  进行中: "c-order-status--active",
+  待完成: "c-order-status--pending",
   已完成: "c-order-status--success",
-  已取消: "c-order-status--canceled",
 };
 
 function normalize(s: string) {
@@ -52,6 +50,10 @@ export function OrderManagementPage() {
   const filtered = useMemo(() => {
     const q = normalize(query);
     const list = orders.filter((order) => {
+      if (order.closedAt) {
+        return false;
+      }
+
       const student = studentById.get(order.studentId);
       const pkg = packageById.get(order.packageId);
 

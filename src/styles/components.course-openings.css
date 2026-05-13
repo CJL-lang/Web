@@ -1,0 +1,235 @@
+@layer components {
+  .c-course-openings__coach-grid {
+    @apply grid w-full max-w-full gap-6 lg:gap-8;
+  }
+
+  .c-course-openings-batch-card.c-section-card {
+    @apply p-5 md:p-6 lg:p-8;
+  }
+
+  .c-course-openings-batch-card .c-section-card__title {
+    @apply text-xl md:text-2xl lg:text-[1.75rem];
+  }
+
+  .c-course-openings-batch-card .c-section-card__header {
+    @apply pb-5 md:pb-6;
+  }
+
+  .c-course-openings-batch-card .c-section-card__body {
+    @apply pt-5 md:pt-7 lg:pt-8;
+  }
+
+  .c-course-openings-batch-card .c-field-input {
+    @apply min-h-12 text-base;
+  }
+
+  .c-course-openings-batch-card .c-field-shell__label {
+    @apply text-base;
+  }
+
+  .c-course-openings-form {
+    @apply flex flex-col gap-5 md:gap-6 lg:gap-7;
+  }
+
+  .c-course-openings-form__row {
+    @apply grid gap-4 md:grid-cols-2 lg:gap-6;
+  }
+
+  .c-course-openings-form__summary {
+    @apply flex flex-col gap-4 rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-4 sm:flex-row sm:items-center sm:justify-between md:p-5;
+  }
+
+  .c-course-openings-metric {
+    @apply flex min-w-0 items-center gap-4;
+  }
+
+  .c-course-openings-metric__icon {
+    @apply h-11 w-11 shrink-0 rounded-[1.35rem] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-2.5 text-[var(--color-brand)];
+  }
+
+  .c-course-openings-metric__value {
+    @apply m-0 text-xl font-semibold tracking-tight text-[var(--color-text-primary)] md:text-2xl;
+  }
+
+  .c-course-openings-metric__label {
+    @apply m-0 text-sm font-medium text-[var(--color-text-muted)];
+  }
+
+  .c-course-openings-order-picker {
+    @apply min-w-0 rounded-2xl border border-[color-mix(in_srgb,var(--color-border-subtle)_70%,transparent)] bg-[color-mix(in_srgb,var(--color-surface-soft)_88%,transparent)] p-3 md:p-4 lg:p-5;
+  }
+
+  .c-course-openings-order-picker__list {
+    @apply m-0 grid list-none gap-3 p-0 sm:grid-cols-2 sm:gap-4 xl:grid-cols-3;
+  }
+
+  .c-course-openings-order-option {
+    @apply flex min-h-[4.25rem] cursor-pointer items-center gap-4 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4 transition hover:border-[var(--color-border-strong)] hover:bg-[var(--color-surface-alt)] md:min-h-[4.5rem] md:p-4 md:py-5;
+  }
+
+  .c-course-openings-order-option input {
+    @apply h-[1.125rem] w-[1.125rem] shrink-0 accent-[var(--color-brand)];
+  }
+
+  .c-course-openings-order-option__body {
+    @apply flex min-w-0 flex-1 flex-col gap-1.5 md:gap-2;
+  }
+
+  .c-course-openings-order-option__title {
+    @apply text-base font-semibold text-[var(--color-text-primary)] md:text-lg;
+  }
+
+  .c-course-openings-order-option__meta {
+    @apply break-words text-sm leading-6 text-[var(--color-text-secondary)];
+  }
+
+  .c-course-openings-order-option.is-selected {
+    @apply border-[var(--color-border-strong)] bg-[var(--surface-brand-soft)];
+  }
+
+  .c-course-openings-order-option.is-disabled {
+    @apply cursor-not-allowed opacity-55 hover:border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-soft)];
+  }
+
+  .c-course-openings__button-icon {
+    @apply h-4 w-4 shrink-0 md:h-5 md:w-5;
+  }
+
+  .c-course-openings-form__error {
+    @apply m-0 rounded-2xl border border-[var(--border-danger)] bg-[var(--surface-danger-soft)] px-3 py-2 text-sm font-medium text-[var(--color-danger)];
+  }
+
+  .c-course-openings-form__hint {
+    @apply m-0 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-3 py-2 text-sm leading-6 text-[var(--color-text-secondary)];
+  }
+
+  .c-course-openings-batch-card .c-course-openings-form__error {
+    @apply rounded-3xl px-4 py-3 md:text-base;
+  }
+
+  .c-course-openings-group-list {
+    @apply m-0 flex list-none flex-col gap-3 p-0;
+  }
+
+  .c-course-openings-group {
+    @apply rounded-[22px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] p-4;
+  }
+
+  .c-course-openings-group__header {
+    @apply flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between;
+  }
+
+  .c-course-openings-group__actions {
+    @apply flex flex-wrap items-center gap-2 sm:justify-end;
+  }
+
+  .c-course-openings-group__title {
+    @apply m-0 text-base font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-course-openings-group__title-link {
+    @apply text-[var(--color-text-primary)] transition hover:text-[var(--color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
+  }
+
+  .c-course-openings-group__subtitle {
+    @apply mt-1 break-words text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-course-openings-group__coach-select {
+    @apply min-w-0 sm:max-w-56;
+  }
+
+  .c-course-openings-group__orders {
+    @apply mt-3 m-0 grid list-none gap-2 p-0 sm:grid-cols-2;
+  }
+
+  .c-course-openings-group__order {
+    @apply flex min-w-0 items-center justify-between gap-2 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] px-3 py-2;
+  }
+
+  .c-course-openings-group__order-title {
+    @apply min-w-0 truncate text-sm font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-course-openings-group__order-meta {
+    @apply shrink-0 text-xs text-[var(--color-text-muted)];
+  }
+
+  a.c-course-openings-group__order-meta {
+    @apply transition hover:text-[var(--color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
+  }
+
+  .c-course-openings-summary-list {
+    @apply m-0 grid gap-3 sm:grid-cols-2;
+  }
+
+  .c-course-openings-summary-list div {
+    @apply min-w-0 rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4;
+  }
+
+  .c-course-openings-summary-list dt {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  }
+
+  .c-course-openings-summary-list dd {
+    @apply mt-2 mb-0 break-words text-sm font-semibold text-[var(--color-text-primary)];
+  }
+
+  .c-course-openings-detail__toolbar {
+    @apply flex flex-wrap items-center gap-3;
+  }
+
+  .c-course-openings-detail__actions {
+    @apply flex flex-wrap justify-end gap-2;
+  }
+
+  .c-course-openings-add-students {
+    @apply flex flex-col gap-3;
+  }
+
+  .c-course-openings-add-students__hint {
+    @apply m-0 text-sm leading-6 text-[var(--color-text-secondary)];
+  }
+
+  .c-course-openings-detail-order-list {
+    @apply m-0 flex list-none flex-col gap-3 p-0;
+  }
+
+  .c-course-openings-detail-order {
+    @apply rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] px-4 py-3;
+  }
+
+  .c-course-openings-detail-order__main {
+    @apply min-w-0;
+  }
+
+  .c-course-openings-detail-order__title {
+    @apply break-words text-sm font-semibold text-[var(--color-text-primary)] transition hover:text-[var(--color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
+  }
+
+  .c-course-openings-detail-order__meta {
+    @apply mt-1 mb-0 break-words text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-course-openings-order-list__row {
+    @apply cursor-pointer;
+  }
+
+  @media (width >= 40rem) {
+    .c-course-openings-order-list__column-head.c-resource-list__column-head,
+    .c-course-openings-order-list__row.c-resource-list__row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 7rem 7rem 7rem 9rem;
+      align-items: center;
+      column-gap: 1rem;
+    }
+  }
+
+  .c-course-openings-order-list__stat {
+    @apply md:min-w-[6rem];
+  }
+
+  .c-course-openings-order-list__date {
+    @apply md:min-w-[8rem];
+  }
+}

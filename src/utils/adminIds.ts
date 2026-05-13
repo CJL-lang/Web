@@ -1,4 +1,5 @@
 import type { CoachListItem } from "../mocks/coaches";
+import type { CourseOpeningGroup } from "../mocks/courseOpenings";
 import type { OrderListItem } from "../mocks/orders";
 import type { PackageListItem } from "../mocks/packages";
 import type { StudentListItem } from "../mocks/students";
@@ -45,6 +46,19 @@ export function nextOrderId(orders: OrderListItem[]): string {
     }
   }
   return `ORD-${max + 1}`;
+}
+
+export function nextCourseOpeningGroupId(
+  groups: CourseOpeningGroup[],
+): string {
+  let max = 1000;
+  for (const group of groups) {
+    const m = /^COG-(\d+)$/.exec(group.id);
+    if (m) {
+      max = Math.max(max, parseInt(m[1], 10));
+    }
+  }
+  return `COG-${max + 1}`;
 }
 
 export function coachInitialsFromName(name: string): string {

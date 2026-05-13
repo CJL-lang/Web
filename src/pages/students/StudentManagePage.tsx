@@ -5,14 +5,36 @@ import { StudentBadgeWall } from "../../components/students/StudentBadgeWall";
 import { StudentPackagesSection } from "../../components/students/StudentPackagesSection";
 import { SectionCard } from "../../components/ui/SectionCard";
 import { useAdminData } from "../../context/AdminDataContext";
+import {
+  findCourseOpeningGroupByOrderId,
+  getOrderOpeningStatus,
+  type OrderOpeningStatus,
+} from "../../mocks/courseOpenings";
 import { getStudentProfileFromListItem } from "../../mocks/studentProfiles";
 import { normalizeEnrollmentStatus } from "../../mocks/students";
-import { studentEnrollmentStatusPillClass } from "../../utils/bizStatusPills";
+import {
+  orderOpeningStatusPillClass,
+  studentEnrollmentStatusPillClass,
+} from "../../utils/bizStatusPills";
 import { cn } from "../../utils/cn";
+
+function formatIsoMinute(input: string) {
+  const date = new Date(input);
+  if (Number.isNaN(date.getTime())) {
+    return "未知时间";
+  }
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
 
 export function StudentManagePage() {
   const { studentId } = useParams<{ studentId: string }>();
-  const { students } = useAdminData();
+  const { coaches, courseOpeningGroups, orders, packages, students } =
+    useAdminData();
 
   if (!studentId) {
     return <Navigate replace to="/students" />;
@@ -26,6 +48,30 @@ export function StudentManagePage() {
 
   const profile = getStudentProfileFromListItem(listItem);
   const enrollmentStatus = normalizeEnrollmentStatus(profile.status);
+  const openingRecords = orders
+    .filter((order) => order.studentId === listItem.id && !order.closedAt)
+    .map((order) => {
+      const group = findCourseOpeningGroupByOrderId(
+        order.id,
+        courseOpeningGroups,
+      );
+      const coach = group
+        ? coaches.find((item) => item.id === group.coachId)
+        : undefined;
+      const pkg = packages.find((item) => item.id === order.packageId);
+      const openingStatus: OrderOpeningStatus = getOrderOpeningStatus(
+        order.id,
+        courseOpeningGroups,
+      );
+
+      return {
+        coach,
+        group,
+        openingStatus,
+        order,
+        pkg,
+      };
+    });
 
   return (
     <>
@@ -141,6 +187,43 @@ export function StudentManagePage() {
               </div>
             </div>
           </div>
+        </SectionCard>
+
+        <SectionCard
+          className="c-section-card--grid-span-2"
+          title="开课记录"
+        >
+          {openingRecords.length === 0 ? (
+            <p className="c-resource-list__empty">当前学员暂无订单开课记录。</p>
+          ) : (
+            <ul className="c-student-detail__opening-list">
+              {openingRecords.map(({ coach, group, openingStatus, order, pkg }) => (
+                <li key={order.id} className="c-student-detail__opening-row">
+                  <div className="c-student-detail__opening-main">
+                    <Link
+                      className="c-student-detail__opening-title"
+                      to={`/orders/${encodeURIComponent(order.id)}`}
+                    >
+                      {order.id} · {pkg?.name ?? "未知套餐"}
+                    </Link>
+                    <p className="c-student-detail__opening-meta">
+                      {group
+                        ? `${coach?.name ?? "未知教练"} · ${group.id} · ${formatIsoMinute(group.openedAt)}`
+                        : "未绑定教练"}
+                    </p>
+                  </div>
+                  <span
+                    className={cn(
+                      "c-order-status",
+                      orderOpeningStatusPillClass(openingStatus),
+                    )}
+                  >
+                    {openingStatus}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </SectionCard>
 
         <SectionCard

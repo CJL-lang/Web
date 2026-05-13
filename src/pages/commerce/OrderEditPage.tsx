@@ -19,7 +19,7 @@ export function OrderEditPage() {
     return <Navigate replace to="/orders" />;
   }
 
-  if (order.status === "进行中" || order.status === "已完成") {
+  if (order.status === "已完成" || order.closedAt) {
     return (
       <Navigate replace to={`/orders/${encodeURIComponent(order.id)}`} />
     );

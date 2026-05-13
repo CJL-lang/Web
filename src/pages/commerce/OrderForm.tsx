@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 
 import { Button } from "../../components/ui/Button";
 import { InputField, TextareaField } from "../../components/ui/Field";
+import { cn } from "../../utils/cn";
 import {
-  ORDER_STATUSES,
   PAYMENT_METHODS,
-  requiresConfirmedPayment,
+  deriveOrderStatus,
   type OrderListItem,
-  type OrderStatus,
+  type OrderPaymentVoucher,
   type PaymentMethod,
 } from "../../mocks/orders";
 import type { PackageListItem } from "../../mocks/packages";
@@ -20,7 +20,7 @@ import {
 
 export type OrderFormPayload = Omit<
   OrderListItem,
-  "id" | "createdAt" | "updatedAt"
+  "id" | "createdAt" | "updatedAt" | "closedAt"
 >;
 
 interface OrderFormProps {
@@ -38,6 +38,7 @@ interface FieldErrors {
   amount?: string;
   paymentMethod?: string;
   paymentDate?: string;
+  paymentVoucher?: string;
 }
 
 function parseAmount(input: string) {
@@ -54,12 +55,10 @@ export function OrderForm({
 }: OrderFormProps) {
   const studentSelectId = useId();
   const packageSelectId = useId();
-  const statusSelectId = useId();
-  const paymentSelectId = useId();
+  const voucherInputId = useId();
 
   const defaultPackageId = initialOrder?.packageId ?? packages[0]?.id ?? "";
   const defaultPackage = packages.find((p) => p.id === defaultPackageId);
-  const initialStatus = initialOrder?.status ?? "待支付";
 
   const [studentId, setStudentId] = useState(
     initialOrder?.studentId ?? students[0]?.id ?? "",
@@ -68,17 +67,21 @@ export function OrderForm({
   const [amountInput, setAmountInput] = useState(
     initialOrder ? String(initialOrder.amount) : String(defaultPackage?.price ?? ""),
   );
-  const [status, setStatus] = useState<OrderStatus>(initialStatus);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(
-    initialStatus === "待支付"
-      ? "待确认"
-      : (initialOrder?.paymentMethod ?? "待确认"),
+    initialOrder?.paymentMethod ?? "待确认",
   );
   const [paymentDate, setPaymentDate] = useState(
     storedToDatetimeLocalValue(initialOrder?.paymentDate ?? ""),
   );
+  const [paymentVoucher, setPaymentVoucher] = useState<
+    OrderPaymentVoucher | undefined
+  >(initialOrder?.paymentVoucher);
   const [note, setNote] = useState(initialOrder?.note ?? "");
   const [errors, setErrors] = useState<FieldErrors>({});
+
+  const hasPaymentMethod = paymentMethod !== "待确认";
+  const hasPaymentDate = Boolean(paymentDate);
+  const hasPaymentVoucher = Boolean(paymentVoucher?.dataUrl);
 
   const validate = (): boolean => {
     const next: FieldErrors = {};
@@ -95,12 +98,21 @@ export function OrderForm({
     } else if (amount <= 0) {
       next.amount = "订单金额需大于 0";
     }
-    if (requiresConfirmedPayment(status)) {
+    const paymentFieldCount = [
+      hasPaymentMethod,
+      hasPaymentDate,
+      hasPaymentVoucher,
+    ].filter(Boolean).length;
+
+    if (paymentFieldCount > 0 && paymentFieldCount < 3) {
       if (paymentMethod === "待确认") {
         next.paymentMethod = "请选择支付方式";
       }
       if (!paymentDate) {
         next.paymentDate = "请选择订单支付时间";
+      }
+      if (!paymentVoucher?.dataUrl) {
+        next.paymentVoucher = "请上传订单凭证";
       }
     }
 
@@ -117,17 +129,50 @@ export function OrderForm({
     setErrors((current) => ({ ...current, packageId: undefined }));
   };
 
-  const handleStatusChange = (nextStatus: OrderStatus) => {
-    setStatus(nextStatus);
-    if (nextStatus === "待支付") {
-      setPaymentMethod("待确认");
-      setPaymentDate("");
+  const handleVoucherChange = (fileList: FileList | null) => {
+    const file = fileList?.[0];
+    if (!file) {
+      return;
     }
-    setErrors((current) => ({
-      ...current,
-      paymentDate: undefined,
-      paymentMethod: undefined,
-    }));
+
+    if (!file.type.startsWith("image/")) {
+      setPaymentVoucher(undefined);
+      setErrors((current) => ({
+        ...current,
+        paymentVoucher: "请上传图片格式的订单凭证",
+      }));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      if (typeof reader.result !== "string") {
+        setErrors((current) => ({
+          ...current,
+          paymentVoucher: "订单凭证读取失败，请重新上传",
+        }));
+        return;
+      }
+
+      setPaymentVoucher({
+        fileName: file.name,
+        mimeType: file.type || "image/*",
+        dataUrl: reader.result,
+      });
+      setErrors((current) => ({ ...current, paymentVoucher: undefined }));
+    });
+    reader.addEventListener("error", () => {
+      setErrors((current) => ({
+        ...current,
+        paymentVoucher: "订单凭证读取失败，请重新上传",
+      }));
+    });
+    reader.readAsDataURL(file);
+  };
+
+  const removeVoucher = () => {
+    setPaymentVoucher(undefined);
+    setErrors((current) => ({ ...current, paymentVoucher: undefined }));
   };
 
   const handleSubmit = () => {
@@ -135,15 +180,25 @@ export function OrderForm({
       return;
     }
 
+    const nextPaymentVoucher = paymentVoucher?.dataUrl
+      ? paymentVoucher
+      : undefined;
+    const nextStatus = deriveOrderStatus({
+      paymentMethod,
+      paymentDate: paymentDate || undefined,
+      paymentVoucher: nextPaymentVoucher,
+    });
+
     onSubmit({
       studentId,
       packageId,
       amount: parseAmount(amountInput),
-      status,
+      status: nextStatus,
       orderDate:
         initialOrder?.orderDate ?? formatLocalDateTimeMinute(new Date()),
-      paymentMethod: status === "待支付" ? "待确认" : paymentMethod,
-      paymentDate: status === "待支付" ? undefined : paymentDate || undefined,
+      paymentMethod: nextStatus === "已完成" ? paymentMethod : "待确认",
+      paymentDate: nextStatus === "已完成" ? paymentDate || undefined : undefined,
+      paymentVoucher: nextStatus === "已完成" ? nextPaymentVoucher : undefined,
       note: note.trim() || undefined,
     });
   };
@@ -219,57 +274,42 @@ export function OrderForm({
 
         <div className="c-field-shell">
           <div className="c-field-shell__label-row">
-            <label className="c-field-shell__label" htmlFor={statusSelectId}>
-              订单状态
-            </label>
+            <span className="c-field-shell__label">支付方式</span>
           </div>
-          <select
-            autoComplete="off"
-            className="c-field-input"
-            id={statusSelectId}
-            onChange={(e) => handleStatusChange(e.target.value as OrderStatus)}
-            value={status}
-          >
-            {ORDER_STATUSES.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="c-field-shell">
-          <div className="c-field-shell__label-row">
-            <label className="c-field-shell__label" htmlFor={paymentSelectId}>
-              支付方式
-            </label>
-          </div>
-          <select
-            className="c-field-input"
-            disabled={status === "待支付"}
-            id={paymentSelectId}
-            onChange={(e) => {
-              setPaymentMethod(e.target.value as PaymentMethod);
-              setErrors((current) => ({
-                ...current,
-                paymentMethod: undefined,
-              }));
-            }}
-            value={paymentMethod}
+          <div
+            className="c-order-payment-methods"
+            role="radiogroup"
+            aria-label="支付方式"
           >
             {PAYMENT_METHODS.map((item) => (
-              <option key={item} value={item}>
+              <button
+                key={item}
+                aria-checked={paymentMethod === item}
+                className={cn(
+                  "c-order-payment-methods__option",
+                  paymentMethod === item &&
+                    "c-order-payment-methods__option--active",
+                )}
+                role="radio"
+                type="button"
+                onClick={() => {
+                  setPaymentMethod(item);
+                  setErrors((current) => ({
+                    ...current,
+                    paymentMethod: undefined,
+                  }));
+                }}
+              >
                 {item}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
           {errors.paymentMethod ? (
             <span className="c-field-shell__error">{errors.paymentMethod}</span>
           ) : null}
         </div>
 
         <InputField
-          disabled={status === "待支付"}
           error={errors.paymentDate}
           label="订单支付时间"
           onChange={(e) => {
@@ -280,6 +320,42 @@ export function OrderForm({
           type="datetime-local"
           value={paymentDate}
         />
+
+        <div className="c-field-shell">
+          <div className="c-field-shell__label-row">
+            <label className="c-field-shell__label" htmlFor={voucherInputId}>
+              订单凭证
+            </label>
+            <span className="c-field-shell__hint">支持上传一张图片</span>
+          </div>
+          <input
+            accept="image/*"
+            className="c-field-input c-order-voucher-input"
+            id={voucherInputId}
+            onChange={(e) => handleVoucherChange(e.target.files)}
+            type="file"
+          />
+          {paymentVoucher ? (
+            <div className="c-order-voucher-preview">
+              <img
+                alt="订单凭证预览"
+                className="c-order-voucher-preview__image"
+                src={paymentVoucher.dataUrl}
+              />
+              <div className="c-order-voucher-preview__meta">
+                <span className="c-order-voucher-preview__name">
+                  {paymentVoucher.fileName}
+                </span>
+                <Button type="button" variant="secondary" onClick={removeVoucher}>
+                  移除凭证
+                </Button>
+              </div>
+            </div>
+          ) : null}
+          {errors.paymentVoucher ? (
+            <span className="c-field-shell__error">{errors.paymentVoucher}</span>
+          ) : null}
+        </div>
 
         <TextareaField
           label="备注"

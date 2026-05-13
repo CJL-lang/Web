@@ -1,19 +1,34 @@
-import { ChevronLeft, Pencil, StickyNote } from "lucide-react";
-import { useMemo, useRef, useState, type ReactNode } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { ChevronLeft, Pencil } from "lucide-react";
+import { useMemo, useRef, type ReactNode } from "react";
+import {
+  Link,
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 import { Button } from "../../components/ui/Button";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { useAdminData } from "../../context/AdminDataContext";
+import {
+  findCourseOpeningGroupByOrderId,
+  getCourseOpeningGroupDisplayStatus,
+  getOrderOpeningStatus,
+  type CourseOpeningGroupDisplayStatus,
+  type OrderOpeningStatus,
+} from "../../mocks/courseOpenings";
 import type { OrderStatus } from "../../mocks/orders";
+import {
+  courseOpeningGroupStatusPillClass,
+  orderOpeningStatusPillClass,
+} from "../../utils/bizStatusPills";
 import { formatOrderDateTimeForDisplay } from "../../utils/orderDateTime";
 import { cn } from "../../utils/cn";
 
 const orderStatusClass: Record<OrderStatus, string> = {
-  待支付: "c-order-status--pending",
-  进行中: "c-order-status--active",
+  待完成: "c-order-status--pending",
   已完成: "c-order-status--success",
-  已取消: "c-order-status--canceled",
 };
 
 function formatPrice(amount: number) {
@@ -32,6 +47,39 @@ function OrderStatusPill({ status }: { status: OrderStatus }) {
   );
 }
 
+function OrderOpeningStatusPill({ status }: { status: OrderOpeningStatus }) {
+  return (
+    <span className={cn("c-order-status", orderOpeningStatusPillClass(status))}>
+      {status}
+    </span>
+  );
+}
+
+function CourseOpeningGroupStatusPill({
+  status,
+}: {
+  status: CourseOpeningGroupDisplayStatus;
+}) {
+  return (
+    <span className={cn("c-order-status", courseOpeningGroupStatusPillClass(status))}>
+      {status}
+    </span>
+  );
+}
+
+function formatIsoMinute(input: string) {
+  const date = new Date(input);
+  if (Number.isNaN(date.getTime())) {
+    return "未知时间";
+  }
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
 function DetailTableRow({ label, value }: { label: string; value: ReactNode }) {
   return (
     <tr>
@@ -43,12 +91,28 @@ function DetailTableRow({ label, value }: { label: string; value: ReactNode }) {
   );
 }
 
+type OrderDetailLocationState = {
+  fromCourseOpeningsOrders?: boolean;
+};
+
+function ordersListPathFromState(state: unknown): "/orders" | "/course-openings/orders" {
+  if (
+    state &&
+    typeof state === "object" &&
+    (state as OrderDetailLocationState).fromCourseOpeningsOrders === true
+  ) {
+    return "/course-openings/orders";
+  }
+  return "/orders";
+}
+
 export function OrderDetailPage() {
   const { orderId } = useParams<{ orderId: string }>();
-  const cancelDialogRef = useRef<HTMLDialogElement>(null);
-  const noteDialogRef = useRef<HTMLDialogElement>(null);
-  const [noteDraft, setNoteDraft] = useState("");
-  const { cancelOrder, orders, packages, students, updateOrder } =
+  const location = useLocation();
+  const navigate = useNavigate();
+  const ordersListPath = ordersListPathFromState(location.state);
+  const closeDialogRef = useRef<HTMLDialogElement>(null);
+  const { closeOrder, coaches, courseOpeningGroups, orders, packages, students } =
     useAdminData();
 
   const order = useMemo(
@@ -68,40 +132,35 @@ export function OrderDetailPage() {
     [order, packages],
   );
 
-  if (!orderId || !order) {
+  const openingGroup = useMemo(
+    () =>
+      order
+        ? findCourseOpeningGroupByOrderId(order.id, courseOpeningGroups)
+        : undefined,
+    [courseOpeningGroups, order],
+  );
+
+  const openingStatus = order
+    ? getOrderOpeningStatus(order.id, courseOpeningGroups)
+    : "未开启";
+
+  const openingCoach = openingGroup
+    ? coaches.find((coach) => coach.id === openingGroup.coachId)
+    : undefined;
+  const openingGroupStatus = openingGroup
+    ? getCourseOpeningGroupDisplayStatus(openingGroup, packages)
+    : undefined;
+
+  if (!orderId || !order || order.closedAt) {
     return <Navigate replace to="/orders" />;
   }
 
-  const isInProgress = order.status === "进行中";
-  const isCompleted = order.status === "已完成";
-  const canCancel =
-    order.status !== "进行中" &&
-    order.status !== "已完成" &&
-    order.status !== "已取消";
+  const canEditOrClose = order.status === "待完成";
 
-  const confirmCancel = () => {
-    cancelOrder(order.id);
-    cancelDialogRef.current?.close();
-  };
-
-  const openNoteDialog = () => {
-    setNoteDraft(order.note ?? "");
-    noteDialogRef.current?.showModal();
-  };
-
-  const saveNote = () => {
-    updateOrder(order.id, {
-      studentId: order.studentId,
-      packageId: order.packageId,
-      amount: order.amount,
-      status: order.status,
-      orderDate: order.orderDate,
-      paymentMethod: order.paymentMethod,
-      paymentDate: order.paymentDate,
-      note: noteDraft.trim() || undefined,
-      updatedAt: new Date().toISOString(),
-    });
-    noteDialogRef.current?.close();
+  const confirmClose = () => {
+    closeOrder(order.id);
+    closeDialogRef.current?.close();
+    navigate("/orders");
   };
 
   return (
@@ -109,20 +168,7 @@ export function OrderDetailPage() {
       <PageHeader
         actions={
           <div className="c-order-detail__header-actions">
-            {isInProgress ? (
-              <Button
-                className="gap-2"
-                type="button"
-                variant="secondary"
-                onClick={openNoteDialog}
-              >
-                <StickyNote
-                  aria-hidden
-                  className="c-order-detail__action-icon"
-                />
-                编辑备注
-              </Button>
-            ) : isCompleted ? null : (
+            {canEditOrClose ? (
               <>
                 <Link
                   className="c-button-link-primary c-order-detail__edit-link"
@@ -131,17 +177,15 @@ export function OrderDetailPage() {
                   <Pencil aria-hidden className="c-order-detail__action-icon" />
                   编辑订单
                 </Link>
-                {canCancel ? (
-                  <Button
-                    type="button"
-                    variant="danger"
-                    onClick={() => cancelDialogRef.current?.showModal()}
-                  >
-                    取消订单
-                  </Button>
-                ) : null}
+                <Button
+                  type="button"
+                  variant="danger"
+                  onClick={() => closeDialogRef.current?.showModal()}
+                >
+                  关闭订单
+                </Button>
               </>
-            )}
+            ) : null}
           </div>
         }
         eyebrow="Commerce"
@@ -149,9 +193,11 @@ export function OrderDetailPage() {
       />
 
       <div className="c-order-detail__toolbar">
-        <Link className="c-order-detail__back-link" to="/orders">
+        <Link className="c-order-detail__back-link" to={ordersListPath}>
           <ChevronLeft aria-hidden className="c-order-detail__back-icon" />
-          返回订单列表
+          {ordersListPath === "/course-openings/orders"
+            ? "返回开课订单"
+            : "返回订单列表"}
         </Link>
       </div>
 
@@ -169,16 +215,69 @@ export function OrderDetailPage() {
               label="订单状态"
               value={<OrderStatusPill status={order.status} />}
             />
+            <DetailTableRow
+              label="开课状态"
+              value={<OrderOpeningStatusPill status={openingStatus} />}
+            />
+            <DetailTableRow
+              label="绑定教练"
+              value={openingCoach?.name ?? "未绑定"}
+            />
+            <DetailTableRow
+              label="开课组编号"
+              value={openingGroup?.id ?? "未开启"}
+            />
+            <DetailTableRow
+              label="开课组状态"
+              value={
+                openingGroupStatus ? (
+                  <CourseOpeningGroupStatusPill status={openingGroupStatus} />
+                ) : (
+                  "未开启"
+                )
+              }
+            />
+            <DetailTableRow
+              label="开启时间"
+              value={openingGroup ? formatIsoMinute(openingGroup.openedAt) : "未开启"}
+            />
             <DetailTableRow label="订单金额" value={formatPrice(order.amount)} />
             <DetailTableRow label="学员" value={student?.name ?? "未知学员"} />
             <DetailTableRow label="学员编号" value={order.studentId} />
             <DetailTableRow label="套餐" value={pkg?.name ?? "未知套餐"} />
+            <DetailTableRow
+              label="班型"
+              value={pkg ? `1 对 ${pkg.coachStudentRatio}` : "未知班型"}
+            />
+            <DetailTableRow
+              label="课时"
+              value={pkg ? `${pkg.lessonCount} 节` : "未知课时"}
+            />
             <DetailTableRow label="套餐编号" value={order.packageId} />
             <DetailTableRow
               label="订单创建时间"
               value={formatOrderDateTimeForDisplay(order.orderDate)}
             />
             <DetailTableRow label="支付方式" value={order.paymentMethod} />
+            <DetailTableRow
+              label="订单凭证"
+              value={
+                order.paymentVoucher ? (
+                  <div className="c-order-detail-voucher">
+                    <img
+                      alt="订单凭证"
+                      className="c-order-detail-voucher__image"
+                      src={order.paymentVoucher.dataUrl}
+                    />
+                    <span className="c-order-detail-voucher__name">
+                      {order.paymentVoucher.fileName}
+                    </span>
+                  </div>
+                ) : (
+                  "未上传"
+                )
+              }
+            />
             <DetailTableRow
               label="订单支付时间"
               value={
@@ -197,8 +296,8 @@ export function OrderDetailPage() {
       </section>
 
       <dialog
-        ref={cancelDialogRef}
-        aria-labelledby="order-cancel-dialog-title"
+        ref={closeDialogRef}
+        aria-labelledby="order-close-dialog-title"
         aria-modal="true"
         className="c-order-cancel-dialog"
       >
@@ -206,7 +305,7 @@ export function OrderDetailPage() {
           className="c-order-cancel-dialog__surface"
           onPointerDown={(e) => {
             if (e.target === e.currentTarget) {
-              cancelDialogRef.current?.close();
+              closeDialogRef.current?.close();
             }
           }}
         >
@@ -216,73 +315,23 @@ export function OrderDetailPage() {
           >
             <h2
               className="c-order-cancel-dialog__title"
-              id="order-cancel-dialog-title"
+              id="order-close-dialog-title"
             >
-              取消订单
+              关闭订单
             </h2>
             <p className="c-order-cancel-dialog__meta">
-              确认将 {order.id} 标记为已取消？订单会保留在历史记录中。
+              确认关闭 {order.id}？关闭后订单将从订单管理列表隐藏。
             </p>
             <div className="c-order-cancel-dialog__actions">
               <Button
                 type="button"
                 variant="secondary"
-                onClick={() => cancelDialogRef.current?.close()}
+                onClick={() => closeDialogRef.current?.close()}
               >
                 返回
               </Button>
-              <Button type="button" variant="danger" onClick={confirmCancel}>
-                确认取消
-              </Button>
-            </div>
-          </div>
-        </div>
-      </dialog>
-
-      <dialog
-        ref={noteDialogRef}
-        aria-labelledby="order-note-dialog-title"
-        aria-modal="true"
-        className="c-order-cancel-dialog"
-      >
-        <div
-          className="c-order-cancel-dialog__surface"
-          onPointerDown={(e) => {
-            if (e.target === e.currentTarget) {
-              noteDialogRef.current?.close();
-            }
-          }}
-        >
-          <div
-            className="c-order-cancel-dialog__panel"
-            onPointerDown={(e) => e.stopPropagation()}
-          >
-            <h2
-              className="c-order-cancel-dialog__title"
-              id="order-note-dialog-title"
-            >
-              编辑备注
-            </h2>
-            <p className="c-order-cancel-dialog__meta">
-              进行中的订单仅支持修改备注；金额、套餐等请通过其他流程处理。
-            </p>
-            <textarea
-              aria-label="备注内容"
-              className="c-field-textarea"
-              onChange={(e) => setNoteDraft(e.target.value)}
-              rows={5}
-              value={noteDraft}
-            />
-            <div className="c-order-cancel-dialog__actions">
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => noteDialogRef.current?.close()}
-              >
-                取消
-              </Button>
-              <Button type="button" variant="primary" onClick={saveNote}>
-                保存
+              <Button type="button" variant="danger" onClick={confirmClose}>
+                确认关闭
               </Button>
             </div>
           </div>

@@ -9,6 +9,13 @@ import {
   CoachesListPage,
 } from "../pages/coaches";
 import {
+  CourseOpeningCoachPage,
+  CourseOpeningGroupDetailPage,
+  CourseOpeningGroupsPage,
+  CourseOpeningOrdersPage,
+  CourseOpeningsLayout,
+} from "../pages/courseOpenings";
+import {
   DashboardCoachesPage,
   DashboardPage,
   DashboardRevenuePage,
@@ -140,6 +147,32 @@ export const router = createBrowserRouter([
       {
         path: "orders/:orderId/edit",
         element: <OrderEditPage />,
+      },
+      {
+        path: "course-openings",
+        element: <CourseOpeningsLayout />,
+        children: [
+          {
+            index: true,
+            element: <Navigate replace to="groups" />,
+          },
+          {
+            path: "groups",
+            element: <CourseOpeningGroupsPage />,
+          },
+          {
+            path: "groups/:groupId",
+            element: <CourseOpeningGroupDetailPage />,
+          },
+          {
+            path: "coaches",
+            element: <CourseOpeningCoachPage />,
+          },
+          {
+            path: "orders",
+            element: <CourseOpeningOrdersPage />,
+          },
+        ],
       },
       {
         path: "approvals",
