@@ -14,9 +14,15 @@
   --color-border-subtle: rgba(34, 28, 16, 0.2);
   --color-success: #34a96c;
   --color-danger: #dc5e5e;
+  --background-page:
+    radial-gradient(circle at top, rgba(236, 171, 19, 0.09), transparent 30%),
+    linear-gradient(180deg, #171109 0%, #110d08 100%);
   --shadow-soft: 0 24px 48px rgba(5, 3, 1, 0.26);
   --shadow-elevated-md: 0 20px 40px rgba(5, 3, 1, 0.12);
   --shadow-inset-soft: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --selection-bg: rgba(236, 171, 19, 0.24);
+  --scrollbar-thumb: rgba(236, 171, 19, 0.22);
+  --scrollbar-track: rgba(255, 255, 255, 0.02);
   --gradient-message-content:
     linear-gradient(165deg, rgba(236, 171, 19, 0.1) 0%, transparent 55%);
   --gradient-message-recipient:
@@ -46,4 +52,46 @@
   --font-body:
     "Noto Sans SC", "Source Han Sans SC", "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root[data-theme="platinum"] {
+  color-scheme: light;
+  --color-brand: #b88718;
+  --color-brand-strong: #9f7414;
+  --color-canvas: #f7f4ec;
+  --color-surface: #fffdf8;
+  --color-surface-alt: #f2ead8;
+  --color-surface-alt-hover: #eadfca;
+  --color-surface-soft: rgba(255, 253, 248, 0.82);
+  --color-text-primary: #20242a;
+  --color-text-secondary: #5c6570;
+  --color-text-muted: #7e8792;
+  --color-ink-strong: #fffaf0;
+  --color-border-strong: rgba(184, 135, 24, 0.28);
+  --color-border-subtle: rgba(119, 103, 64, 0.22);
+  --color-success: #247a4b;
+  --color-danger: #ba3f3f;
+  --background-page:
+    radial-gradient(circle at top, rgba(184, 135, 24, 0.16), transparent 32%),
+    linear-gradient(180deg, #fbf8f0 0%, #f2ecdf 100%);
+  --shadow-soft: 0 22px 48px rgba(73, 57, 22, 0.12);
+  --shadow-elevated-md: 0 18px 36px rgba(73, 57, 22, 0.1);
+  --shadow-inset-soft: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --selection-bg: rgba(184, 135, 24, 0.22);
+  --scrollbar-thumb: rgba(184, 135, 24, 0.32);
+  --scrollbar-track: rgba(73, 57, 22, 0.06);
+  --gradient-message-content:
+    linear-gradient(165deg, rgba(184, 135, 24, 0.12) 0%, transparent 55%);
+  --gradient-message-recipient:
+    linear-gradient(195deg, rgba(184, 135, 24, 0.1) 0%, transparent 48%);
+  --surface-panel-raised: rgba(255, 253, 248, 0.9);
+  --surface-panel-deep: rgba(235, 224, 202, 0.55);
+  --surface-brand-soft: rgba(184, 135, 24, 0.11);
+  --surface-success-soft: rgba(36, 122, 75, 0.1);
+  --surface-danger-soft: rgba(186, 63, 63, 0.1);
+  --border-brand-soft: rgba(184, 135, 24, 0.14);
+  --border-brand-mid: rgba(184, 135, 24, 0.2);
+  --border-brand-strong: rgba(184, 135, 24, 0.3);
+  --border-success: rgba(36, 122, 75, 0.28);
+  --border-danger: rgba(186, 63, 63, 0.24);
 }

@@ -28,10 +28,6 @@
     @apply flex flex-wrap gap-x-4 gap-y-1 text-sm text-[var(--color-text-secondary)];
   }
 
-  .c-student-detail__status-chip {
-    @apply rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] px-2.5 py-0.5 text-xs font-semibold text-[var(--color-text-primary)];
-  }
-
   .c-student-detail__school-no-emphasis {
     @apply font-medium text-[var(--color-text-primary)];
   }
@@ -70,6 +66,26 @@
 
   .c-student-detail__parent-phone-row {
     @apply mt-2 mb-0 flex items-center gap-2 text-sm text-[var(--color-text-secondary)];
+  }
+
+  .c-student-detail__parent-profile-list {
+    @apply mt-3 grid gap-2 border-t border-[var(--color-border-subtle)] pt-3 sm:grid-cols-2;
+  }
+
+  .c-student-detail__parent-profile-row {
+    @apply min-w-0;
+  }
+
+  .c-student-detail__parent-profile-row--wide {
+    @apply sm:col-span-2;
+  }
+
+  .c-student-detail__parent-profile-row dt {
+    @apply text-xs font-medium text-[var(--color-text-muted)];
+  }
+
+  .c-student-detail__parent-profile-row dd {
+    @apply mt-0.5 mb-0 break-words text-sm text-[var(--color-text-primary)];
   }
 
   .c-student-detail__coach-divider {
@@ -338,6 +354,7 @@
     font-size: 0.9rem;
     line-height: 1.6;
     color: var(--color-text-secondary);
+    white-space: pre-line;
   }
 
   .c-student-package-dialog__outline {

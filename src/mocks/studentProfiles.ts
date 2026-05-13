@@ -1,3 +1,4 @@
+import { findPackageByName } from "./packages";
 import { getStudentById, type StudentListItem } from "./students";
 
 export interface StudentFeaturedMedal {
@@ -18,9 +19,15 @@ export interface StudentBadges {
 }
 
 export interface StudentParentContact {
+  userId?: string;
   name: string;
   relation: string;
   phone: string;
+  emergencyContact?: string;
+  homeAddress?: string;
+  occupation?: string;
+  notes?: string;
+  updatedAt?: string;
 }
 
 export interface StudentCoachProfile {
@@ -139,6 +146,8 @@ export interface StudentAdminPackage {
   status: PackageDisplayStatus;
   summary: string;
   detail: StudentPackageDetail;
+  /** 命中商务目录 mock 时在弹窗展示班型「1 对 N」 */
+  catalogCoachStudentRatio?: number;
 }
 
 export interface StudentFullProfile extends StudentListItem {
@@ -160,22 +169,22 @@ const coachDirectory: Record<
 > = {
   陈教练: {
     title: "高级教练",
-    phone: "138****6012",
+    phone: "138 1234 6012",
     specialty: "青少年梯队 · 挥杆技术",
   },
   王教练: {
     title: "主教练",
-    phone: "136****8841",
+    phone: "136 2468 8841",
     specialty: "成人入门 · 下场策略",
   },
   刘教练: {
     title: "资深教练",
-    phone: "137****2290",
+    phone: "137 1357 2290",
     specialty: "私教强化 · 短杆",
   },
   黄教练: {
     title: "教练",
-    phone: "135****7736",
+    phone: "135 9753 7736",
     specialty: "基础训练 · 体能配合",
   },
 };
@@ -497,11 +506,19 @@ function defaultParents(
   seed: number,
 ): StudentParentContact[] {
   const last4 = (1000 + (seed % 9000)).toString().slice(-4);
+  const areaIndex = seed % 4;
+  const districts = ["浦东新区", "徐汇区", "静安区", "闵行区"];
+  const occupations = ["企业管理", "医生", "金融从业者", "教师"];
   return [
     {
+      userId: `mock-parent-${student.id.toLowerCase()}-1`,
       name: `${student.name.slice(0, 1)}女士`,
       relation: "母亲",
-      phone: `139****${last4}`,
+      phone: `139 1234 ${last4}`,
+      emergencyContact: `139 1234 ${last4}`,
+      homeAddress: `上海市${districts[areaIndex]}高尔夫社区 ${18 + (seed % 60)} 号`,
+      occupation: occupations[areaIndex],
+      updatedAt: "2026-05-12",
     },
   ];
 }
@@ -543,10 +560,17 @@ function defaultPackages(student: StudentListItem): StudentAdminPackage[] {
     ? "已结业"
     : "进行中";
 
-  const totalPrimary = 14 + (seed % 12);
+  const catalog = findPackageByName(student.packageName);
+
+  const totalPrimary = catalog
+    ? catalog.lessonCount
+    : 14 + (seed % 12);
   const remainingPrimary = primaryExpired
     ? 0
-    : Math.max(1, 4 + (seed % 8));
+    : Math.max(
+        1,
+        Math.min(4 + (seed % 8), Math.max(1, totalPrimary - 1)),
+      );
   const completedPrimary = primaryExpired
     ? totalPrimary
     : totalPrimary - remainingPrimary;
@@ -554,6 +578,20 @@ function defaultPackages(student: StudentListItem): StudentAdminPackage[] {
   const periodPrimary = primaryExpired
     ? { start: "2024.02.01", end: "2024.12.28" }
     : { start: "2025.09.01", end: "2026.06.30" };
+
+  const plansJoined = catalog?.improvementPlans.join("； ") ?? "";
+  const planTitle = catalog
+    ? "核心提升计划"
+    : primaryExpired
+      ? "结业归档"
+      : "阶段训练计划";
+  const planDescription = catalog
+    ? primaryExpired
+      ? `${catalog.introduction}\n\n重点：${plansJoined}\n\n共 ${totalPrimary} 节课程已结业归档。`
+      : `${catalog.introduction}\n\n重点：${plansJoined}\n\n当前进度 ${completedPrimary}/${totalPrimary} 节。`
+    : primaryExpired
+      ? `共 ${totalPrimary} 节系统课已结业；权益已到期，可联系前台续办。`
+      : `共 ${totalPrimary} 节系统课，当前进度 ${completedPrimary}/${totalPrimary}。`;
 
   const totalHist = 8;
   const monthStart = 6 + (seed % 3);
@@ -571,6 +609,9 @@ function defaultPackages(student: StudentListItem): StudentAdminPackage[] {
         enrollment === "已过期"
           ? "已结业归档 · 权益如需延续可联系前台"
           : "当前进行中 · 含场地与教练课时",
+      ...(catalog
+        ? { catalogCoachStudentRatio: catalog.coachStudentRatio }
+        : {}),
       detail: {
         period: periodPrimary,
         overview: {
@@ -578,10 +619,8 @@ function defaultPackages(student: StudentListItem): StudentAdminPackage[] {
           totalLessons: totalPrimary,
         },
         planSummary: {
-          title: primaryExpired ? "结业归档" : "阶段训练计划",
-          description: primaryExpired
-            ? `共 ${totalPrimary} 节系统课已结业；权益已到期，可联系前台续办。`
-            : `共 ${totalPrimary} 节系统课，当前进度 ${completedPrimary}/${totalPrimary}。`,
+          title: planTitle,
+          description: planDescription,
         },
         courseOutline: placeholderOutline(
           student.id,
@@ -688,20 +727,30 @@ const profilePatches: Partial<Record<string, Partial<StudentFullProfile>>> = {
     },
     parents: [
       {
+        userId: "mock-parent-st-1024-1",
         name: "林岚",
         relation: "母亲",
-        phone: "139****2208",
+        phone: "139 1234 2208",
+        emergencyContact: "139 1234 2208",
+        homeAddress: "上海市浦东新区世纪公园片区 28 号",
+        occupation: "品牌策划",
+        updatedAt: "2026-05-12",
       },
       {
+        userId: "mock-parent-st-1024-2",
         name: "林峻",
         relation: "父亲",
-        phone: "138****9031",
+        phone: "138 5678 9031",
+        emergencyContact: "138 5678 9031",
+        homeAddress: "上海市浦东新区世纪公园片区 28 号",
+        occupation: "企业管理",
+        updatedAt: "2026-05-12",
       },
     ],
     coachProfile: {
       name: "陈教练",
       title: "高级教练 · 梯队负责人",
-      phone: "138****6012",
+      phone: "138 1234 6012",
       specialty: "青少年进阶 · 挥杆平面",
     },
     ability: [
@@ -869,118 +918,6 @@ const profilePatches: Partial<Record<string, Partial<StudentFullProfile>>> = {
         },
       ],
     },
-    packages: [
-      {
-        id: "ST-1024-p1",
-        name: "青少年进阶课（进行中）",
-        status: "进行中",
-        summary: "剩余 14 课时 · 至 2026-06",
-        detail: {
-          period: { start: "2026.01.06", end: "2026.06.30" },
-          overview: { completedLessons: 6, totalLessons: 20 },
-          planSummary: {
-            title: "梯队进阶主线",
-            description:
-              "青少年挥杆平面与短杆稳定性为主，共 20 节；当前 6/20，优先完成阶段测评与场地应用周。",
-          },
-          courseOutline: [
-            {
-              id: "ST-1024-p1-l1",
-              title: "第 1 节：平面与站位复盘",
-              description: "视频对比 + 打位基础节奏。",
-              statusLabel: "已销课",
-            },
-            {
-              id: "ST-1024-p1-l2",
-              title: "第 2 节：铁杆距离控制",
-              description: "半挥与全挥落区训练。",
-              statusLabel: "已销课",
-            },
-            {
-              id: "ST-1024-p1-l3",
-              title: "第 3 节：阶段测评",
-              description: "六项维度雷达图与教练点评。",
-              statusLabel: "已销课",
-            },
-            {
-              id: "ST-1024-p1-l4",
-              title: "第 4 节：场下策略辅导",
-              description: "与同组学员组队洞杯策略沙盘。",
-              statusLabel: "待上课",
-            },
-          ],
-        },
-      },
-      {
-        id: "ST-1024-p2",
-        name: "寒假短杆集训",
-        status: "已结业",
-        summary: "2026-01 · 8/8 次完成",
-        detail: {
-          period: { start: "2026.01.12", end: "2026.01.25" },
-          overview: { completedLessons: 8, totalLessons: 8 },
-          planSummary: {
-            title: "短杆密集型集训",
-            description: "两周内完成果岭周边救球与切滚组合，出勤与销课已全部闭环。",
-          },
-          courseOutline: [
-            {
-              id: "ST-1024-p2-l1",
-              title: "第 1 节：切滚与高抛切换",
-              description: "不同草纹下的杆面选择与落点意象。",
-              statusLabel: "已销课",
-            },
-            {
-              id: "ST-1024-p2-l2",
-              title: "第 2 节：洞杯周边对抗",
-              description: "与同组轮换救球记分。",
-              statusLabel: "已销课",
-            },
-            {
-              id: "ST-1024-p2-l3",
-              title: "第 3 节：集训结业赛",
-              description: "计时赛统计救球成功率。",
-              statusLabel: "已销课",
-            },
-          ],
-        },
-      },
-      {
-        id: "ST-1024-p3",
-        name: "体能辅训包",
-        status: "已体验",
-        summary: "与主课并行 · 可转正课",
-        detail: {
-          period: { start: "2025.11.01", end: "2026.08.31" },
-          overview: { completedLessons: 4, totalLessons: 10 },
-          planSummary: {
-            title: "体能辅训（体验进度）",
-            description:
-              "与主课并行共 10 次体验额度，当前 4/10；未完部分可续为正课包或暂停后顺延。",
-          },
-          courseOutline: [
-            {
-              id: "ST-1024-p3-l1",
-              title: "第 1 节：核心与下肢稳定",
-              description: "平板与单侧支撑结合挥杆代偿评估。",
-              statusLabel: "已销课",
-            },
-            {
-              id: "ST-1024-p3-l2",
-              title: "第 2 节：爆发与柔韧性",
-              description: "药球与弹力带轮转。",
-              statusLabel: "已销课",
-            },
-            {
-              id: "ST-1024-p3-l3",
-              title: "第 3 节：体验待续",
-              description: "可选下一节转正课计费；当前不计入结业包。",
-              statusLabel: "待上课",
-            },
-          ],
-        },
-      },
-    ],
   },
 };
 

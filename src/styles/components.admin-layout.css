@@ -22,6 +22,6 @@
 
   /* 主区随栅格列伸缩；不再套一层 1120px 顶宽，避免宽屏右侧空洞 */
   .c-admin-layout__content {
-    @apply w-full min-w-0 max-w-none;
+    @apply flex w-full min-w-0 max-w-none flex-col gap-5 md:gap-6;
   }
 }

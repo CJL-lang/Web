@@ -1,9 +1,11 @@
-import { ChevronRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
+import { ResourceListColumnHead } from "../../components/ui/ResourceListColumnHead";
 import { useAdminData } from "../../context/AdminDataContext";
+import { coachSessionStatusPillClass } from "../../utils/bizStatusPills";
 import { cn } from "../../utils/cn";
 
 const FILTER_ALL = "__all__";
@@ -73,9 +75,9 @@ export function CoachesListPage() {
         </div>
 
         <div className="c-resource-list__filters">
-          <label className="c-resource-list__filter-field">
-            <span className="c-resource-list__filter-label">状态</span>
+          <div className="c-resource-list__filter-field">
             <select
+              aria-label="状态"
               className="c-field-input c-resource-list__filter-select"
               onChange={(e) => setStatusFilter(e.target.value)}
               value={statusFilter}
@@ -87,7 +89,7 @@ export function CoachesListPage() {
                 </option>
               ))}
             </select>
-          </label>
+          </div>
         </div>
       </div>
 
@@ -97,47 +99,71 @@ export function CoachesListPage() {
             没有符合条件的教练，请调整搜索或筛选条件。
           </p>
         ) : (
-          <ul className="c-resource-list__list">
-            {filtered.map((coach) => {
-              const studentCount = studentCountByCoachName.get(coach.name) ?? 0;
-              return (
-                <li key={coach.id}>
-                  <NavLink
-                    className={({ isPending }) =>
-                      cn(
-                        "group c-resource-list__row",
-                        isPending && "c-resource-list__row--pending"
-                      )
-                    }
-                    to={coach.id}
-                  >
-                    <div className="c-resource-list__title-block">
-                      <p className="c-resource-list__title">{coach.name}</p>
-                      <p className="c-resource-list__subtitle">
-                        {coach.id} · {coach.title}
-                      </p>
-                    </div>
-                    <div className="c-resource-list__stat c-resource-list__stat--coach-col">
-                      <p className="c-resource-list__stat-label--strong">状态</p>
-                      <p className="c-resource-list__stat-value">
-                        {coach.sessionStatus}
-                      </p>
-                    </div>
-                    <div className="c-resource-list__stat c-resource-list__stat--fixed">
-                      <p className="c-resource-list__stat-label">带教学员</p>
-                      <p className="c-resource-list__stat-value--plain">
-                        {studentCount} 人
-                      </p>
-                    </div>
-                    <ChevronRight
-                      aria-hidden
-                      className="c-resource-list__chevron"
-                    />
-                  </NavLink>
-                </li>
-              );
-            })}
-          </ul>
+          <>
+            <ResourceListColumnHead
+              columns={[
+                { key: "primary", variant: "primary", label: "教练" },
+                {
+                  key: "session",
+                  variant: "stat",
+                  label: "状态",
+                  className:
+                    "c-resource-list__stat--coach-col c-resource-list__stat--col",
+                },
+                {
+                  key: "students",
+                  variant: "stat",
+                  label: "带教学员",
+                  className: "c-resource-list__stat--col",
+                },
+              ]}
+            />
+            <ul className="c-resource-list__list">
+              {filtered.map((coach) => {
+                const studentCount =
+                  studentCountByCoachName.get(coach.name) ?? 0;
+                return (
+                  <li key={coach.id}>
+                    <NavLink
+                      className={({ isPending }) =>
+                        cn(
+                          "c-resource-list__row",
+                          isPending && "c-resource-list__row--pending"
+                        )
+                      }
+                      to={coach.id}
+                    >
+                      <div className="c-resource-list__title-block">
+                        <p className="c-resource-list__title">{coach.name}</p>
+                        <p className="c-resource-list__subtitle">
+                          {coach.id} · {coach.title}
+                        </p>
+                      </div>
+                      <div className="c-resource-list__stat c-resource-list__stat--coach-col c-resource-list__stat--col c-resource-list__stat--value-only">
+                        <p className="c-resource-list__stat-value">
+                          <span
+                            className={cn(
+                              "c-order-status",
+                              coachSessionStatusPillClass(
+                                coach.sessionStatus,
+                              ),
+                            )}
+                          >
+                            {coach.sessionStatus}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="c-resource-list__stat c-resource-list__stat--col c-resource-list__stat--value-only">
+                        <p className="c-resource-list__stat-value--plain">
+                          {studentCount} 人
+                        </p>
+                      </div>
+                    </NavLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
         )}
       </section>
     </>

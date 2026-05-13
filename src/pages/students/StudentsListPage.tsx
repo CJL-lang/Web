@@ -1,10 +1,12 @@
-import { ChevronRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
+import { ResourceListColumnHead } from "../../components/ui/ResourceListColumnHead";
 import { useAdminData } from "../../context/AdminDataContext";
 import { normalizeEnrollmentStatus } from "../../mocks/students";
+import { studentEnrollmentStatusPillClass } from "../../utils/bizStatusPills";
 import { cn } from "../../utils/cn";
 
 const FILTER_ALL = "__all__";
@@ -76,9 +78,9 @@ export function StudentsListPage() {
         </div>
 
         <div className="c-resource-list__filters">
-          <label className="c-resource-list__filter-field">
-            <span className="c-resource-list__filter-label">状态</span>
+          <div className="c-resource-list__filter-field">
             <select
+              aria-label="状态"
               className="c-field-input c-resource-list__filter-select"
               onChange={(e) => setStatusFilter(e.target.value)}
               value={statusFilter}
@@ -90,11 +92,11 @@ export function StudentsListPage() {
                 </option>
               ))}
             </select>
-          </label>
+          </div>
 
-          <label className="c-resource-list__filter-field">
-            <span className="c-resource-list__filter-label">教练</span>
+          <div className="c-resource-list__filter-field">
             <select
+              aria-label="教练"
               className="c-field-input c-resource-list__filter-select"
               onChange={(e) => setCoachFilter(e.target.value)}
               value={coachFilter}
@@ -106,7 +108,7 @@ export function StudentsListPage() {
                 </option>
               ))}
             </select>
-          </label>
+          </div>
         </div>
       </div>
 
@@ -116,44 +118,67 @@ export function StudentsListPage() {
             没有符合条件的学员，请调整搜索或筛选条件。
           </p>
         ) : (
-          <ul className="c-resource-list__list">
-            {filtered.map((student) => (
-              <li key={student.id}>
-                <NavLink
-                  className={({ isPending }) =>
-                    cn(
-                      "group c-resource-list__row",
-                      isPending && "c-resource-list__row--pending"
-                    )
-                  }
-                  to={student.id}
-                >
-                  <div className="c-resource-list__title-block">
-                    <p className="c-resource-list__title">{student.name}</p>
-                    <p className="c-resource-list__subtitle">
-                      {student.id} · {student.packageName}
-                    </p>
-                  </div>
-                  <div className="c-resource-list__stat">
-                    <p className="c-resource-list__stat-label">状态</p>
-                    <p className="c-resource-list__stat-value">
-                      {normalizeEnrollmentStatus(student.status)}
-                    </p>
-                  </div>
-                  <div className="c-resource-list__stat c-resource-list__stat--fixed">
-                    <p className="c-resource-list__stat-label">教练</p>
-                    <p className="c-resource-list__stat-value--plain">
-                      {student.coach}
-                    </p>
-                  </div>
-                  <ChevronRight
-                    aria-hidden
-                    className="c-resource-list__chevron"
-                  />
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+          <>
+            <ResourceListColumnHead
+              columns={[
+                { key: "primary", variant: "primary", label: "学员" },
+                {
+                  key: "status",
+                  variant: "stat",
+                  label: "状态",
+                  className: "c-resource-list__stat--col",
+                },
+                {
+                  key: "coach",
+                  variant: "stat",
+                  label: "教练",
+                  className: "c-resource-list__stat--col",
+                },
+              ]}
+            />
+            <ul className="c-resource-list__list">
+              {filtered.map((student) => {
+                const enrollment = normalizeEnrollmentStatus(student.status);
+                return (
+                  <li key={student.id}>
+                    <NavLink
+                      className={({ isPending }) =>
+                        cn(
+                          "c-resource-list__row",
+                          isPending && "c-resource-list__row--pending"
+                        )
+                      }
+                      to={student.id}
+                    >
+                      <div className="c-resource-list__title-block">
+                        <p className="c-resource-list__title">{student.name}</p>
+                        <p className="c-resource-list__subtitle">
+                          {student.id} · {student.packageName}
+                        </p>
+                      </div>
+                      <div className="c-resource-list__stat c-resource-list__stat--col c-resource-list__stat--value-only">
+                        <p className="c-resource-list__stat-value">
+                          <span
+                            className={cn(
+                              "c-order-status",
+                              studentEnrollmentStatusPillClass(enrollment),
+                            )}
+                          >
+                            {enrollment}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="c-resource-list__stat c-resource-list__stat--col c-resource-list__stat--value-only">
+                        <p className="c-resource-list__stat-value--plain">
+                          {student.coach}
+                        </p>
+                      </div>
+                    </NavLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
         )}
       </section>
     </>

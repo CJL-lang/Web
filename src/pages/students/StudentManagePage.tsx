@@ -7,6 +7,8 @@ import { SectionCard } from "../../components/ui/SectionCard";
 import { useAdminData } from "../../context/AdminDataContext";
 import { getStudentProfileFromListItem } from "../../mocks/studentProfiles";
 import { normalizeEnrollmentStatus } from "../../mocks/students";
+import { studentEnrollmentStatusPillClass } from "../../utils/bizStatusPills";
+import { cn } from "../../utils/cn";
 
 export function StudentManagePage() {
   const { studentId } = useParams<{ studentId: string }>();
@@ -23,6 +25,7 @@ export function StudentManagePage() {
   }
 
   const profile = getStudentProfileFromListItem(listItem);
+  const enrollmentStatus = normalizeEnrollmentStatus(profile.status);
 
   return (
     <>
@@ -49,8 +52,13 @@ export function StudentManagePage() {
             <span>
               {profile.age} 岁 · {profile.gender}
             </span>
-            <span className="c-student-detail__status-chip">
-              {normalizeEnrollmentStatus(profile.status)}
+            <span
+              className={cn(
+                "c-order-status",
+                studentEnrollmentStatusPillClass(enrollmentStatus),
+              )}
+            >
+              {enrollmentStatus}
             </span>
           </div>
         </div>
@@ -67,7 +75,10 @@ export function StudentManagePage() {
               <h3 className="c-student-detail__section-heading">关联家长</h3>
               <ul className="c-student-detail__parent-list">
                 {profile.parents.map((p, i) => (
-                  <li key={`${p.phone}-${i}`} className="c-student-detail__parent-card">
+                  <li
+                    key={`${p.userId ?? p.phone}-${i}`}
+                    className="c-student-detail__parent-card"
+                  >
                     <div className="c-student-detail__parent-card-header">
                       <p className="c-student-detail__parent-name">{p.name}</p>
                       <span className="c-student-detail__parent-relation">
@@ -78,6 +89,26 @@ export function StudentManagePage() {
                       <Phone aria-hidden className="c-icon-phone-inline" />
                       {p.phone}
                     </p>
+                    <dl className="c-student-detail__parent-profile-list">
+                      {p.occupation ? (
+                        <div className="c-student-detail__parent-profile-row">
+                          <dt>职业</dt>
+                          <dd>{p.occupation}</dd>
+                        </div>
+                      ) : null}
+                      {p.emergencyContact ? (
+                        <div className="c-student-detail__parent-profile-row">
+                          <dt>紧急联系方式</dt>
+                          <dd>{p.emergencyContact}</dd>
+                        </div>
+                      ) : null}
+                      {p.homeAddress ? (
+                        <div className="c-student-detail__parent-profile-row c-student-detail__parent-profile-row--wide">
+                          <dt>家庭住址</dt>
+                          <dd>{p.homeAddress}</dd>
+                        </div>
+                      ) : null}
+                    </dl>
                   </li>
                 ))}
               </ul>

@@ -159,6 +159,16 @@ export function StudentPackagesSection({ packages }: StudentPackagesSectionProps
                       </span>
                     </span>
                   </p>
+                  {selected.catalogCoachStudentRatio != null ? (
+                    <p className="c-student-package-dialog__meta">
+                      <span className="c-student-package-dialog__meta-label">
+                        班型
+                      </span>
+                      <span className="c-student-package-dialog__meta-value">
+                        1 对 {selected.catalogCoachStudentRatio}
+                      </span>
+                    </p>
+                  ) : null}
                   <p className="c-student-package-dialog__meta">
                     <span className="c-student-package-dialog__meta-label">
                       套餐周期
@@ -176,15 +186,6 @@ export function StudentPackagesSection({ packages }: StudentPackagesSectionProps
                     </span>
                   </p>
                 </div>
-
-                <section className="c-student-package-dialog__section">
-                  <h3 className="c-student-package-dialog__section-title">
-                    {selected.detail.planSummary.title}
-                  </h3>
-                  <p className="c-student-package-dialog__section-desc">
-                    {selected.detail.planSummary.description}
-                  </p>
-                </section>
 
                 <section className="c-student-package-dialog__section">
                   <h3 className="c-student-package-dialog__section-title">

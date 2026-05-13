@@ -1,4 +1,5 @@
 import type { CoachListItem } from "../mocks/coaches";
+import type { OrderListItem } from "../mocks/orders";
 import type { PackageListItem } from "../mocks/packages";
 import type { StudentListItem } from "../mocks/students";
 
@@ -33,6 +34,17 @@ export function nextPackageId(packages: PackageListItem[]): string {
     }
   }
   return `PKG-${max + 1}`;
+}
+
+export function nextOrderId(orders: OrderListItem[]): string {
+  let max = 1000;
+  for (const order of orders) {
+    const m = /^ORD-(\d+)$/.exec(order.id);
+    if (m) {
+      max = Math.max(max, parseInt(m[1], 10));
+    }
+  }
+  return `ORD-${max + 1}`;
 }
 
 export function coachInitialsFromName(name: string): string {

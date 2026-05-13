@@ -51,3 +51,12 @@ export const INITIAL_PACKAGE_LIST: PackageListItem[] = [
     improvementPlans: ["完成入门安全与礼仪训练", "体验推杆与短杆基础", "评估后续学习方向"],
   },
 ];
+
+/** 按套餐名称精确匹配目录（mock 阶段不设学员–套餐 id 关联） */
+export function findPackageByName(name: string): PackageListItem | undefined {
+  const t = name.trim();
+  if (!t) {
+    return undefined;
+  }
+  return INITIAL_PACKAGE_LIST.find((p) => p.name === t);
+}

@@ -1,10 +1,24 @@
-import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { navigationItems } from "../../constants/navigation";
 import { cn } from "../../utils/cn";
+import {
+  getNavTargetPath,
+  isWithinNavSection,
+  rememberNavSectionPath,
+} from "../../utils/navigation";
 import { AcademyBrand } from "./AcademyBrand";
 
+const navigationPaths = navigationItems.map((item) => item.path);
+
 export function TabletNav() {
+  const location = useLocation();
+
+  useEffect(() => {
+    rememberNavSectionPath(location.pathname, navigationPaths);
+  }, [location.pathname]);
+
   return (
     <aside className="c-tablet-nav">
       <div className="c-tablet-nav__brand">
@@ -27,8 +41,9 @@ export function TabletNav() {
                     : "c-tablet-nav__link--inactive"
                 )
               }
+              replace={isWithinNavSection(location.pathname, item.path)}
               title={item.label}
-              to={item.path}
+              to={getNavTargetPath(location.pathname, item.path)}
             >
               <Icon size={18} />
             </NavLink>

@@ -1,8 +1,9 @@
-import { ChevronRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
+import { ResourceListColumnHead } from "../../components/ui/ResourceListColumnHead";
 import { useAdminData } from "../../context/AdminDataContext";
 import { cn } from "../../utils/cn";
 
@@ -79,52 +80,69 @@ export function PackageManagementPage() {
             没有符合条件的套餐，请调整搜索条件。
           </p>
         ) : (
-          <ul className="c-resource-list__list">
-            {filtered.map((item) => (
-              <li key={item.id}>
-                <NavLink
-                  aria-label={`编辑套餐：${item.name}`}
-                  className={({ isPending }) =>
-                    cn(
-                      "group c-resource-list__row c-package-list__row",
-                      isPending && "c-resource-list__row--pending"
-                    )
-                  }
-                  to={`/packages/${encodeURIComponent(item.id)}/edit`}
-                >
-                  <div className="c-resource-list__title-block">
-                    <p className="c-resource-list__title">{item.name}</p>
-                  </div>
+          <>
+            <ResourceListColumnHead
+              columns={[
+                { key: "primary", variant: "primary", label: "套餐" },
+                {
+                  key: "price",
+                  variant: "stat",
+                  label: "价格",
+                  className: "c-package-list__stat",
+                },
+                {
+                  key: "ratio",
+                  variant: "stat",
+                  label: "班型",
+                  className: "c-package-list__stat",
+                },
+                {
+                  key: "lessons",
+                  variant: "stat",
+                  label: "课时",
+                  className: "c-resource-list__stat--fixed",
+                },
+              ]}
+            />
+            <ul className="c-resource-list__list">
+              {filtered.map((item) => (
+                <li key={item.id}>
+                  <NavLink
+                    aria-label={`查看套餐：${item.name}`}
+                    className={({ isPending }) =>
+                      cn(
+                        "c-resource-list__row c-package-list__row",
+                        isPending && "c-resource-list__row--pending"
+                      )
+                    }
+                    to={`/packages/${encodeURIComponent(item.id)}`}
+                  >
+                    <div className="c-resource-list__title-block">
+                      <p className="c-resource-list__title">{item.name}</p>
+                    </div>
 
-                  <div className="c-resource-list__stat c-package-list__stat">
-                    <p className="c-resource-list__stat-label">价格</p>
-                    <p className="c-resource-list__stat-value">
-                      {formatPrice(item.price)}
-                    </p>
-                  </div>
+                    <div className="c-resource-list__stat c-package-list__stat c-resource-list__stat--value-only">
+                      <p className="c-resource-list__stat-value">
+                        {formatPrice(item.price)}
+                      </p>
+                    </div>
 
-                  <div className="c-resource-list__stat c-package-list__stat">
-                    <p className="c-resource-list__stat-label">班型</p>
-                    <p className="c-resource-list__stat-value--plain">
-                      1 对 {item.coachStudentRatio}
-                    </p>
-                  </div>
+                    <div className="c-resource-list__stat c-package-list__stat c-resource-list__stat--value-only">
+                      <p className="c-resource-list__stat-value--plain">
+                        1 对 {item.coachStudentRatio}
+                      </p>
+                    </div>
 
-                  <div className="c-resource-list__stat c-resource-list__stat--fixed">
-                    <p className="c-resource-list__stat-label">课时</p>
-                    <p className="c-resource-list__stat-value--plain">
-                      {item.lessonCount} 节
-                    </p>
-                  </div>
-
-                  <ChevronRight
-                    aria-hidden
-                    className="c-resource-list__chevron"
-                  />
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+                    <div className="c-resource-list__stat c-resource-list__stat--fixed c-resource-list__stat--value-only">
+                      <p className="c-resource-list__stat-value--plain">
+                        {item.lessonCount} 节
+                      </p>
+                    </div>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </>
         )}
       </section>
     </>

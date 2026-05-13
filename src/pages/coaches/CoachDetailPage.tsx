@@ -4,6 +4,8 @@ import { Link, Navigate, useParams } from "react-router-dom";
 
 import { SectionCard } from "../../components/ui/SectionCard";
 import { useAdminData } from "../../context/AdminDataContext";
+import { coachSessionStatusPillClass } from "../../utils/bizStatusPills";
+import { cn } from "../../utils/cn";
 
 export function CoachDetailPage() {
   const { coachId } = useParams<{ coachId: string }>();
@@ -70,7 +72,16 @@ export function CoachDetailPage() {
         <dl className="c-coach-detail__dl">
           <div>
             <dt className="c-coach-detail__dt">当前带教状态</dt>
-            <dd className="c-coach-detail__dd">{coach.sessionStatus}</dd>
+            <dd className="c-coach-detail__dd">
+              <span
+                className={cn(
+                  "c-order-status",
+                  coachSessionStatusPillClass(coach.sessionStatus),
+                )}
+              >
+                {coach.sessionStatus}
+              </span>
+            </dd>
           </div>
           <div>
             <dt className="c-coach-detail__dt">联系电话</dt>

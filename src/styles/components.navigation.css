@@ -24,11 +24,11 @@
   }
 
   .c-sidebar-navlink__row {
-    @apply flex items-start gap-3;
+    @apply flex items-center gap-3;
   }
 
   .c-sidebar-navlink__icon {
-    @apply mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl transition;
+    @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl transition;
   }
 
   .c-sidebar-navlink__icon--active {
@@ -49,14 +49,6 @@
 
   .c-sidebar-navlink__title--inactive {
     @apply text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)];
-  }
-
-  .c-sidebar-navlink__text-stack {
-    @apply space-y-1;
-  }
-
-  .c-sidebar-navlink__desc {
-    @apply text-xs leading-5 text-[var(--color-text-muted)];
   }
 
   /* Mobile horizontal strip */

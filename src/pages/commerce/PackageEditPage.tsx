@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { Button } from "../../components/ui/Button";
 import { InputField, TextareaField } from "../../components/ui/Field";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { useAdminData } from "../../context/AdminDataContext";
-
+import type { PackageListItem } from "../../mocks/packages";
+// 教练对学员比例选项
 const RATIO_OPTIONS = [1, 2, 3, 4, 6, 8, 10] as const;
-
+// 表单验证错误类型
 interface FieldErrors {
   name?: string;
   introduction?: string;
@@ -15,40 +16,37 @@ interface FieldErrors {
   lessonCount?: string;
   plan?: string;
 }
-
+// 套餐编辑页面
 export function PackageEditPage() {
-  const navigate = useNavigate();
   const { packageId } = useParams<{ packageId: string }>();
-  const { packages, updatePackage } = useAdminData();
-
+  const { packages } = useAdminData();
   const pkg = useMemo(
     () => (packageId ? packages.find((p) => p.id === packageId) : undefined),
     [packageId, packages]
   );
+  if (!packageId || !pkg) {
+    return <Navigate replace to="/packages" />;
+  }
+  return <PackageEditForm key={pkg.id} pkg={pkg} />;
+}
+// 套餐编辑表单
+function PackageEditForm({ pkg }: { pkg: PackageListItem }) {
+  const navigate = useNavigate();
+  const { updatePackage } = useAdminData();
 
-  const [name, setName] = useState("");
-  const [introduction, setIntroduction] = useState("");
-  const [priceInput, setPriceInput] = useState("");
-  const [coachStudentRatio, setCoachStudentRatio] = useState<number>(4);
-  const [lessonCountInput, setLessonCountInput] = useState("");
-  const [plan, setPlan] = useState("");
+  const [name, setName] = useState(pkg.name);
+  const [introduction, setIntroduction] = useState(pkg.introduction);
+  const [priceInput, setPriceInput] = useState(String(pkg.price));
+  const [coachStudentRatio, setCoachStudentRatio] = useState<number>(
+    pkg.coachStudentRatio
+  );
+  const [lessonCountInput, setLessonCountInput] = useState(
+    String(pkg.lessonCount)
+  );
+  const [plan, setPlan] = useState(
+    pkg.improvementPlans.length > 0 ? pkg.improvementPlans.join("； ") : ""
+  );
   const [errors, setErrors] = useState<FieldErrors>({});
-
-  useEffect(() => {
-    if (!pkg) {
-      return;
-    }
-    setName(pkg.name);
-    setIntroduction(pkg.introduction);
-    setPriceInput(String(pkg.price));
-    setCoachStudentRatio(pkg.coachStudentRatio);
-    setLessonCountInput(String(pkg.lessonCount));
-    setPlan(
-      pkg.improvementPlans.length > 0
-        ? pkg.improvementPlans.join("； ")
-        : ""
-    );
-  }, [pkg]);
 
   const validate = (): boolean => {
     const next: FieldErrors = {};
@@ -78,7 +76,7 @@ export function PackageEditPage() {
     setErrors(next);
     return Object.keys(next).length === 0;
   };
-
+// 提交表单
   const handleSubmit = () => {
     if (!validate() || !pkg) {
       return;
@@ -92,12 +90,8 @@ export function PackageEditPage() {
       lessonCount: Number.parseInt(lessonCountInput.trim(), 10),
       improvementPlans: [plan.trim()],
     });
-    navigate("/packages");
+    navigate(`/packages/${encodeURIComponent(pkg.id)}`);
   };
-
-  if (!packageId || !pkg) {
-    return <Navigate replace to="/packages" />;
-  }
 
   return (
     <>

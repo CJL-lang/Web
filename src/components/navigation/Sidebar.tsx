@@ -1,10 +1,24 @@
-import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 import { navigationItems } from "../../constants/navigation";
 import { cn } from "../../utils/cn";
+import {
+  getNavTargetPath,
+  isWithinNavSection,
+  rememberNavSectionPath,
+} from "../../utils/navigation";
 import { AcademyBrand } from "./AcademyBrand";
 
+const navigationPaths = navigationItems.map((item) => item.path);
+
 export function Sidebar() {
+  const location = useLocation();
+
+  useEffect(() => {
+    rememberNavSectionPath(location.pathname, navigationPaths);
+  }, [location.pathname]);
+
   return (
     <aside className="c-sidebar">
       <div className="c-sidebar__brand-row">
@@ -26,7 +40,8 @@ export function Sidebar() {
                     : "c-sidebar-navlink--inactive"
                 )
               }
-              to={item.path}
+              replace={isWithinNavSection(location.pathname, item.path)}
+              to={getNavTargetPath(location.pathname, item.path)}
             >
               {({ isActive }) => (
                 <div className="c-sidebar-navlink__row">
@@ -40,18 +55,15 @@ export function Sidebar() {
                   >
                     <Icon size={18} />
                   </div>
-                  <div className="c-sidebar-navlink__text-stack">
-                    <div
-                      className={cn(
-                        "c-sidebar-navlink__title",
-                        isActive
-                          ? "c-sidebar-navlink__title--active"
-                          : "c-sidebar-navlink__title--inactive"
-                      )}
-                    >
-                      {item.label}
-                    </div>
-                    <p className="c-sidebar-navlink__desc">{item.description}</p>
+                  <div
+                    className={cn(
+                      "c-sidebar-navlink__title",
+                      isActive
+                        ? "c-sidebar-navlink__title--active"
+                        : "c-sidebar-navlink__title--inactive"
+                    )}
+                  >
+                    {item.label}
                   </div>
                 </div>
               )}

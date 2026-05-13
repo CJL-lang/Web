@@ -14,10 +14,15 @@ import {
   DashboardRevenuePage,
   DashboardStudentsPage,
 } from "../pages/dashboard";
+import { OrderCreatePage } from "../pages/commerce/OrderCreatePage";
+import { OrderDetailPage } from "../pages/commerce/OrderDetailPage";
+import { OrderEditPage } from "../pages/commerce/OrderEditPage";
 import { OrderManagementPage } from "../pages/commerce/OrderManagementPage";
 import { PackageCreatePage } from "../pages/commerce/PackageCreatePage";
+import { PackageDetailPage } from "../pages/commerce/PackageDetailPage";
 import { PackageEditPage } from "../pages/commerce/PackageEditPage";
 import { PackageManagementPage } from "../pages/commerce/PackageManagementPage";
+import { PackagesLayout } from "../pages/commerce/PackagesLayout";
 import { MessagePublishPage } from "../pages/messages/MessagePublishPage";
 import { SettingsPage } from "../pages/settings/SettingsPage";
 import {
@@ -100,19 +105,41 @@ export const router = createBrowserRouter([
       },
       {
         path: "packages",
-        element: <PackageManagementPage />,
-      },
-      {
-        path: "packages/new",
-        element: <PackageCreatePage />,
-      },
-      {
-        path: "packages/:packageId/edit",
-        element: <PackageEditPage />,
+        element: <PackagesLayout />,
+        children: [
+          {
+            index: true,
+            element: <PackageManagementPage />,
+          },
+          {
+            path: "new",
+            element: <PackageCreatePage />,
+          },
+          {
+            path: ":packageId",
+            element: <PackageDetailPage />,
+          },
+          {
+            path: ":packageId/edit",
+            element: <PackageEditPage />,
+          },
+        ],
       },
       {
         path: "orders",
         element: <OrderManagementPage />,
+      },
+      {
+        path: "orders/new",
+        element: <OrderCreatePage />,
+      },
+      {
+        path: "orders/:orderId",
+        element: <OrderDetailPage />,
+      },
+      {
+        path: "orders/:orderId/edit",
+        element: <OrderEditPage />,
       },
       {
         path: "approvals",
