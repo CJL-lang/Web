@@ -563,7 +563,7 @@ function defaultPackages(student: StudentListItem): StudentAdminPackage[] {
   const catalog = findPackageByName(student.packageName);
 
   const totalPrimary = catalog
-    ? catalog.lessonCount
+    ? (catalog.lessonCount ?? 14 + (seed % 12))
     : 14 + (seed % 12);
   const remainingPrimary = primaryExpired
     ? 0

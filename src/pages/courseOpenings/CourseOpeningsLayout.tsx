@@ -4,7 +4,7 @@ import { cn } from "../../utils/cn";
 
 const courseOpeningTabs = [
   { label: "开课组", path: "groups" },
-  { label: "教练视角", path: "coaches" },
+  { label: "批量开课", path: "coaches" },
   { label: "订单视角", path: "orders" },
 ] as const;
 

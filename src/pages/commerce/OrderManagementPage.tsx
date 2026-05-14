@@ -17,6 +17,8 @@ type CreatedSort = "asc" | "desc";
 const orderStatusClass: Record<OrderStatus, string> = {
   待完成: "c-order-status--pending",
   已完成: "c-order-status--success",
+  已退款: "c-order-status--canceled",
+  已关闭: "c-order-status--closed",
 };
 
 function normalize(s: string) {
@@ -50,10 +52,6 @@ export function OrderManagementPage() {
   const filtered = useMemo(() => {
     const q = normalize(query);
     const list = orders.filter((order) => {
-      if (order.closedAt) {
-        return false;
-      }
-
       const student = studentById.get(order.studentId);
       const pkg = packageById.get(order.packageId);
 

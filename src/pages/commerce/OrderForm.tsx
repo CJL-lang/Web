@@ -11,7 +11,10 @@ import {
   type OrderPaymentVoucher,
   type PaymentMethod,
 } from "../../mocks/orders";
-import type { PackageListItem } from "../../mocks/packages";
+import {
+  formatPackageLessonCount,
+  type PackageListItem,
+} from "../../mocks/packages";
 import type { StudentListItem } from "../../mocks/students";
 import {
   formatLocalDateTimeMinute,
@@ -123,7 +126,7 @@ export function OrderForm({
   const handlePackageChange = (nextPackageId: string) => {
     setPackageId(nextPackageId);
     const nextPackage = packages.find((p) => p.id === nextPackageId);
-    if (nextPackage) {
+    if (nextPackage?.price) {
       setAmountInput(String(nextPackage.price));
     }
     setErrors((current) => ({ ...current, packageId: undefined }));
@@ -249,7 +252,8 @@ export function OrderForm({
             <option value="">请选择套餐</option>
             {packages.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.name} · {item.lessonCount} 节
+                {item.name || "未命名套餐"} ·{" "}
+                {formatPackageLessonCount(item.lessonCount)}
               </option>
             ))}
           </select>

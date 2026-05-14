@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { useAdminData } from "../../context/AdminDataContext";
+import { isPackageAvailable } from "../../mocks/packages";
 import { OrderForm, type OrderFormPayload } from "./OrderForm";
 
 export function OrderEditPage() {
@@ -14,12 +15,19 @@ export function OrderEditPage() {
     () => (orderId ? orders.find((item) => item.id === orderId) : undefined),
     [orderId, orders],
   );
+  const selectablePackages = useMemo(
+    () =>
+      packages.filter(
+        (pkg) => isPackageAvailable(pkg) || pkg.id === order?.packageId,
+      ),
+    [order?.packageId, packages],
+  );
 
   if (!orderId || !order) {
     return <Navigate replace to="/orders" />;
   }
 
-  if (order.status === "已完成" || order.closedAt) {
+  if (order.status !== "待完成" || order.closedAt) {
     return (
       <Navigate replace to={`/orders/${encodeURIComponent(order.id)}`} />
     );
@@ -41,7 +49,7 @@ export function OrderEditPage() {
         cancelTo={`/orders/${encodeURIComponent(order.id)}`}
         initialOrder={order}
         onSubmit={handleSubmit}
-        packages={packages}
+        packages={selectablePackages}
         students={students}
         submitLabel="保存修改"
       />

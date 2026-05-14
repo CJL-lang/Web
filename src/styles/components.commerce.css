@@ -3,8 +3,51 @@
     @apply cursor-pointer;
   }
 
+  .c-package-list__status-col {
+    @apply md:min-w-[5.5rem];
+  }
+
   .c-package-list__stat {
     @apply md:min-w-[6rem];
+  }
+
+  .c-package-status {
+    @apply inline-flex min-h-6 items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  .c-package-status--draft {
+    @apply border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] text-[var(--color-text-secondary)];
+  }
+
+  .c-package-status--active {
+    @apply border-[var(--border-success)] bg-[var(--surface-success-soft)] text-[var(--color-success)];
+  }
+
+  .c-package-status--expired {
+    @apply border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] text-[var(--color-text-muted)];
+  }
+
+  @media (width >= 40rem) {
+    .c-package-list__column-head.c-resource-list__column-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 5.5rem 7rem 6rem 6rem;
+      align-items: center;
+      column-gap: 1rem;
+    }
+
+    .c-package-list__row.c-resource-list__row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 5.5rem 7rem 6rem 6rem;
+      align-items: center;
+      column-gap: 1rem;
+    }
+  }
+
+  @media (width < 40rem) {
+    .c-package-list__row .c-package-list__status-col {
+      display: block;
+      text-align: left;
+    }
   }
 
   .c-order-list__row {
@@ -58,6 +101,10 @@
 
   .c-order-status--canceled {
     @apply border-[var(--border-danger)] bg-[var(--surface-danger-soft)] text-[var(--color-danger)];
+  }
+
+  .c-order-status--closed {
+    @apply border-[var(--color-border-strong)] bg-[var(--color-surface-soft)] text-[var(--color-text-secondary)];
   }
 
   .c-order-voucher-input {
@@ -242,6 +289,14 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 0.5rem;
+  }
+
+  .c-order-refund-dialog__panel {
+    width: min(520px, 100%);
+  }
+
+  .c-order-refund-dialog__fields {
+    @apply flex flex-col gap-4;
   }
 
   .c-package-plan-list {

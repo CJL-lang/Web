@@ -1,6 +1,5 @@
 import type {
   DashboardMetric,
-  DashboardModuleTab,
   DashboardTimeRange,
   DashboardTimeRangeOption,
   InsightItem,
@@ -49,24 +48,6 @@ export const dashboardInsights: InsightItem[] = [
     title: "潜在线索",
     value: "39",
     description: "高意向咨询主要来自体验课转正式课链路。",
-  },
-];
-
-export const dashboardModuleTabs: DashboardModuleTab[] = [
-  {
-    id: "students",
-    label: "学员",
-    path: "/dashboard/students",
-  },
-  {
-    id: "coaches",
-    label: "教练",
-    path: "/dashboard/coaches",
-  },
-  {
-    id: "revenue",
-    label: "营收",
-    path: "/dashboard/revenue",
   },
 ];
 

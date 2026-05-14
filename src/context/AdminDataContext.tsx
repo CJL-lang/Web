@@ -28,6 +28,11 @@ import {
   type StudentListItem,
 } from "../mocks/students";
 
+interface RefundOrderPayload {
+  refundAmount: number;
+  refundReason: string;
+}
+
 export interface AdminDataContextValue {
   students: StudentListItem[];
   coaches: CoachListItem[];
@@ -38,12 +43,14 @@ export interface AdminDataContextValue {
   addCoach: (item: CoachListItem) => void;
   addPackage: (item: PackageListItem) => void;
   updatePackage: (id: string, next: Omit<PackageListItem, "id">) => void;
+  expirePackage: (id: string) => void;
   addOrder: (item: OrderListItem) => void;
   updateOrder: (
     id: string,
     next: Omit<OrderListItem, "id" | "createdAt">,
   ) => void;
   closeOrder: (id: string) => void;
+  refundOrder: (id: string, payload: RefundOrderPayload) => void;
   addCourseOpeningGroup: (item: CourseOpeningGroup) => void;
   appendOrdersToCourseOpeningGroup: (id: string, orderIds: string[]) => void;
   confirmCourseOpeningGroup: (id: string) => void;
@@ -91,6 +98,12 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
     []
   );
 
+  const expirePackage = useCallback((id: string) => {
+    setPackages((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, status: "已过期" } : p))
+    );
+  }, []);
+
   const addOrder = useCallback((item: OrderListItem) => {
     setOrders((prev) => [...prev, item]);
   }, []);
@@ -116,7 +129,37 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
         }
 
         const now = new Date().toISOString();
-        return { ...order, closedAt: now, updatedAt: now };
+        return {
+          ...order,
+          status: "已关闭",
+          closedAt: now,
+          updatedAt: now,
+        };
+      }),
+    );
+  }, []);
+
+  const refundOrder = useCallback((id: string, payload: RefundOrderPayload) => {
+    setOrders((prev) =>
+      prev.map((order) => {
+        if (
+          order.id !== id ||
+          order.status !== "已完成" ||
+          order.closedAt ||
+          order.refundedAt
+        ) {
+          return order;
+        }
+
+        const now = new Date().toISOString();
+        return {
+          ...order,
+          status: "已退款",
+          refundAmount: payload.refundAmount,
+          refundReason: payload.refundReason,
+          refundedAt: now,
+          updatedAt: now,
+        };
       }),
     );
   }, []);
@@ -186,9 +229,11 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
         addCoach,
         addPackage,
         updatePackage,
+        expirePackage,
         addOrder,
         updateOrder,
         closeOrder,
+        refundOrder,
         addCourseOpeningGroup,
         appendOrdersToCourseOpeningGroup,
         confirmCourseOpeningGroup,

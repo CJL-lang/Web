@@ -76,6 +76,32 @@ export function CourseOpeningCoachPage() {
   const selectionLimit =
     fillableGroups.length > 0 ? fillableRemainingCapacity : groupCapacity;
 
+  const batchHeadcountMetric = useMemo(() => {
+    if (fillableGroups.length === 0) {
+      return {
+        denominatorLabel: "新组容量" as const,
+        numeratorLabel: "已选订单" as const,
+        value: `${selectedOrderIds.length}/${groupCapacity}`,
+      };
+    }
+    const first = fillableGroups[0];
+    const pkg = packageById.get(first.packageId);
+    const capacity = pkg?.coachStudentRatio ?? first.orderIds.length;
+    const firstRemaining = getUnopenedGroupRemainingCapacity(first, packages);
+    const toFirstGroup = Math.min(selectedOrderIds.length, firstRemaining);
+    return {
+      denominatorLabel: "额定人数" as const,
+      numeratorLabel: "组内人数" as const,
+      value: `${first.orderIds.length + toFirstGroup}/${capacity}`,
+    };
+  }, [
+    fillableGroups,
+    groupCapacity,
+    packageById,
+    packages,
+    selectedOrderIds.length,
+  ]);
+
   const eligibleOrders = useMemo(() => {
     return orders.filter(
       (order) =>
@@ -230,10 +256,11 @@ export function CourseOpeningCoachPage() {
               />
               <div>
                 <p className="c-course-openings-metric__value">
-                  {selectedOrderIds.length}/{selectionLimit}
+                  {batchHeadcountMetric.value}
                 </p>
                 <p className="c-course-openings-metric__label">
-                  已选订单 / {fillableGroups.length > 0 ? "可补名额" : "新组容量"}
+                  {batchHeadcountMetric.numeratorLabel} /{" "}
+                  {batchHeadcountMetric.denominatorLabel}
                 </p>
               </div>
             </div>
@@ -249,12 +276,6 @@ export function CourseOpeningCoachPage() {
               {fillableGroups.length > 0 ? "补入未满组" : "创建开课组"}
             </Button>
           </div>
-
-          {fillableGroups.length > 0 ? (
-            <p className="c-course-openings-form__hint">
-              已找到 {fillableGroups.length} 个同教练同套餐未满组，将按最早创建顺序补入，最多可选 {fillableRemainingCapacity} 个订单。
-            </p>
-          ) : null}
 
           {createError ? (
             <p className="c-course-openings-form__error">{createError}</p>

@@ -23,6 +23,8 @@ import {
 const orderPaymentStatusClass: Record<OrderStatus, string> = {
   待完成: "c-order-status--pending",
   已完成: "c-order-status--success",
+  已退款: "c-order-status--canceled",
+  已关闭: "c-order-status--closed",
 };
 
 export function CourseOpeningOrdersPage() {
@@ -55,7 +57,11 @@ export function CourseOpeningOrdersPage() {
 
     return orders
       .filter((order) => !order.closedAt)
-      .filter((order) => order.status === "已完成")
+      .filter(
+        (order) =>
+          order.status === "已完成" ||
+          (order.status === "已退款" && orderGroupByOrderId.has(order.id)),
+      )
       .filter((order) => {
         const group = orderGroupByOrderId.get(order.id);
         const openingStatus = getOrderOpeningStatus(

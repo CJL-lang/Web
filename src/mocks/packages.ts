@@ -1,12 +1,54 @@
+export type PackageStatus = "草稿" | "已上架" | "已过期";
+
 export interface PackageListItem {
   id: string;
   name: string;
   /** 套餐简介：适用对象、结构等，便于管理员理解与维护 */
   introduction: string;
-  price: number;
+  price: number | null;
   coachStudentRatio: number;
-  lessonCount: number;
+  lessonCount: number | null;
   improvementPlans: string[];
+  status: PackageStatus;
+}
+
+export function isPackageComplete(pkg: PackageListItem): boolean {
+  return Boolean(
+    pkg.name.trim() &&
+      pkg.introduction.trim() &&
+      pkg.price &&
+      pkg.price > 0 &&
+      pkg.lessonCount &&
+      pkg.lessonCount > 0 &&
+      pkg.improvementPlans.some((plan) => plan.trim())
+  );
+}
+
+export function isPackageAvailable(pkg: PackageListItem): boolean {
+  return pkg.status === "已上架" && isPackageComplete(pkg);
+}
+
+export function formatPackagePrice(price: PackageListItem["price"]): string {
+  if (price === null) {
+    return "未填写";
+  }
+  return new Intl.NumberFormat("zh-CN", {
+    currency: "CNY",
+    maximumFractionDigits: 0,
+    style: "currency",
+  }).format(price);
+}
+
+export function formatPackageRatio(
+  ratio: PackageListItem["coachStudentRatio"]
+): string {
+  return `1 对 ${ratio}`;
+}
+
+export function formatPackageLessonCount(
+  lessonCount: PackageListItem["lessonCount"]
+): string {
+  return lessonCount === null ? "未填写" : `${lessonCount} 节`;
 }
 
 export const INITIAL_PACKAGE_LIST: PackageListItem[] = [
@@ -19,6 +61,7 @@ export const INITIAL_PACKAGE_LIST: PackageListItem[] = [
     coachStudentRatio: 4,
     lessonCount: 12,
     improvementPlans: ["建立标准握杆与站姿", "掌握铁杆基础挥杆", "形成课后练习习惯"],
+    status: "已上架",
   },
   {
     id: "PKG-2",
@@ -29,6 +72,7 @@ export const INITIAL_PACKAGE_LIST: PackageListItem[] = [
     coachStudentRatio: 2,
     lessonCount: 8,
     improvementPlans: ["强化切杆距离控制", "提升果岭周边救球稳定性", "建立短杆训练记录"],
+    status: "已上架",
   },
   {
     id: "PKG-3",
@@ -39,6 +83,7 @@ export const INITIAL_PACKAGE_LIST: PackageListItem[] = [
     coachStudentRatio: 1,
     lessonCount: 10,
     improvementPlans: ["定制挥杆技术调整", "优化下场策略与球位选择", "阶段复盘与数据跟踪"],
+    status: "已上架",
   },
   {
     id: "PKG-4",
@@ -49,6 +94,7 @@ export const INITIAL_PACKAGE_LIST: PackageListItem[] = [
     coachStudentRatio: 6,
     lessonCount: 4,
     improvementPlans: ["完成入门安全与礼仪训练", "体验推杆与短杆基础", "评估后续学习方向"],
+    status: "已上架",
   },
 ];
 

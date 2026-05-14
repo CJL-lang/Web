@@ -16,6 +16,12 @@ interface FieldErrors {
   lessonCount?: string;
   plan?: string;
 }
+
+function parsePositiveIntegerOrNull(input: string): number | null {
+  const value = Number.parseInt(input.trim(), 10);
+  return Number.isNaN(value) || value <= 0 ? null : value;
+}
+
 // 套餐编辑页面
 export function PackageEditPage() {
   const { packageId } = useParams<{ packageId: string }>();
@@ -32,16 +38,18 @@ export function PackageEditPage() {
 // 套餐编辑表单
 function PackageEditForm({ pkg }: { pkg: PackageListItem }) {
   const navigate = useNavigate();
-  const { updatePackage } = useAdminData();
+  const { expirePackage, updatePackage } = useAdminData();
 
   const [name, setName] = useState(pkg.name);
   const [introduction, setIntroduction] = useState(pkg.introduction);
-  const [priceInput, setPriceInput] = useState(String(pkg.price));
+  const [priceInput, setPriceInput] = useState(
+    pkg.price === null ? "" : String(pkg.price)
+  );
   const [coachStudentRatio, setCoachStudentRatio] = useState<number>(
     pkg.coachStudentRatio
   );
   const [lessonCountInput, setLessonCountInput] = useState(
-    String(pkg.lessonCount)
+    pkg.lessonCount === null ? "" : String(pkg.lessonCount)
   );
   const [plan, setPlan] = useState(
     pkg.improvementPlans.length > 0 ? pkg.improvementPlans.join("； ") : ""
@@ -89,7 +97,27 @@ function PackageEditForm({ pkg }: { pkg: PackageListItem }) {
       coachStudentRatio,
       lessonCount: Number.parseInt(lessonCountInput.trim(), 10),
       improvementPlans: [plan.trim()],
+      status: "已上架",
     });
+    navigate(`/packages/${encodeURIComponent(pkg.id)}`);
+  };
+
+  const handleSaveDraft = () => {
+    updatePackage(pkg.id, {
+      name: name.trim(),
+      introduction: introduction.trim(),
+      price: parsePositiveIntegerOrNull(priceInput),
+      coachStudentRatio,
+      lessonCount: parsePositiveIntegerOrNull(lessonCountInput),
+      improvementPlans: plan.trim() ? [plan.trim()] : [],
+      status: "草稿",
+    });
+    setErrors({});
+    navigate(`/packages/${encodeURIComponent(pkg.id)}`);
+  };
+
+  const handleExpirePackage = () => {
+    expirePackage(pkg.id);
     navigate(`/packages/${encodeURIComponent(pkg.id)}`);
   };
 
@@ -183,6 +211,14 @@ function PackageEditForm({ pkg }: { pkg: PackageListItem }) {
             <Button type="button" onClick={handleSubmit}>
               保存修改
             </Button>
+            <Button type="button" variant="secondary" onClick={handleSaveDraft}>
+              保存草稿
+            </Button>
+            {pkg.status === "已上架" ? (
+              <Button type="button" variant="danger" onClick={handleExpirePackage}>
+                下架套餐
+              </Button>
+            ) : null}
             <Link className="c-button-link-secondary" to="/packages">
               取消
             </Link>

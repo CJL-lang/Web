@@ -9,7 +9,7 @@ import {
   getCourseOpeningGroupDisplayStatus,
   getCourseOpeningGroupRemainingCapacity,
 } from "../../mocks/courseOpenings";
-import type { OrderListItem } from "../../mocks/orders";
+import type { OrderListItem, OrderStatus } from "../../mocks/orders";
 import { courseOpeningGroupStatusPillClass } from "../../utils/bizStatusPills";
 import { cn } from "../../utils/cn";
 import { formatOrderDateTimeForDisplay } from "../../utils/orderDateTime";
@@ -17,7 +17,15 @@ import {
   createOrderGroupMap,
   formatIsoMinute,
   formatPrice,
+  sortCoachesForGroupSelect,
 } from "./courseOpeningViewHelpers";
+
+const orderPaymentStatusClass: Record<OrderStatus, string> = {
+  待完成: "c-order-status--pending",
+  已完成: "c-order-status--success",
+  已退款: "c-order-status--canceled",
+  已关闭: "c-order-status--closed",
+};
 
 export function CourseOpeningGroupDetailPage() {
   const { groupId } = useParams<{ groupId: string }>();
@@ -53,13 +61,14 @@ export function CourseOpeningGroupDetailPage() {
     () => new Map(coaches.map((coach) => [coach.id, coach])),
     [coaches],
   );
-  const activeCoaches = useMemo(
-    () => coaches.filter((coach) => coach.status === "在职"),
-    [coaches],
-  );
   const orderGroupByOrderId = useMemo(
     () => createOrderGroupMap(courseOpeningGroups),
     [courseOpeningGroups],
+  );
+
+  const coachSelectRows = useMemo(
+    () => sortCoachesForGroupSelect(coaches),
+    [coaches],
   );
 
   if (!groupId || !group) {
@@ -76,7 +85,6 @@ export function CourseOpeningGroupDetailPage() {
   const displayStatus = getCourseOpeningGroupDisplayStatus(group, packages);
   const canAddOrders = group.status === "未满人" && remainingCapacity > 0;
   const canConfirmOpening = group.status === "未满人" && remainingCapacity === 0;
-  const currentCoachIsInactive = coach != null && coach.status !== "在职";
   const openedOrders = group.orderIds
     .map((orderId) => orders.find((item) => item.id === orderId))
     .filter((order): order is OrderListItem => order != null);
@@ -135,16 +143,17 @@ export function CourseOpeningGroupDetailPage() {
 
   return (
     <>
-      <div className="c-course-openings-detail__toolbar">
-        <Link className="c-order-detail__back-link" to="/course-openings/groups">
-          <ChevronLeft aria-hidden className="c-order-detail__back-icon" />
-          返回开课组
-        </Link>
-      </div>
+      <div className="c-course-openings-detail">
+        <div className="c-course-openings-detail__toolbar">
+          <Link className="c-order-detail__back-link" to="/course-openings/groups">
+            <ChevronLeft aria-hidden className="c-order-detail__back-icon" />
+            返回开课组
+          </Link>
+        </div>
 
-      <SectionCard
-        action={
-          <div className="c-course-openings-detail__actions">
+        <SectionCard
+          action={
+            <div className="c-course-openings-detail__actions">
             {group.status === "未满人" ? (
               <Button
                 disabled={!canConfirmOpening}
@@ -174,72 +183,139 @@ export function CourseOpeningGroupDetailPage() {
         }
         title={group.id}
       >
-        <dl className="c-course-openings-summary-list">
-          <div>
-            <dt>教练</dt>
-            <dd>
-              <select
-                aria-label={`调整 ${group.id} 的教练`}
-                className="c-field-input c-course-openings-group__coach-select"
-                value={group.coachId}
-                onChange={(event) => {
-                  const nextCoach = coachById.get(event.target.value);
-                  if (!nextCoach || nextCoach.status !== "在职") {
-                    return;
-                  }
-                  reassignCourseOpeningGroupCoach(group.id, nextCoach.id);
-                }}
-              >
-                {!coach ? <option value={group.coachId}>未知教练</option> : null}
-                {currentCoachIsInactive ? (
-                  <option value={coach.id}>
-                    {coach.name} · {coach.status}
-                  </option>
-                ) : null}
-                {activeCoaches.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name} · {item.title}
-                  </option>
-                ))}
-              </select>
-            </dd>
-          </div>
-          <div>
-            <dt>状态</dt>
-            <dd>
-              <span
-                className={cn(
-                  "c-order-status",
-                  courseOpeningGroupStatusPillClass(displayStatus),
-                )}
-              >
-                {displayStatus}
-              </span>
-            </dd>
-          </div>
-          <div>
-            <dt>套餐</dt>
-            <dd>{pkg?.name ?? "未知套餐"}</dd>
-          </div>
-          <div>
-            <dt>容量</dt>
-            <dd>
-              {group.orderIds.length}/{capacity} 人
-            </dd>
-          </div>
-          <div>
-            <dt>剩余名额</dt>
-            <dd>{remainingCapacity} 人</dd>
-          </div>
-          <div>
-            <dt>开启时间</dt>
-            <dd>{formatIsoMinute(group.openedAt)}</dd>
-          </div>
-          <div>
-            <dt>更新时间</dt>
-            <dd>{formatIsoMinute(group.updatedAt)}</dd>
-          </div>
-        </dl>
+        <div className="c-course-openings-summary-table-wrap">
+          <table
+            className="c-course-openings-summary-table"
+            aria-label={`${group.id} 开课组信息`}
+          >
+            <tbody>
+              <tr>
+                <th scope="row">教练</th>
+                <td>
+                  <select
+                    aria-label={`调整 ${group.id} 的教练`}
+                    className="c-field-input c-course-openings-group__coach-select"
+                    value={group.coachId}
+                    onChange={(event) => {
+                      const nextCoach = coachById.get(event.target.value);
+                      if (!nextCoach || nextCoach.status !== "在职") {
+                        return;
+                      }
+                      reassignCourseOpeningGroupCoach(group.id, nextCoach.id);
+                    }}
+                  >
+                    {!coach ? (
+                      <option value={group.coachId}>未知教练</option>
+                    ) : null}
+                    {coachSelectRows.map((item) => {
+                      const canPick =
+                        item.status === "在职" || item.id === group.coachId;
+                      const label =
+                        item.status === "在职"
+                          ? item.name
+                          : `${item.name}（${item.status}）`;
+                      return (
+                        <option
+                          key={item.id}
+                          disabled={!canPick}
+                          value={item.id}
+                        >
+                          {label}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">状态</th>
+                <td>
+                  <span
+                    className={cn(
+                      "c-order-status",
+                      courseOpeningGroupStatusPillClass(displayStatus),
+                    )}
+                  >
+                    {displayStatus}
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">套餐</th>
+                <td>
+                  {pkg ? (
+                    <Link
+                      className="c-course-openings-summary-table__package-link"
+                      state={{
+                        returnTo: `/course-openings/groups/${encodeURIComponent(group.id)}`,
+                      }}
+                      to={`/packages/${encodeURIComponent(pkg.id)}`}
+                    >
+                      {pkg.name}
+                    </Link>
+                  ) : (
+                    "未知套餐"
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">容量</th>
+                <td>
+                  {group.orderIds.length}/{capacity} 人
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">剩余名额</th>
+                <td>{remainingCapacity} 人</td>
+              </tr>
+              <tr className="c-course-openings-summary-table__row--orders">
+                <th scope="row">学员订单</th>
+                <td>
+                  {openedOrders.length === 0 ? (
+                    <span className="c-course-openings-summary-table__empty">
+                      暂无
+                    </span>
+                  ) : (
+                    <ul className="c-course-openings-summary-table__orders">
+                      {openedOrders.map((order) => {
+                        const student = studentById.get(order.studentId);
+                        return (
+                          <li key={order.id}>
+                            <Link
+                              className="c-course-openings-summary-table__order-link"
+                              state={{
+                                returnTo: `/course-openings/groups/${encodeURIComponent(group.id)}`,
+                              }}
+                              to={`/orders/${encodeURIComponent(order.id)}`}
+                            >
+                              <span>{student?.name ?? "未知学员"} · {order.id}</span>
+                              <span
+                                className={cn(
+                                  "c-order-status",
+                                  orderPaymentStatusClass[order.status],
+                                )}
+                              >
+                                {order.status}
+                              </span>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">开启时间</th>
+                <td>{formatIsoMinute(group.openedAt)}</td>
+              </tr>
+              <tr>
+                <th scope="row">更新时间</th>
+                <td>{formatIsoMinute(group.updatedAt)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </SectionCard>
 
       {canAddOrders ? (
@@ -257,9 +333,6 @@ export function CourseOpeningGroupDetailPage() {
           title="添加学员"
         >
           <div className="c-course-openings-add-students">
-            <p className="c-course-openings-add-students__hint">
-              仅可添加已支付、未关闭、未加入其他开课组且套餐相同的订单。当前还可添加 {remainingCapacity} 人。
-            </p>
             {addError ? (
               <p className="c-course-openings-form__error">{addError}</p>
             ) : null}
@@ -308,31 +381,7 @@ export function CourseOpeningGroupDetailPage() {
           </div>
         </SectionCard>
       ) : null}
-
-      <SectionCard title="组内订单">
-        <ul className="c-course-openings-detail-order-list">
-          {openedOrders.map((order) => {
-            const student = studentById.get(order.studentId);
-
-            return (
-              <li key={order.id} className="c-course-openings-detail-order">
-                <div className="c-course-openings-detail-order__main">
-                  <Link
-                    className="c-course-openings-detail-order__title"
-                    to={`/orders/${encodeURIComponent(order.id)}`}
-                  >
-                    {student?.name ?? "未知学员"} · {order.id}
-                  </Link>
-                  <p className="c-course-openings-detail-order__meta">
-                    {formatOrderDateTimeForDisplay(order.orderDate)} ·{" "}
-                    {formatPrice(order.amount)}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </SectionCard>
+      </div>
 
       <dialog
         ref={closeDialogRef}

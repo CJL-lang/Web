@@ -14,6 +14,7 @@ import {
   FILTER_ALL,
   formatIsoMinute,
   normalize,
+  sortCoachesForGroupSelect,
 } from "./courseOpeningViewHelpers";
 
 export function CourseOpeningGroupsPage() {
@@ -42,8 +43,8 @@ export function CourseOpeningGroupsPage() {
     () => new Map(coaches.map((coach) => [coach.id, coach])),
     [coaches],
   );
-  const activeCoaches = useMemo(
-    () => coaches.filter((coach) => coach.status === "在职"),
+  const coachesForGroupSelect = useMemo(
+    () => sortCoachesForGroupSelect(coaches),
     [coaches],
   );
 
@@ -101,16 +102,8 @@ export function CourseOpeningGroupsPage() {
     studentById,
   ]);
 
-  const activeCoachOptions = activeCoaches.map((coach) => (
-    <option key={coach.id} value={coach.id}>
-      {coach.name}
-    </option>
-  ));
-
   const renderCoachSelectForGroup = (group: CourseOpeningGroup) => {
     const currentCoach = coachById.get(group.coachId);
-    const currentCoachIsInactive =
-      currentCoach != null && currentCoach.status !== "在职";
 
     return (
       <select
@@ -128,10 +121,19 @@ export function CourseOpeningGroupsPage() {
         {!currentCoach ? (
           <option value={group.coachId}>未知教练</option>
         ) : null}
-        {currentCoachIsInactive ? (
-          <option value={currentCoach.id}>{currentCoach.name}</option>
-        ) : null}
-        {activeCoachOptions}
+        {coachesForGroupSelect.map((item) => {
+          const canPick =
+            item.status === "在职" || item.id === group.coachId;
+          const label =
+            item.status === "在职"
+              ? item.name
+              : `${item.name}（${item.status}）`;
+          return (
+            <option key={item.id} disabled={!canPick} value={item.id}>
+              {label}
+            </option>
+          );
+        })}
       </select>
     );
   };
@@ -225,20 +227,21 @@ export function CourseOpeningGroupsPage() {
             return (
               <li key={group.id} className="c-course-openings-group">
                 <div className="c-course-openings-group__header">
-                  <div>
-                    <h3 className="c-course-openings-group__title">
-                      <Link
-                        className="c-course-openings-group__title-link"
-                        to={encodeURIComponent(group.id)}
-                      >
+                  <div className="min-w-0 flex-1">
+                    <Link
+                      className="c-course-openings-group__row-link"
+                      to={`/course-openings/groups/${encodeURIComponent(group.id)}`}
+                      aria-label={`查看开课组 ${group.id} 详情`}
+                    >
+                      <h3 className="c-course-openings-group__title">
                         {group.id}
-                      </Link>
-                    </h3>
-                    <p className="c-course-openings-group__subtitle">
-                      {coach?.name ?? "未知教练"} · {pkg?.name ?? "未知套餐"} ·{" "}
-                      {group.orderIds.length}/{capacity} 人 ·{" "}
-                      {formatIsoMinute(group.openedAt)}
-                    </p>
+                      </h3>
+                      <p className="c-course-openings-group__subtitle">
+                        {coach?.name ?? "未知教练"} · {pkg?.name ?? "未知套餐"} ·{" "}
+                        {group.orderIds.length}/{capacity} 人 ·{" "}
+                        {formatIsoMinute(group.openedAt)}
+                      </p>
+                    </Link>
                   </div>
                   <div className="c-course-openings-group__actions">
                     <span
@@ -266,6 +269,7 @@ export function CourseOpeningGroupsPage() {
                         </span>
                         <Link
                           className="c-course-openings-group__order-meta"
+                          state={{ returnTo: "/course-openings/groups" }}
                           to={`/orders/${encodeURIComponent(orderId)}`}
                         >
                           {orderId}

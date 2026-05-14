@@ -86,7 +86,12 @@ export function RecipientGroupPicker({
   return (
     <div className={cn("c-recipient-group", className)}>
       <div className="c-recipient-group__header">
-        <h3 className="c-recipient-group__title">{title}</h3>
+        <div className="c-recipient-group__title-wrap">
+          <h3 className="c-recipient-group__title">{title}</h3>
+          <span className="c-recipient-group__count">
+            {selectedIds.length}/{items.length}
+          </span>
+        </div>
         <div className="c-recipient-group__actions">
           <Button
             className="c-recipient-group__action-button"

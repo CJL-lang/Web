@@ -1,75 +1,210 @@
 @layer components {
   .c-recipient-group {
-    @apply space-y-3 rounded-[18px] border p-3 md:p-4;
-    border-color: var(--border-brand-soft);
-    background: var(--surface-panel-deep);
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 0.9rem;
+    border-radius: 22px;
+    border: 1px solid var(--border-brand-soft);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--surface-panel-raised) 78%, transparent),
+        color-mix(in srgb, var(--surface-panel-deep) 86%, transparent)
+      );
+    box-shadow:
+      var(--shadow-inset-soft),
+      0 14px 30px rgba(5, 3, 1, 0.08);
+  }
+
+  @media (min-width: 768px) {
+    .c-recipient-group {
+      padding: 1rem;
+    }
   }
 
   .c-recipient-group__header {
-    @apply flex flex-wrap items-center justify-between gap-3;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .c-recipient-group__title-wrap {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.55rem;
   }
 
   .c-recipient-group__title {
-    @apply text-base font-semibold tracking-tight text-[var(--color-text-primary)];
+    margin: 0;
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .c-recipient-group__count {
+    display: inline-flex;
+    min-height: 1.5rem;
+    align-items: center;
+    padding: 0.12rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-brand-soft);
+    background: var(--surface-brand-soft);
+    color: var(--color-brand);
+    font-size: 0.74rem;
+    font-weight: 800;
+    line-height: 1;
   }
 
   .c-recipient-group__actions {
-    @apply flex flex-wrap items-center gap-2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .c-recipient-group__action-button {
-    @apply min-h-11;
+    min-height: 2.35rem;
+    border-radius: 0.85rem;
+    padding-inline: 0.8rem;
+    padding-block: 0.55rem;
+    font-size: 0.78rem;
   }
 
   .c-recipient-group__search {
-    @apply relative;
+    position: relative;
   }
 
   .c-recipient-group__search-icon {
-    @apply pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)];
+    pointer-events: none;
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    transition: color 0.16s ease;
+  }
+
+  .c-recipient-group__search:focus-within .c-recipient-group__search-icon {
+    color: var(--color-brand);
   }
 
   .c-recipient-group__search-input {
-    @apply min-h-11 w-full rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] py-2.5 pl-10 pr-3 text-sm text-[var(--color-text-primary)] outline-none transition placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-brand)];
+    min-height: 2.85rem;
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid color-mix(in srgb, var(--color-border-subtle) 88%, transparent);
+    background: color-mix(in srgb, var(--color-surface-soft) 86%, transparent);
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    outline: none;
+    padding: 0.65rem 0.85rem 0.65rem 2.6rem;
+    transition:
+      border-color 0.16s ease,
+      background 0.16s ease,
+      box-shadow 0.16s ease;
+  }
+
+  .c-recipient-group__search-input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .c-recipient-group__search-input:hover {
+    border-color: color-mix(in srgb, var(--color-brand) 34%, transparent);
+    background: color-mix(in srgb, var(--color-surface-alt) 72%, transparent);
+  }
+
+  .c-recipient-group__search-input:focus {
+    border-color: var(--color-brand);
+    background: color-mix(in srgb, var(--color-surface-alt) 84%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 20%, transparent);
   }
 
   .c-recipient-group__list {
-    @apply space-y-1.5 rounded-[20px] border p-2;
-    border-color: var(--color-border-subtle);
-    background: color-mix(in srgb, var(--color-surface) 45%, transparent);
+    display: flex;
+    max-height: 20rem;
+    min-height: 12.5rem;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0;
+    overflow-y: auto;
+    padding: 0.45rem;
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--color-border-subtle) 78%, transparent);
+    background: color-mix(in srgb, var(--color-surface) 52%, transparent);
     box-shadow: var(--shadow-inset-soft);
+    list-style: none;
   }
 
   .c-recipient-group__item {
-    @apply flex min-h-11 cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition;
+    display: flex;
+    min-height: 2.75rem;
+    cursor: pointer;
+    align-items: center;
+    gap: 0.75rem;
+    border-radius: 0.85rem;
+    padding: 0.55rem 0.7rem;
+    transition:
+      background 0.16s ease,
+      box-shadow 0.16s ease,
+      transform 0.16s ease;
   }
 
   .c-recipient-group__item:hover {
-    background: color-mix(in srgb, var(--color-surface-alt) 60%, transparent);
+    background: color-mix(in srgb, var(--color-surface-alt) 68%, transparent);
   }
 
-  /* 选中态由原生 checkbox 驱动，避免在 TSX 中拼接状态类名 */
+  .c-recipient-group__item:has(:focus-visible) {
+    outline: 2px solid color-mix(in srgb, var(--color-brand) 55%, transparent);
+    outline-offset: 2px;
+  }
+
   .c-recipient-group__item:has(:checked) {
-    @apply ring-1;
-    background: var(--surface-brand-soft);
-    --tw-ring-color: var(--color-border-strong);
+    background: color-mix(in srgb, var(--color-brand) 13%, transparent);
+    box-shadow:
+      inset 0 0 0 1px var(--color-border-strong),
+      0 8px 18px rgba(5, 3, 1, 0.08);
   }
 
   .c-recipient-group__checkbox {
-    @apply h-4 w-4 shrink-0 rounded;
-    @apply border-[var(--color-border-strong)] bg-[var(--color-surface-alt)] text-[var(--color-brand)] focus:ring-2;
-    --tw-ring-color: color-mix(in srgb, var(--color-brand) 50%, transparent);
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    accent-color: var(--color-brand);
   }
 
   .c-recipient-group__name {
-    @apply text-sm text-[var(--color-text-primary)];
+    min-width: 0;
+    overflow: hidden;
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .c-recipient-group__empty {
-    @apply list-none rounded-xl px-3 py-6 text-center text-sm text-[var(--color-text-muted)];
+    display: flex;
+    min-height: 10rem;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    border-radius: 14px;
+    border: 1px dashed var(--color-border-subtle);
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    text-align: center;
   }
 
   .c-recipient-group__error {
-    @apply text-xs text-[var(--color-danger)];
+    margin: 0;
+    color: var(--color-danger);
+    font-size: 0.75rem;
   }
 }

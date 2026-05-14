@@ -1,13 +1,19 @@
 import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { useAdminData } from "../../context/AdminDataContext";
+import { isPackageAvailable } from "../../mocks/packages";
 import { nextOrderId } from "../../utils/adminIds";
 import { OrderForm, type OrderFormPayload } from "./OrderForm";
 
 export function OrderCreatePage() {
   const navigate = useNavigate();
   const { addOrder, orders, packages, students } = useAdminData();
+  const availablePackages = useMemo(
+    () => packages.filter(isPackageAvailable),
+    [packages]
+  );
 
   const handleSubmit = (payload: OrderFormPayload) => {
     const now = new Date().toISOString();
@@ -27,7 +33,7 @@ export function OrderCreatePage() {
       <OrderForm
         cancelTo="/orders"
         onSubmit={handleSubmit}
-        packages={packages}
+        packages={availablePackages}
         students={students}
         submitLabel="保存订单"
       />

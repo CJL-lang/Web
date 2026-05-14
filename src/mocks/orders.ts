@@ -1,4 +1,9 @@
-export const ORDER_STATUSES = ["待完成", "已完成"] as const;
+export const ORDER_STATUSES = [
+  "待完成",
+  "已完成",
+  "已退款",
+  "已关闭",
+] as const;
 
 export type OrderStatus = (typeof ORDER_STATUSES)[number];
 
@@ -31,6 +36,9 @@ export interface OrderListItem {
   /** Minute precision when payment is confirmed */
   paymentDate?: string;
   paymentVoucher?: OrderPaymentVoucher;
+  refundAmount?: number;
+  refundReason?: string;
+  refundedAt?: string;
   closedAt?: string;
   note?: string;
   createdAt: string;
@@ -111,7 +119,7 @@ export const INITIAL_ORDER_LIST: OrderListItem[] = [
     studentId: "ST-1080",
     packageId: "PKG-3",
     amount: 6800,
-    status: "待完成",
+    status: "已关闭",
     orderDate: "2026-04-18T16:15",
     paymentMethod: "待确认",
     closedAt: "2026-04-20T01:10:00.000Z",

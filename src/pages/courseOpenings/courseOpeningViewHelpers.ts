@@ -1,3 +1,4 @@
+import type { CoachListItem } from "../../mocks/coaches";
 import type { CourseOpeningGroup } from "../../mocks/courseOpenings";
 import type { PackageListItem } from "../../mocks/packages";
 
@@ -49,4 +50,11 @@ export function getUnopenedGroupRemainingCapacity(
     packages.find((item) => item.id === group.packageId)?.coachStudentRatio ??
     group.orderIds.length;
   return Math.max(0, capacity - group.orderIds.length);
+}
+
+/** 开课组教练下拉：稳定顺序展示全部教练（含休假等），供详情/列表一致使用 */
+export function sortCoachesForGroupSelect(
+  coaches: CoachListItem[],
+): CoachListItem[] {
+  return [...coaches].sort((a, b) => a.id.localeCompare(b.id));
 }

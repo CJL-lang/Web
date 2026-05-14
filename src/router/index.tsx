@@ -30,6 +30,8 @@ import { PackageDetailPage } from "../pages/commerce/PackageDetailPage";
 import { PackageEditPage } from "../pages/commerce/PackageEditPage";
 import { PackageManagementPage } from "../pages/commerce/PackageManagementPage";
 import { PackagesLayout } from "../pages/commerce/PackagesLayout";
+import { MessageHistoryPage } from "../pages/messages/MessageHistoryPage";
+import { MessagesLayout } from "../pages/messages/MessagesLayout";
 import { MessagePublishPage } from "../pages/messages/MessagePublishPage";
 import { SettingsPage } from "../pages/settings/SettingsPage";
 import {
@@ -72,7 +74,21 @@ export const router = createBrowserRouter([
       },
       {
         path: "messages",
-        element: <MessagePublishPage />,
+        element: <MessagesLayout />,
+        children: [
+          {
+            index: true,
+            element: <Navigate replace to="publish" />,
+          },
+          {
+            path: "publish",
+            element: <MessagePublishPage />,
+          },
+          {
+            path: "history",
+            element: <MessageHistoryPage />,
+          },
+        ],
       },
       {
         path: "students",

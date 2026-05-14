@@ -5,19 +5,23 @@ import { Link, NavLink } from "react-router-dom";
 import { PageHeader } from "../../components/ui/PageHeader";
 import { ResourceListColumnHead } from "../../components/ui/ResourceListColumnHead";
 import { useAdminData } from "../../context/AdminDataContext";
+import {
+  formatPackageLessonCount,
+  formatPackagePrice,
+  formatPackageRatio,
+  type PackageStatus,
+} from "../../mocks/packages";
 import { cn } from "../../utils/cn";
 
 function normalize(s: string) {
   return s.trim().toLowerCase();
 }
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("zh-CN", {
-    currency: "CNY",
-    maximumFractionDigits: 0,
-    style: "currency",
-  }).format(price);
-}
+const packageStatusClass: Record<PackageStatus, string> = {
+  草稿: "c-package-status--draft",
+  已上架: "c-package-status--active",
+  已过期: "c-package-status--expired",
+};
 
 export function PackageManagementPage() {
   const { packages } = useAdminData();
@@ -34,9 +38,10 @@ export function PackageManagementPage() {
           item.id,
           item.name,
           item.introduction,
-          item.price.toString(),
+          item.status,
+          item.price?.toString() ?? "",
           `1对${item.coachStudentRatio}`,
-          `${item.lessonCount}节课`,
+          item.lessonCount ? `${item.lessonCount}节课` : "",
           item.improvementPlans.join(" "),
         ].join(" ")
       );
@@ -82,8 +87,15 @@ export function PackageManagementPage() {
         ) : (
           <>
             <ResourceListColumnHead
+              className="c-package-list__column-head"
               columns={[
                 { key: "primary", variant: "primary", label: "套餐" },
+                {
+                  key: "status",
+                  variant: "stat",
+                  label: "状态",
+                  className: "c-package-list__status-col",
+                },
                 {
                   key: "price",
                   variant: "stat",
@@ -108,7 +120,7 @@ export function PackageManagementPage() {
               {filtered.map((item) => (
                 <li key={item.id}>
                   <NavLink
-                    aria-label={`查看套餐：${item.name}`}
+                    aria-label={`查看套餐：${item.name || "未命名草稿"}`}
                     className={({ isPending }) =>
                       cn(
                         "c-resource-list__row c-package-list__row",
@@ -118,24 +130,40 @@ export function PackageManagementPage() {
                     to={`/packages/${encodeURIComponent(item.id)}`}
                   >
                     <div className="c-resource-list__title-block">
-                      <p className="c-resource-list__title">{item.name}</p>
+                      <p className="c-resource-list__title">
+                        {item.name || "未命名草稿"}
+                      </p>
+                      <p className="c-resource-list__subtitle">{item.id}</p>
+                    </div>
+
+                    <div className="c-resource-list__stat c-package-list__status-col c-resource-list__stat--value-only">
+                      <p className="c-resource-list__stat-value">
+                        <span
+                          className={cn(
+                            "c-package-status",
+                            packageStatusClass[item.status]
+                          )}
+                        >
+                          {item.status}
+                        </span>
+                      </p>
                     </div>
 
                     <div className="c-resource-list__stat c-package-list__stat c-resource-list__stat--value-only">
                       <p className="c-resource-list__stat-value">
-                        {formatPrice(item.price)}
+                        {formatPackagePrice(item.price)}
                       </p>
                     </div>
 
                     <div className="c-resource-list__stat c-package-list__stat c-resource-list__stat--value-only">
                       <p className="c-resource-list__stat-value--plain">
-                        1 对 {item.coachStudentRatio}
+                        {formatPackageRatio(item.coachStudentRatio)}
                       </p>
                     </div>
 
                     <div className="c-resource-list__stat c-resource-list__stat--fixed c-resource-list__stat--value-only">
                       <p className="c-resource-list__stat-value--plain">
-                        {item.lessonCount} 节
+                        {formatPackageLessonCount(item.lessonCount)}
                       </p>
                     </div>
                   </NavLink>

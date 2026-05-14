@@ -99,10 +99,6 @@
     @apply m-0 rounded-2xl border border-[var(--border-danger)] bg-[var(--surface-danger-soft)] px-3 py-2 text-sm font-medium text-[var(--color-danger)];
   }
 
-  .c-course-openings-form__hint {
-    @apply m-0 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)] px-3 py-2 text-sm leading-6 text-[var(--color-text-secondary)];
-  }
-
   .c-course-openings-batch-card .c-course-openings-form__error {
     @apply rounded-3xl px-4 py-3 md:text-base;
   }
@@ -129,6 +125,14 @@
 
   .c-course-openings-group__title-link {
     @apply text-[var(--color-text-primary)] transition hover:text-[var(--color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
+  }
+
+  .c-course-openings-group__row-link {
+    @apply block min-w-0 rounded-2xl no-underline outline-offset-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
+  }
+
+  .c-course-openings-group__row-link:hover .c-course-openings-group__title {
+    @apply text-[var(--color-brand)];
   }
 
   .c-course-openings-group__subtitle {
@@ -159,20 +163,51 @@
     @apply transition hover:text-[var(--color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
   }
 
-  .c-course-openings-summary-list {
-    @apply m-0 grid gap-3 sm:grid-cols-2;
+  .c-course-openings-summary-table-wrap {
+    @apply overflow-x-auto rounded-[22px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-soft)];
   }
 
-  .c-course-openings-summary-list div {
-    @apply min-w-0 rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] p-4;
+  .c-course-openings-summary-table {
+    @apply m-0 w-full min-w-[20rem] border-collapse text-left;
   }
 
-  .c-course-openings-summary-list dt {
-    @apply text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-text-muted)];
+  .c-course-openings-summary-table th {
+    @apply w-[min(11rem,36%)] border-b border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] px-4 py-3 align-middle text-xs font-semibold tracking-wide text-[var(--color-text-muted)];
   }
 
-  .c-course-openings-summary-list dd {
-    @apply mt-2 mb-0 break-words text-sm font-semibold text-[var(--color-text-primary)];
+  .c-course-openings-summary-table td {
+    @apply border-b border-[var(--color-border-subtle)] px-4 py-3 align-middle text-sm font-semibold break-words text-[var(--color-text-primary)];
+  }
+
+  .c-course-openings-summary-table tr:last-child th,
+  .c-course-openings-summary-table tr:last-child td {
+    border-bottom-width: 0;
+  }
+
+  .c-course-openings-summary-table__row--orders th,
+  .c-course-openings-summary-table__row--orders td {
+    vertical-align: top;
+  }
+
+  .c-course-openings-summary-table__empty {
+    @apply font-normal text-[var(--color-text-secondary)];
+  }
+
+  .c-course-openings-summary-table__orders {
+    @apply m-0 flex list-none flex-col gap-2 p-0;
+  }
+
+  .c-course-openings-summary-table__order-link,
+  .c-course-openings-summary-table__package-link {
+    @apply inline-block break-words text-sm font-semibold text-[var(--color-text-primary)] transition hover:text-[var(--color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
+  }
+
+  .c-course-openings-summary-table__order-link {
+    @apply inline-flex flex-wrap items-center gap-2;
+  }
+
+  .c-course-openings-detail {
+    @apply flex flex-col gap-6 md:gap-8 lg:gap-10 pt-1 md:pt-2;
   }
 
   .c-course-openings-detail__toolbar {
@@ -185,30 +220,6 @@
 
   .c-course-openings-add-students {
     @apply flex flex-col gap-3;
-  }
-
-  .c-course-openings-add-students__hint {
-    @apply m-0 text-sm leading-6 text-[var(--color-text-secondary)];
-  }
-
-  .c-course-openings-detail-order-list {
-    @apply m-0 flex list-none flex-col gap-3 p-0;
-  }
-
-  .c-course-openings-detail-order {
-    @apply rounded-[20px] border border-[var(--color-border-subtle)] bg-[var(--color-surface-alt)] px-4 py-3;
-  }
-
-  .c-course-openings-detail-order__main {
-    @apply min-w-0;
-  }
-
-  .c-course-openings-detail-order__title {
-    @apply break-words text-sm font-semibold text-[var(--color-text-primary)] transition hover:text-[var(--color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
-  }
-
-  .c-course-openings-detail-order__meta {
-    @apply mt-1 mb-0 break-words text-sm text-[var(--color-text-secondary)];
   }
 
   .c-course-openings-order-list__row {

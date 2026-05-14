@@ -230,13 +230,19 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.45rem;
+    gap: 0.55rem;
+    min-width: 0;
+    padding: 0.8rem;
+    border-radius: 18px;
+    border: 1px solid color-mix(in srgb, var(--color-border-subtle) 72%, transparent);
+    background: color-mix(in srgb, var(--color-surface) 42%, transparent);
+    box-shadow: var(--shadow-inset-soft);
   }
 
   .c-message-icon-add-shortcut__row {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.65rem;
   }
 
   .c-message-icon-add-shortcut__current {
@@ -245,8 +251,8 @@
   }
 
   .c-message-icon-add-shortcut__label {
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 0.78rem;
+    font-weight: 800;
     color: var(--color-text-primary);
   }
 
@@ -261,7 +267,7 @@
     padding: 0 0.65rem;
     border-radius: 14px;
     border: 1px dashed color-mix(in srgb, var(--color-brand) 45%, transparent);
-    background: color-mix(in srgb, var(--color-surface-alt) 50%, transparent);
+    background: color-mix(in srgb, var(--color-surface-alt) 64%, transparent);
     box-shadow: var(--shadow-inset-soft);
     color: var(--color-brand);
     cursor: pointer;
@@ -300,27 +306,37 @@
   .c-message-icon-preview-row {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.8rem;
     width: 100%;
-    max-width: min(100%, 23.5rem);
+    max-width: min(100%, 31rem);
     margin: 0;
-    padding: 0.7rem 0.9rem;
-    border-radius: 18px;
+    padding: 0.8rem 0.9rem;
+    border-radius: 20px;
     border: 1px solid color-mix(in srgb, var(--color-border-strong) 55%, transparent);
-    background: color-mix(in srgb, var(--color-surface-alt) 72%, transparent);
-    box-shadow: var(--shadow-inset-soft);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--color-brand) 9%, transparent),
+        transparent 48%
+      ),
+      color-mix(in srgb, var(--color-surface-alt) 78%, transparent);
+    box-shadow:
+      var(--shadow-inset-soft),
+      0 12px 28px rgba(5, 3, 1, 0.1);
     font: inherit;
     color: inherit;
     text-align: left;
     cursor: pointer;
     transition:
       border-color 0.15s ease,
-      background 0.15s ease;
+      background 0.15s ease,
+      transform 0.15s ease;
   }
 
   .c-message-icon-preview-row:hover {
     border-color: color-mix(in srgb, var(--color-brand) 35%, transparent);
     background: color-mix(in srgb, var(--color-surface-alt) 85%, transparent);
+    transform: translateY(-1px);
   }
 
   .c-message-icon-preview-row:focus-visible {
@@ -334,7 +350,7 @@
     margin: 0;
     font-size: 0.98rem;
     font-weight: 700;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
     line-height: 1.3;
     color: var(--color-text-primary);
     overflow: hidden;
@@ -407,7 +423,7 @@
     font-size: 1.05rem;
     font-weight: 600;
     color: var(--color-text-primary);
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
   }
 
   .c-message-icon-picker__dialog-close {

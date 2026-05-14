@@ -1,6 +1,5 @@
 export type TrendDirection = "up" | "down" | "neutral";
 export type DashboardTimeRange = "30d" | "12m" | "term";
-export type DashboardModuleKey = "students" | "coaches" | "revenue";
 export type StudentGenderKey = "male" | "female";
 export type StudentLevelKey =
   | "L1"
@@ -31,12 +30,6 @@ export interface InsightItem {
 export interface DashboardTimeRangeOption {
   id: DashboardTimeRange;
   label: string;
-}
-
-export interface DashboardModuleTab {
-  id: DashboardModuleKey;
-  label: string;
-  path: string;
 }
 
 export interface StudentSummarySnapshot {

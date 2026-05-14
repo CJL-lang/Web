@@ -2,18 +2,17 @@ import { NavLink, Outlet } from "react-router-dom";
 
 import { cn } from "../../utils/cn";
 
-const dashboardTabs = [
-  { label: "学员", path: "students" },
-  { label: "教练", path: "coaches" },
-  { label: "营收", path: "revenue" },
+const messageTabs = [
+  { label: "发送消息", path: "publish" },
+  { label: "历史记录", path: "history" },
 ] as const;
 
-export function DashboardPage() {
+export function MessagesLayout() {
   return (
     <div className="c-dashboard-shell">
       <header className="c-dashboard-header">
-        <nav className="c-dashboard-tabs" aria-label="统计模块页签">
-          {dashboardTabs.map((item) => (
+        <nav aria-label="消息模块页签" className="c-dashboard-tabs c-dashboard-tabs--cols-2">
+          {messageTabs.map((item) => (
             <NavLink
               key={item.path}
               className={({ isActive }) =>

@@ -17,6 +17,11 @@ interface FieldErrors {
   plan?: string;
 }
 
+function parsePositiveIntegerOrNull(input: string): number | null {
+  const value = Number.parseInt(input.trim(), 10);
+  return Number.isNaN(value) || value <= 0 ? null : value;
+}
+
 export function PackageCreatePage() {
   const navigate = useNavigate();
   const { addPackage, packages } = useAdminData();
@@ -71,6 +76,21 @@ export function PackageCreatePage() {
       coachStudentRatio,
       lessonCount: Number.parseInt(lessonCountInput.trim(), 10),
       improvementPlans: [plan.trim()],
+      status: "已上架",
+    });
+    navigate("/packages");
+  };
+
+  const handleSaveDraft = () => {
+    addPackage({
+      id: nextPackageId(packages),
+      name: name.trim(),
+      introduction: introduction.trim(),
+      price: parsePositiveIntegerOrNull(priceInput),
+      coachStudentRatio,
+      lessonCount: parsePositiveIntegerOrNull(lessonCountInput),
+      improvementPlans: plan.trim() ? [plan.trim()] : [],
+      status: "草稿",
     });
     navigate("/packages");
   };
@@ -167,6 +187,9 @@ export function PackageCreatePage() {
           <div className="c-form-shell__actions">
             <Button type="button" onClick={handleSubmit}>
               保存套餐
+            </Button>
+            <Button type="button" variant="secondary" onClick={handleSaveDraft}>
+              保存草稿
             </Button>
             <Link className="c-button-link-secondary" to="/packages">
               取消

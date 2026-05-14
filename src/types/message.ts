@@ -41,10 +41,24 @@ export const SYSTEM_MESSAGE_ICON_CATEGORY_ORDER: SystemMessageIconCategory[] = [
 export const SYSTEM_MESSAGE_ICON_KINDS: SystemMessageIconKind[] =
   SYSTEM_MESSAGE_ICON_OPTIONS.map((o) => o.kind);
 
-export interface SendMessagePayload {
+export interface MessageComposerData {
   title: string;
   body: string;
   studentIds: string[];
   coachIds: string[];
   iconKind: SystemMessageIconKind;
+}
+
+export type SendMessagePayload = MessageComposerData;
+
+export interface MessageDraft extends MessageComposerData {
+  updatedAt: string;
+}
+
+export interface SentMessageRecord extends MessageComposerData {
+  id: string;
+  studentCount: number;
+  coachCount: number;
+  recipientCount: number;
+  sentAt: string;
 }
