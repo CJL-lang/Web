@@ -204,7 +204,7 @@ export function OrderDetailPage() {
     ? coaches.find((coach) => coach.id === openingGroup.coachId)
     : undefined;
   const openingGroupStatus = openingGroup
-    ? getCourseOpeningGroupDisplayStatus(openingGroup, packages)
+    ? getCourseOpeningGroupDisplayStatus(openingGroup)
     : undefined;
 
   if (!orderId || !order) {

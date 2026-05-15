@@ -1,10 +1,11 @@
 import { CheckCircle2, UsersRound } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Button } from "../../components/ui/Button";
 import { SectionCard } from "../../components/ui/SectionCard";
 import { useAdminData } from "../../context/AdminDataContext";
+import type { CourseOpeningGroup } from "../../mocks/courseOpenings";
 import { nextCourseOpeningGroupId } from "../../utils/adminIds";
 import { cn } from "../../utils/cn";
 import {
@@ -13,8 +14,23 @@ import {
   getUnopenedGroupRemainingCapacity,
 } from "./courseOpeningViewHelpers";
 
+type PendingBatchOpeningAction =
+  | {
+      kind: "append";
+      operations: Array<{
+        groupId: string;
+        orderIds: string[];
+        openGroup: boolean;
+      }>;
+    }
+  | {
+      kind: "create";
+      group: CourseOpeningGroup;
+    };
+
 export function CourseOpeningCoachPage() {
   const navigate = useNavigate();
+  const fullOpeningDialogRef = useRef<HTMLDialogElement>(null);
   const {
     addCourseOpeningGroup,
     appendOrdersToCourseOpeningGroup,
@@ -36,6 +52,8 @@ export function CourseOpeningCoachPage() {
     () => packages[0]?.id ?? "",
   );
   const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
+  const [pendingBatchOpeningAction, setPendingBatchOpeningAction] =
+    useState<PendingBatchOpeningAction | null>(null);
   const [createError, setCreateError] = useState("");
 
   const studentById = useMemo(
@@ -114,6 +132,10 @@ export function CourseOpeningCoachPage() {
   const packageEligibleOrders = useMemo(() => {
     return eligibleOrders.filter((order) => order.packageId === selectedPackageId);
   }, [eligibleOrders, selectedPackageId]);
+  const fullOpeningPrompt =
+    pendingBatchOpeningAction?.kind === "create"
+      ? "该新开课组已达到额定人数。确认后会创建开课组并标记为已开课；取消则不创建开课组。"
+      : "本次补入会使开课组达到额定人数。确认后会写入学员并标记为已开课；取消则不提交本批次变更。";
 
   const activeCoachOptions = activeCoaches.map((coach) => (
     <option key={coach.id} value={coach.id}>
@@ -141,6 +163,77 @@ export function CourseOpeningCoachPage() {
     });
   };
 
+  const buildFillableGroupOperations = () => {
+    let cursor = 0;
+    const operations: Array<{
+      groupId: string;
+      orderIds: string[];
+      openGroup: boolean;
+    }> = [];
+
+    for (const group of fillableGroups) {
+      const remaining = getUnopenedGroupRemainingCapacity(group, packages);
+      const slice = selectedOrderIds.slice(cursor, cursor + remaining);
+      if (slice.length > 0) {
+        operations.push({
+          groupId: group.id,
+          orderIds: slice,
+          openGroup: remaining > 0 && slice.length >= remaining,
+        });
+      }
+      cursor += slice.length;
+      if (cursor >= selectedOrderIds.length) {
+        break;
+      }
+    }
+
+    return operations;
+  };
+
+  const commitFillableGroupOperations = (
+    operations: PendingBatchOpeningAction & { kind: "append" },
+  ) => {
+    for (const operation of operations.operations) {
+      appendOrdersToCourseOpeningGroup(operation.groupId, operation.orderIds, {
+        openGroup: operation.openGroup,
+      });
+    }
+    setSelectedOrderIds([]);
+    setCreateError("");
+    navigate("/course-openings/groups");
+  };
+
+  const openFullOpeningDialog = (action: PendingBatchOpeningAction) => {
+    setPendingBatchOpeningAction(action);
+    fullOpeningDialogRef.current?.showModal();
+  };
+
+  const cancelPendingBatchOpening = () => {
+    setPendingBatchOpeningAction(null);
+    setSelectedOrderIds([]);
+    fullOpeningDialogRef.current?.close();
+  };
+
+  const confirmPendingBatchOpening = () => {
+    if (!pendingBatchOpeningAction) {
+      return;
+    }
+
+    if (pendingBatchOpeningAction.kind === "append") {
+      commitFillableGroupOperations(pendingBatchOpeningAction);
+    } else {
+      addCourseOpeningGroup(pendingBatchOpeningAction.group);
+      setSelectedOrderIds([]);
+      setCreateError("");
+      navigate(
+        `/course-openings/groups/${encodeURIComponent(pendingBatchOpeningAction.group.id)}`,
+      );
+    }
+
+    setPendingBatchOpeningAction(null);
+    fullOpeningDialogRef.current?.close();
+  };
+
   const createOpeningGroup = () => {
     if (!selectedCoach || selectedCoach.status !== "在职") {
       setCreateError("请选择在职教练。");
@@ -160,33 +253,38 @@ export function CourseOpeningCoachPage() {
     }
 
     if (fillableGroups.length > 0) {
-      let cursor = 0;
-      for (const group of fillableGroups) {
-        const remaining = getUnopenedGroupRemainingCapacity(group, packages);
-        const slice = selectedOrderIds.slice(cursor, cursor + remaining);
-        if (slice.length > 0) {
-          appendOrdersToCourseOpeningGroup(group.id, slice);
-        }
-        cursor += slice.length;
-        if (cursor >= selectedOrderIds.length) {
-          break;
-        }
+      const operations = buildFillableGroupOperations();
+      if (operations.some((operation) => operation.openGroup)) {
+        openFullOpeningDialog({ kind: "append", operations });
+        return;
       }
-      navigate("/course-openings/groups");
+      commitFillableGroupOperations({ kind: "append", operations });
       return;
     }
 
     const now = new Date().toISOString();
     const groupId = nextCourseOpeningGroupId(courseOpeningGroups);
-    addCourseOpeningGroup({
+    const status: CourseOpeningGroup["status"] =
+      groupCapacity > 0 && selectedOrderIds.length >= groupCapacity
+        ? "已开课"
+        : "未满人";
+    const group: CourseOpeningGroup = {
       id: groupId,
       coachId: selectedCoach.id,
       packageId: selectedPackage.id,
       orderIds: selectedOrderIds,
-      status: "未满人",
+      status,
       openedAt: now,
+      startsAt: status === "已开课" ? now : null,
       updatedAt: now,
-    });
+    };
+
+    if (group.status === "已开课") {
+      openFullOpeningDialog({ kind: "create", group });
+      return;
+    }
+
+    addCourseOpeningGroup(group);
     navigate(`/course-openings/groups/${encodeURIComponent(groupId)}`);
   };
 
@@ -334,6 +432,55 @@ export function CourseOpeningCoachPage() {
           </div>
         </div>
       </SectionCard>
+
+      <dialog
+        ref={fullOpeningDialogRef}
+        aria-labelledby="course-opening-batch-full-dialog-title"
+        aria-modal="true"
+        className="c-order-cancel-dialog"
+        onCancel={(event) => {
+          event.preventDefault();
+          cancelPendingBatchOpening();
+        }}
+      >
+        <div
+          className="c-order-cancel-dialog__surface"
+          onPointerDown={(event) => {
+            if (event.target === event.currentTarget) {
+              cancelPendingBatchOpening();
+            }
+          }}
+        >
+          <div
+            className="c-order-cancel-dialog__panel"
+            onPointerDown={(event) => event.stopPropagation()}
+          >
+            <h2
+              className="c-order-cancel-dialog__title"
+              id="course-opening-batch-full-dialog-title"
+            >
+              确认开课
+            </h2>
+            <p className="c-order-cancel-dialog__meta">{fullOpeningPrompt}</p>
+            <div className="c-order-cancel-dialog__actions">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={cancelPendingBatchOpening}
+              >
+                取消
+              </Button>
+              <Button type="button" onClick={confirmPendingBatchOpening}>
+                <CheckCircle2
+                  aria-hidden
+                  className="c-course-openings__button-icon"
+                />
+                确认
+              </Button>
+            </div>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

@@ -197,13 +197,45 @@
     @apply m-0 flex list-none flex-col gap-2 p-0;
   }
 
+  .c-course-openings-summary-table__orders--editable {
+    @apply gap-3;
+  }
+
+  .c-course-openings-summary-table__order-row {
+    @apply flex min-w-0 flex-col gap-3 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-3;
+  }
+
+  .c-course-openings-summary-table__order-actions {
+    @apply flex min-w-0 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center;
+  }
+
+  .c-course-openings-summary-table__order-action-button.c-button {
+    @apply min-h-10 gap-1.5 rounded-xl px-3 py-2;
+  }
+
+  .c-course-openings-replace-dialog__panel.c-order-cancel-dialog__panel {
+    width: min(520px, 100%);
+  }
+
+  .c-course-openings-replace-dialog__body {
+    @apply flex flex-col gap-3;
+  }
+
+  .c-course-openings-replace-dialog__field {
+    @apply flex flex-col gap-2;
+  }
+
+  .c-course-openings-replace-dialog__label {
+    @apply text-sm font-semibold text-[var(--color-text-primary)];
+  }
+
   .c-course-openings-summary-table__order-link,
   .c-course-openings-summary-table__package-link {
     @apply inline-block break-words text-sm font-semibold text-[var(--color-text-primary)] transition hover:text-[var(--color-brand)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand)]/55;
   }
 
   .c-course-openings-summary-table__order-link {
-    @apply inline-flex flex-wrap items-center gap-2;
+    @apply inline-flex flex-wrap items-center gap-2 self-start;
   }
 
   .c-course-openings-detail {

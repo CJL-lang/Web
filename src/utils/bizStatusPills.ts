@@ -29,7 +29,6 @@ export function studentEnrollmentStatusPillClass(
 
 const orderOpeningStatusPill: Record<OrderOpeningStatus, string> = {
   未开启: "c-order-status--pending",
-  待开课: "c-order-status--pending",
   已开启: "c-order-status--active",
 };
 
@@ -44,7 +43,6 @@ const courseOpeningGroupStatusPill: Record<
   string
 > = {
   未满人: "c-order-status--pending",
-  待开课: "c-order-status--pending",
   已开课: "c-order-status--active",
 };
 

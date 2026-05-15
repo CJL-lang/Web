@@ -33,6 +33,10 @@ interface RefundOrderPayload {
   refundReason: string;
 }
 
+interface AppendCourseOpeningGroupOrdersOptions {
+  openGroup?: boolean;
+}
+
 export interface AdminDataContextValue {
   students: StudentListItem[];
   coaches: CoachListItem[];
@@ -52,8 +56,18 @@ export interface AdminDataContextValue {
   closeOrder: (id: string) => void;
   refundOrder: (id: string, payload: RefundOrderPayload) => void;
   addCourseOpeningGroup: (item: CourseOpeningGroup) => void;
-  appendOrdersToCourseOpeningGroup: (id: string, orderIds: string[]) => void;
-  confirmCourseOpeningGroup: (id: string) => void;
+  appendOrdersToCourseOpeningGroup: (
+    id: string,
+    orderIds: string[],
+    options?: AppendCourseOpeningGroupOrdersOptions,
+  ) => void;
+  removeOrderFromCourseOpeningGroup: (id: string, orderId: string) => void;
+  replaceCourseOpeningGroupOrder: (
+    id: string,
+    oldOrderId: string,
+    newOrderId: string,
+    options?: AppendCourseOpeningGroupOrdersOptions,
+  ) => void;
   reassignCourseOpeningGroupCoach: (id: string, coachId: string) => void;
   deleteCourseOpeningGroup: (id: string) => void;
 }
@@ -169,7 +183,11 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const appendOrdersToCourseOpeningGroup = useCallback(
-    (id: string, orderIds: string[]) => {
+    (
+      id: string,
+      orderIds: string[],
+      options?: AppendCourseOpeningGroupOrdersOptions,
+    ) => {
       setCourseOpeningGroups((prev) =>
         prev.map((group) => {
           if (group.id !== id) {
@@ -179,10 +197,15 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
           const nextOrderIds = Array.from(
             new Set([...group.orderIds, ...orderIds]),
           );
+          const now = new Date().toISOString();
+          const openGroup = Boolean(options?.openGroup);
           return {
             ...group,
             orderIds: nextOrderIds,
-            updatedAt: new Date().toISOString(),
+            status: openGroup ? "已开课" : group.status,
+            startsAt:
+              openGroup && group.startsAt == null ? now : group.startsAt,
+            updatedAt: now,
           };
         }),
       );
@@ -190,15 +213,57 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const confirmCourseOpeningGroup = useCallback((id: string) => {
-    setCourseOpeningGroups((prev) =>
-      prev.map((group) =>
-        group.id === id
-          ? { ...group, status: "已开课", updatedAt: new Date().toISOString() }
-          : group,
-      ),
-    );
-  }, []);
+  const removeOrderFromCourseOpeningGroup = useCallback(
+    (id: string, orderId: string) => {
+      setCourseOpeningGroups((prev) =>
+        prev.map((group) =>
+          group.id === id
+            ? {
+                ...group,
+                orderIds: group.orderIds.filter((item) => item !== orderId),
+                updatedAt: new Date().toISOString(),
+              }
+            : group,
+        ),
+      );
+    },
+    [],
+  );
+
+  const replaceCourseOpeningGroupOrder = useCallback(
+    (
+      id: string,
+      oldOrderId: string,
+      newOrderId: string,
+      options?: AppendCourseOpeningGroupOrdersOptions,
+    ) => {
+      setCourseOpeningGroups((prev) =>
+        prev.map((group) => {
+          if (
+            group.id !== id ||
+            !group.orderIds.includes(oldOrderId) ||
+            group.orderIds.includes(newOrderId)
+          ) {
+            return group;
+          }
+
+          const now = new Date().toISOString();
+          const openGroup = Boolean(options?.openGroup);
+          return {
+            ...group,
+            orderIds: group.orderIds.map((item) =>
+              item === oldOrderId ? newOrderId : item,
+            ),
+            status: openGroup ? "已开课" : group.status,
+            startsAt:
+              openGroup && group.startsAt == null ? now : group.startsAt,
+            updatedAt: now,
+          };
+        }),
+      );
+    },
+    [],
+  );
 
   const reassignCourseOpeningGroupCoach = useCallback(
     (id: string, coachId: string) => {
@@ -236,7 +301,8 @@ export function AdminDataProvider({ children }: { children: ReactNode }) {
         refundOrder,
         addCourseOpeningGroup,
         appendOrdersToCourseOpeningGroup,
-        confirmCourseOpeningGroup,
+        removeOrderFromCourseOpeningGroup,
+        replaceCourseOpeningGroupOrder,
         reassignCourseOpeningGroupCoach,
         deleteCourseOpeningGroup,
       }}

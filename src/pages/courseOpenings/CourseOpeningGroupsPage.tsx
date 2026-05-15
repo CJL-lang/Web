@@ -59,7 +59,7 @@ export function CourseOpeningGroupsPage() {
         if (packageFilter !== FILTER_ALL && group.packageId !== packageFilter) {
           return false;
         }
-        const displayStatus = getCourseOpeningGroupDisplayStatus(group, packages);
+        const displayStatus = getCourseOpeningGroupDisplayStatus(group);
         if (statusFilter !== FILTER_ALL && displayStatus !== statusFilter) {
           return false;
         }
@@ -96,7 +96,6 @@ export function CourseOpeningGroupsPage() {
     orders,
     packageById,
     packageFilter,
-    packages,
     query,
     statusFilter,
     studentById,
@@ -219,10 +218,7 @@ export function CourseOpeningGroupsPage() {
             const coach = coachById.get(group.coachId);
             const pkg = packageById.get(group.packageId);
             const capacity = pkg?.coachStudentRatio ?? group.orderIds.length;
-            const displayStatus = getCourseOpeningGroupDisplayStatus(
-              group,
-              packages,
-            );
+            const displayStatus = getCourseOpeningGroupDisplayStatus(group);
 
             return (
               <li key={group.id} className="c-course-openings-group">

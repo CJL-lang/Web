@@ -1,46 +1,55 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
 
 import { AdminLayout } from "../layouts/AdminLayout";
-import { ApprovalsPage } from "../pages/approvals/ApprovalsPage";
+import { ApprovalsPage } from "../pages/approvals/ApprovalsPage";// 审批管理
 import {
   CoachCreatePage,
   CoachDetailPage,
   CoachesLayout,
   CoachesListPage,
-} from "../pages/coaches";
+} from "../pages/coaches";// 教练管理
 import {
   CourseOpeningCoachPage,
   CourseOpeningGroupDetailPage,
   CourseOpeningGroupsPage,
   CourseOpeningOrdersPage,
   CourseOpeningsLayout,
-} from "../pages/courseOpenings";
+} from "../pages/courseOpenings";// 课程管理
 import {
   DashboardCoachesPage,
   DashboardPage,
   DashboardRevenuePage,
   DashboardStudentsPage,
-} from "../pages/dashboard";
-import { OrderCreatePage } from "../pages/commerce/OrderCreatePage";
-import { OrderDetailPage } from "../pages/commerce/OrderDetailPage";
-import { OrderEditPage } from "../pages/commerce/OrderEditPage";
-import { OrderManagementPage } from "../pages/commerce/OrderManagementPage";
-import { PackageCreatePage } from "../pages/commerce/PackageCreatePage";
-import { PackageDetailPage } from "../pages/commerce/PackageDetailPage";
-import { PackageEditPage } from "../pages/commerce/PackageEditPage";
-import { PackageManagementPage } from "../pages/commerce/PackageManagementPage";
-import { PackagesLayout } from "../pages/commerce/PackagesLayout";
-import { MessageHistoryPage } from "../pages/messages/MessageHistoryPage";
-import { MessagesLayout } from "../pages/messages/MessagesLayout";
-import { MessagePublishPage } from "../pages/messages/MessagePublishPage";
-import { SettingsPage } from "../pages/settings/SettingsPage";
+} from "../pages/dashboard";// 统计
+import { OrderCreatePage } from "../pages/commerce/OrderCreatePage";// 订单管理
+import { OrderDetailPage } from "../pages/commerce/OrderDetailPage";// 订单详情
+import { OrderEditPage } from "../pages/commerce/OrderEditPage";// 订单编辑
+import { OrderManagementPage } from "../pages/commerce/OrderManagementPage";// 订单管理
+import { PackageCreatePage } from "../pages/commerce/PackageCreatePage";// 套餐管理
+import { PackageDetailPage } from "../pages/commerce/PackageDetailPage";// 套餐详情
+import { PackageEditPage } from "../pages/commerce/PackageEditPage";// 套餐编辑
+import { PackageManagementPage } from "../pages/commerce/PackageManagementPage";// 套餐管理
+import { PackagesLayout } from "../pages/commerce/PackagesLayout";// 套餐管理
+import { MessageHistoryPage } from "../pages/messages/MessageHistoryPage";// 消息历史
+import { MessagesLayout } from "../pages/messages/MessagesLayout";// 消息管理
+import { MessagePublishPage } from "../pages/messages/MessagePublishPage";// 消息发布
+import { SettingsTemplateLayout } from "../layouts/SettingsTemplateLayout";// 设置模板上下文
+import { BadgeTemplateSettingsPage } from "../pages/settings/BadgeTemplateSettingsPage";// 奖牌与勋章模板设置
+import { CourseTemplateDetailPage } from "../pages/settings/CourseTemplateDetailPage";// 课程模板详情
+import { CourseTemplateSettingsPage } from "../pages/settings/CourseTemplateSettingsPage";// 课程模板设置
+import { HomeworkTemplateDetailPage } from "../pages/settings/HomeworkTemplateDetailPage";// 作业模板详情
+import { HomeworkTemplateSettingsPage } from "../pages/settings/HomeworkTemplateSettingsPage";// 作业模板设置
+import { SettingsPage } from "../pages/settings/SettingsPage";// 设置
+import { TrainingPlanTemplateDetailPage } from "../pages/settings/TrainingPlanTemplateDetailPage";// 培养计划模板详情
+import { TrainingPlanTemplateSettingsPage } from "../pages/settings/TrainingPlanTemplateSettingsPage";// 培养计划模板设置
 import {
   StudentCreatePage,
   StudentManagePage,
   StudentsLayout,
   StudentsListPage,
-} from "../pages/students";
+} from "../pages/students";// 学员管理
 
+// 路由配置
 export const router = createBrowserRouter([
   {
     element: <AdminLayout />,
@@ -196,7 +205,41 @@ export const router = createBrowserRouter([
       },
       {
         path: "settings",
-        element: <SettingsPage />,
+        element: <SettingsTemplateLayout />,
+        children: [
+          {
+            index: true,
+            element: <SettingsPage />,
+          },
+          {
+            path: "courses",
+            element: <CourseTemplateSettingsPage />,
+          },
+          {
+            path: "courses/:templateId",
+            element: <CourseTemplateDetailPage />,
+          },
+          {
+            path: "training-plans",
+            element: <TrainingPlanTemplateSettingsPage />,
+          },
+          {
+            path: "training-plans/:templateId",
+            element: <TrainingPlanTemplateDetailPage />,
+          },
+          {
+            path: "homework",
+            element: <HomeworkTemplateSettingsPage />,
+          },
+          {
+            path: "homework/:templateId",
+            element: <HomeworkTemplateDetailPage />,
+          },
+          {
+            path: "badges",
+            element: <BadgeTemplateSettingsPage />,
+          },
+        ],
       },
     ],
   },

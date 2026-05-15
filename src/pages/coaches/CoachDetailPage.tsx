@@ -163,10 +163,7 @@ export function CoachDetailPage() {
             {openingGroups.map((group) => {
               const pkg = packages.find((item) => item.id === group.packageId);
               const capacity = pkg?.coachStudentRatio ?? group.orderIds.length;
-              const displayStatus = getCourseOpeningGroupDisplayStatus(
-                group,
-                packages,
-              );
+              const displayStatus = getCourseOpeningGroupDisplayStatus(group);
 
               return (
                 <li key={group.id} className="c-course-openings-group">

@@ -1,4 +1,6 @@
+import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { SectionCard } from "../../components/ui/SectionCard";
@@ -10,6 +12,17 @@ import {
   type AppTheme,
 } from "../../utils/theme";
 
+const templateSettingEntries = [
+  { id: "course", label: "课程模板设置", path: "/settings/courses" },
+  {
+    id: "trainingPlan",
+    label: "培养计划模板设置",
+    path: "/settings/training-plans",
+  },
+  { id: "homework", label: "作业模板设置", path: "/settings/homework" },
+  { id: "badges", label: "奖牌与勋章模板设置", path: "/settings/badges" },
+] as const;
+
 export function SettingsPage() {
   const [theme, setTheme] = useState<AppTheme>(() => getStoredTheme());
 
@@ -20,17 +33,9 @@ export function SettingsPage() {
 
   return (
     <>
-      <PageHeader
-        description="调整后台界面的显示偏好。"
-        eyebrow="Settings"
-        title="设置"
-      />
+      <PageHeader eyebrow="Settings" title="设置" />
 
-      <SectionCard
-        description="选择后会立即应用，并在下次打开后台时自动保留。"
-        eyebrow="Appearance"
-        title="界面色系"
-      >
+      <SectionCard eyebrow="Appearance" title="界面色系">
         <div className="c-settings-theme-grid">
           {appThemeOptions.map((option) => {
             const isActive = option.id === theme;
@@ -77,6 +82,27 @@ export function SettingsPage() {
               </button>
             );
           })}
+        </div>
+      </SectionCard>
+
+      <SectionCard eyebrow="Templates" title="模板设置">
+        <div className="c-settings-template-list">
+          {templateSettingEntries.map((entry) => (
+            <Link
+              key={entry.id}
+              className="c-settings-template-row"
+              to={entry.path}
+            >
+              <span className="c-settings-template-row__label">
+                {entry.label}
+              </span>
+              <ChevronRight
+                aria-hidden
+                className="c-settings-template-row__icon"
+                strokeWidth={2}
+              />
+            </Link>
+          ))}
         </div>
       </SectionCard>
     </>

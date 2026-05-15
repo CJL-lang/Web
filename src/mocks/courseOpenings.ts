@@ -1,6 +1,6 @@
 import type { PackageListItem } from "./packages";
 
-export const ORDER_OPENING_STATUSES = ["未开启", "待开课", "已开启"] as const;
+export const ORDER_OPENING_STATUSES = ["未开启", "已开启"] as const;
 
 export type OrderOpeningStatus = (typeof ORDER_OPENING_STATUSES)[number];
 
@@ -11,7 +11,6 @@ export type CourseOpeningGroupStatus =
 
 export const COURSE_OPENING_GROUP_DISPLAY_STATUSES = [
   "未满人",
-  "待开课",
   "已开课",
 ] as const;
 
@@ -25,6 +24,8 @@ export interface CourseOpeningGroup {
   orderIds: string[];
   status: CourseOpeningGroupStatus;
   openedAt: string;
+  /** 计划/实际首节开课时刻；null 表示尚未确定 */
+  startsAt: string | null;
   updatedAt: string;
 }
 
@@ -36,6 +37,7 @@ export const INITIAL_COURSE_OPENING_GROUPS: CourseOpeningGroup[] = [
     orderIds: ["ORD-1001"],
     status: "未满人",
     openedAt: "2026-03-13T01:30:00.000Z",
+    startsAt: null,
     updatedAt: "2026-03-13T01:30:00.000Z",
   },
 ];
@@ -54,22 +56,16 @@ export function getCourseOpeningGroupRemainingCapacity(
   group: CourseOpeningGroup,
   packages: PackageListItem[],
 ): number {
-  if (group.status === "已开课") {
-    return 0;
-  }
   return Math.max(0, getCourseOpeningGroupCapacity(group, packages) - group.orderIds.length);
 }
 
 export function getCourseOpeningGroupDisplayStatus(
   group: CourseOpeningGroup,
-  packages: PackageListItem[],
 ): CourseOpeningGroupDisplayStatus {
   if (group.status === "已开课") {
     return "已开课";
   }
-  return getCourseOpeningGroupRemainingCapacity(group, packages) === 0
-    ? "待开课"
-    : "未满人";
+  return "未满人";
 }
 
 export function getOrderOpeningStatus(
@@ -80,7 +76,7 @@ export function getOrderOpeningStatus(
   if (!group) {
     return "未开启";
   }
-  return group.status === "已开课" ? "已开启" : "待开课";
+  return group.status === "已开课" ? "已开启" : "未开启";
 }
 
 export function findCourseOpeningGroupByOrderId(

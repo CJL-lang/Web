@@ -10,6 +10,10 @@ interface SectionCardProps {
   action?: ReactNode;
   children: ReactNode;
   className?: string;
+  id?: string;
+  hidden?: boolean;
+  role?: "region" | "tabpanel";
+  "aria-labelledby"?: string;
 }
 
 export function SectionCard({
@@ -18,10 +22,20 @@ export function SectionCard({
   className,
   description,
   eyebrow,
+  hidden,
+  id,
+  role,
+  "aria-labelledby": ariaLabelledBy,
   title,
 }: SectionCardProps) {
   return (
-    <section className={cn("c-section-card", className)}>
+    <section
+      aria-labelledby={ariaLabelledBy}
+      className={cn("c-section-card", className)}
+      hidden={hidden}
+      id={id}
+      role={role}
+    >
       <div className="c-section-card__header">
         <div className="c-section-card__intro">
           {eyebrow != null && eyebrow !== "" ? (
